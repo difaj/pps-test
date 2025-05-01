@@ -74,13 +74,16 @@
             position: sticky;
             bottom: 0;
         }
-        .nav-bar a {
+        .nav-bar button.nav-link {
             color: var(--tg-theme-button-color, #bb86fc);
             text-decoration: none;
             font-size: 1rem;
             padding: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
         }
-        .nav-bar a.active {
+        .nav-bar button.nav-link.active {
             font-weight: bold;
             border-bottom: 2px solid var(--tg-theme-button-color, #bb86fc);
         }
@@ -99,7 +102,7 @@
 <body>
     <div class="container">
         <!-- Main Page -->
-        <div class="page" id="main-page">
+        <div class="page active" id="main-page">
             <h1>Pay Stars</h1>
             <ul class="links">
                 <li><a href="https://t.me/stars_telegram_vf" target="_blank" data-haptic="warning">Our Channel</a></li>
@@ -151,10 +154,10 @@
 
     <!-- Navigation Bar -->
     <div class="nav-bar">
-        <a href="#main-page" class="nav-link active" data-page="main-page">Main</a>
-        <a href="#contact-page" class="nav-link" data-page="contact-page">Contact</a>
-        <a href="#test-page" class="nav-link" data-page="test-page">Test</a>
-        <a href="#qr-page" class="nav-link" data-page="qr-page">QR Scan</a>
+        <button class="nav-link active" data-page="main-page">Main</button>
+        <button class="nav-link" data-page="contact-page">Contact</button>
+        <button class="nav-link" data-page="test-page">Test</button>
+        <button class="nav-link" data-page="qr-page">QR Scan</button>
     </div>
 
     <script>
@@ -172,6 +175,18 @@
                     this.webApp.ready();
                     this.webApp.expand();
                     this.initDone = true;
+
+                    // Отримати userId
+                    const user = this.webApp.initDataUnsafe?.user;
+                    if (user) {
+                        console.log('User ID:', user.id);
+                    }
+
+                    // Очистити параметри URL
+                    if (window.location.search) {
+                        history.replaceState({}, '', window.location.pathname);
+                    }
+
                     console.log('Telegram WebApp initialized');
                     return true;
                 }
@@ -261,6 +276,9 @@
 
                 this.currentPage = pageId;
                 this.webApp.HapticFeedback.impactOccurred('light');
+
+                // Оновити URL без хеша
+                history.pushState({ page: pageId }, '', window.location.pathname);
             },
 
             // Add haptic feedback to links
@@ -276,15 +294,23 @@
 
             // Setup navigation
             setupNavigation: function() {
-                document.querySelectorAll('.nav-link').forEach(link => {
-                    link.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        const pageId = link.dataset.page;
+                document.querySelectorAll('.nav-link').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const pageId = button.dataset.page;
                         this.switchPage(pageId);
+                    });
+                    button.addEventListener('contextmenu', (e) => {
+                        e.preventDefault();
                     });
                 });
             }
         };
+
+        // Обробка popstate
+        window.addEventListener('popstate', (event) => {
+            const pageId = event.state?.page || 'main-page';
+            PayStarsApp.switchPage(pageId);
+        });
 
         // Initialize the app when page loads
         document.addEventListener('DOMContentLoaded', () => {
