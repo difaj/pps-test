@@ -21,13 +21,14 @@
             animation: fadeIn 1s ease-in-out;
             width: 100%;
             max-width: 500px;
+            margin: 0 auto; /* Центрування контейнера */
             padding: 20px;
             box-sizing: border-box;
             flex-grow: 1;
         }
         h1 {
             font-size: 2rem;
-            margin-bottom: 25px;
+            margin-bottom: 40px; /* Збільшений відступ знизу для тексту */
             color: var(--tg-theme-button-color, #bb86fc);
         }
         .links {
@@ -36,9 +37,15 @@
             gap: 15px;
             list-style: none;
             padding: 0;
-            margin: 0;
+            margin: 0 auto; /* Центрування списку */
+            width: 100%;
+            max-width: 400px; /* Обмеження ширини для кнопок */
         }
-        .links li a, .links li button {
+        .links li {
+            display: flex;
+            justify-content: center; /* Центрування кнопки в li */
+        }
+        .links li button {
             color: var(--tg-theme-button-color, #bb86fc);
             text-decoration: none;
             font-size: 1.1rem;
@@ -51,8 +58,11 @@
             align-items: center;
             background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
             cursor: pointer;
+            width: 100%; /* Кнопки займають всю ширину li */
+            max-width: 300px; /* Обмеження ширини кнопок */
+            box-sizing: border-box;
         }
-        .links li a:hover, .links li button:hover {
+        .links li button:hover {
             background-color: var(--tg-theme-button-color, #bb86fc);
             color: var(--tg-theme-button-text-color, #ffffff);
         }
@@ -68,12 +78,16 @@
         }
         .nav-bar {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-around; /* Рівномірне розташування кнопок */
             padding: 10px;
             background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
             border-top: 1px solid var(--tg-theme-hint-color, #aaaaaa);
             position: sticky;
             bottom: 0;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto; /* Центрування навігаційної панелі */
+            box-sizing: border-box;
         }
         .nav-bar button.nav-link {
             color: var(--tg-theme-button-color, #bb86fc);
@@ -83,6 +97,8 @@
             background: none;
             border: none;
             cursor: pointer;
+            flex: 1; /* Кнопки займають однаковий простір */
+            text-align: center;
         }
         .nav-bar button.nav-link.active {
             font-weight: bold;
@@ -116,7 +132,7 @@
         <div class="page" id="contact-page">
             <h1>Contact Us</h1>
             <ul class="links">
-                <li><button onclick="PayStarsApp.openLink('https://t.me/lakel')" data-haptic="warning">Contact Admin</button></li>
+                <li><button onclick="PayStarsApp.openLink('https://t.me/lakel')" data-hапtic="warning">Contact Admin</button></li>
                 <li><button onclick="PayStarsApp.openLink('https://t.me/help_stars')" data-haptic="warning">Feedback</button></li>
             </ul>
             <div class="tg-logo">Telegram WebApp</div>
@@ -294,7 +310,7 @@
                 history.pushState({ page: pageId }, '', window.location.pathname);
             },
 
-            // Add haptic feedback to links and buttons
+            // Add haptic feedback to buttons
             setupHapticFeedback: function() {
                 document.querySelectorAll('[data-haptic]').forEach(el => {
                     el.addEventListener('click', () => {
