@@ -21,14 +21,13 @@
             animation: fadeIn 1s ease-in-out;
             width: 100%;
             max-width: 500px;
-            margin: 0 auto;
-            padding: 40px 20px; /* Збільшений верхній відступ */
+            padding: 20px;
             box-sizing: border-box;
             flex-grow: 1;
         }
         h1 {
             font-size: 2rem;
-            margin-bottom: 50px; /* Збільшений відступ для тексту "трохи вище" */
+            margin-bottom: 25px;
             color: var(--tg-theme-button-color, #bb86fc);
         }
         .links {
@@ -37,15 +36,9 @@
             gap: 15px;
             list-style: none;
             padding: 0;
-            margin: 0 auto;
-            width: 100%;
-            max-width: 400px;
+            margin: 0;
         }
-        .links li {
-            display: flex;
-            justify-content: center;
-        }
-        .links li button {
+        .links li a {
             color: var(--tg-theme-button-color, #bb86fc);
             text-decoration: none;
             font-size: 1.1rem;
@@ -57,12 +50,8 @@
             justify-content: center;
             align-items: center;
             background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
-            cursor: pointer;
-            width: 100%;
-            max-width: 300px;
-            box-sizing: border-box;
         }
-        .links li button:hover {
+        .links li a:hover {
             background-color: var(--tg-theme-button-color, #bb86fc);
             color: var(--tg-theme-button-text-color, #ffffff);
         }
@@ -84,10 +73,6 @@
             border-top: 1px solid var(--tg-theme-hint-color, #aaaaaa);
             position: sticky;
             bottom: 0;
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
-            box-sizing: border-box;
         }
         .nav-bar button.nav-link {
             color: var(--tg-theme-button-color, #bb86fc);
@@ -97,8 +82,6 @@
             background: none;
             border: none;
             cursor: pointer;
-            flex: 1;
-            text-align: center;
         }
         .nav-bar button.nav-link.active {
             font-weight: bold;
@@ -122,8 +105,8 @@
         <div class="page active" id="main-page">
             <h1>Pay Stars</h1>
             <ul class="links">
-                <li><button onclick="PayStarsApp.openLink('https://t.me/stars_telegram_vf')" data-haptic="warning" oncontextmenu="return false;">Our Channel</button></li>
-                <li><button onclick="PayStarsApp.openLink('https://t.me/StarsPremiumBot')" data-haptic="warning" oncontextmenu="return false;">Premium for Stars</button></li>
+                <li><a href="https://t.me/stars_telegram_vf" target="_blank" data-haptic="warning">Our Channel</a></li>
+                <li><a href="https://t.me/StarsPremiumBot" target="_blank" data-haptic="warning">Premium for Stars</a></li>
             </ul>
             <div class="tg-logo">Telegram WebApp</div>
         </div>
@@ -132,22 +115,37 @@
         <div class="page" id="contact-page">
             <h1>Contact Us</h1>
             <ul class="links">
-                <li><button onclick="PayStarsApp.openLink('https://t.me/lakel')" data-haptic="warning" oncontextmenu="return false;">Contact Admin</button></li>
-                <li><button onclick="PayStarsApp.openLink('https://t.me/help_stars')" data-haptic="warning" oncontextmenu="return false;">Feedback</button></li>
+                <li><a href="https://t.me/lakel" target="_blank" data-haptic="warning">Contact Admin</a></li>
+                <li><a href="https://t.me/help_stars" target="_blank" data-haptic="warning">Feedback</a></li>
             </ul>
-            <div class="tg-logo">Telegram WebApp</ Genet
+            <div class="tg-logo">Telegram WebApp</div>
+        </div>
 
         <!-- Test Page -->
         <div class="page" id="test-page">
             <h1>Test Features</h1>
             <ul class="links">
-                <li><button onclick="PayStarsApp.openLink('tg://nft?slug=aTCuqOAvWUsBAAAAj08P-4gBdtw')" data-haptic="warning" oncontextmenu="return false;">Test Button</button></li>
-                <li><button onclick="PayStarsApp.openLink('https://t.me/$qEkvAY4AKEoGAAAA4lfaNB2EbVk')" data-haptic="warning" oncontextmenu="return false;">Make a Payment</button></li>
+                <li><a href="tg://nft?slug=aTCuqOAvWUsBAAAAj08P-4gBdtw" target="_blank" data-haptic="warning">Test Button</a></li>
+                <li><a href="https://t.me/$qEkvAY4AKEoGAAAA4lfaNB2EbVk" target="_blank" data-haptic="warning">Make a Payment</a></li>
                 <li>
-                    <button onclick="PayStarsApp.setEmojiStatus(this, '5199784671814090753');" data-haptic="warning" oncontextmenu="return false;">
+                    <a href="#" onclick="PayStarsApp.setEmojiStatus(this, '5199784671814090753');" data-haptic="warning">
                         Set Emoji Status
                         <span class="status-feedback"></span>
-                    </button>
+                    </a>
+                </li>
+            </ul>
+            <div class="tg-logo">Telegram WebApp</div>
+        </div>
+
+        <!-- QR Scan Page -->
+        <div class="page" id="qr-page">
+            <h1>Scan QR Code</h1>
+            <ul class="links">
+                <li>
+                    <a href="javascript:;" onclick="PayStarsApp.showScanQrPopup(true);" data-haptic="warning">
+                        Scan QR Code
+                        <span class="status-feedback"></span>
+                    </a>
                 </li>
             </ul>
             <div class="tg-logo">Telegram WebApp</div>
@@ -156,10 +154,10 @@
 
     <!-- Navigation Bar -->
     <div class="nav-bar">
-        <button class="nav-link active" data-page="main-page" oncontextmenu="return false;">Main</button>
-        <button class="nav-link" data-page="contact-page" oncontextmenu="return false;">Contact</button>
-        <button class="nav-link" data-page="test-page" oncontextmenu="return false;">Test</button>
-        <button class="nav-link" onclick="PayStarsApp.showScanQrPopup(true);" data-haptic="warning" oncontextmenu="return false;">QR Scan</button>
+        <button class="nav-link active" data-page="main-page">Main</button>
+        <button class="nav-link" data-page="contact-page">Contact</button>
+        <button class="nav-link" data-page="test-page">Test</button>
+        <button class="nav-link" data-page="qr-page">QR Scan</button>
     </div>
 
     <script>
@@ -196,18 +194,6 @@
                 return false;
             },
 
-            // Відкрити посилання через Telegram WebApp
-            openLink: function(url) {
-                if (!this.init()) return;
-                this.webApp.HapticFeedback.impactOccurred('light');
-                try {
-                    this.webApp.openLink(url);
-                } catch (error) {
-                    console.error('Error opening link:', error);
-                    window.location.href = url; // Резервне перенаправлення
-                }
-            },
-
             // Set emoji status permanently
             setEmojiStatus: function(element, emojiId) {
                 const feedbackEl = element.querySelector('.status-feedback');
@@ -238,7 +224,7 @@
 
             // Show QR code scanner popup
             showScanQrPopup: function(linksOnly) {
-                const feedbackEl = document.querySelector('#test-page .status-feedback') || document.createElement('span');
+                const feedbackEl = document.querySelector('#qr-page .status-feedback');
                 if (!this.init()) {
                     this.showFeedback(feedbackEl, '❌ WebApp not available', 3000);
                     return;
@@ -286,7 +272,7 @@
                 document.querySelectorAll('.nav-link').forEach(link => {
                     link.classList.remove('active');
                 });
-                document.querySelector(`.nav-link[data-page="${pageId}"]`)?.classList.add('active');
+                document.querySelector(`.nav-link[data-page="${pageId}"]`).classList.add('active');
 
                 this.currentPage = pageId;
                 this.webApp.HapticFeedback.impactOccurred('light');
@@ -295,7 +281,7 @@
                 history.pushState({ page: pageId }, '', window.location.pathname);
             },
 
-            // Add haptic feedback to buttons
+            // Add haptic feedback to links
             setupHapticFeedback: function() {
                 document.querySelectorAll('[data-haptic]').forEach(el => {
                     el.addEventListener('click', () => {
@@ -309,21 +295,10 @@
             // Setup navigation
             setupNavigation: function() {
                 document.querySelectorAll('.nav-link').forEach(button => {
-                    if (button.dataset.page) {
-                        button.addEventListener('click', () => {
-                            const pageId = button.dataset.page;
-                            this.switchPage(pageId);
-                        });
-                    }
-                    button.addEventListener('contextmenu', (e) => {
-                        e.preventDefault();
+                    button.addEventListener('click', () => {
+                        const pageId = button.dataset.page;
+                        this.switchPage(pageId);
                     });
-                });
-            },
-
-            // Setup context menu prevention for buttons
-            setupButtonContextMenuPrevention: function() {
-                document.querySelectorAll('.links button').forEach(button => {
                     button.addEventListener('contextmenu', (e) => {
                         e.preventDefault();
                     });
@@ -342,7 +317,6 @@
             PayStarsApp.init();
             PayStarsApp.setupHapticFeedback();
             PayStarsApp.setupNavigation();
-            PayStarsApp.setupButtonContextMenuPrevention();
             PayStarsApp.switchPage('main-page');
 
             // Apply Telegram theme colors
