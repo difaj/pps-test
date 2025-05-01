@@ -70,6 +70,12 @@
             margin-left: 8px;
             font-size: 0.9rem;
         }
+        .qr-feedback {
+            display: none;
+            margin: 10px auto;
+            font-size: 1rem;
+            color: var(--tg-theme-text-color, #ffffff);
+        }
         .page {
             display: none;
         }
@@ -160,7 +166,7 @@
         <button class="nav-link active" data-page="main-page" oncontextmenu="return false;">Main</button>
         <button class="nav-link" data-page="contact-page" oncontextmenu="return false;">Contact</button>
         <button class="nav-link" data-page="test-page" oncontextmenu="return false;">Test</button>
-        <button class="nav-link" onclick="PayStarsApp.showScanQrPopup(true);" data-haptic="warning" oncontextmenu="return false;">QR Scan</button>
+        <button class="nav-link qr-scan" onclick="PayStarsApp.showScanQrPopup(true);" data-haptic="warning" oncontextmenu="return false;">QR Scan</button>
     </div>
 
     <script>
@@ -239,11 +245,11 @@
 
             // Show QR code scanner popup
             showScanQrPopup: function(linksOnly) {
-                // Використовуємо тимчасовий елемент для зворотного зв’язку
-                let feedbackEl = document.query-selector('.status-feedback');
+                console.log('showScanQrPopup called'); // Діагностика
+                let feedbackEl = document.querySelector('.qr-feedback');
                 if (!feedbackEl) {
                     feedbackEl = document.createElement('span');
-                    feedbackEl.className = 'status-feedback';
+                    feedbackEl.className = 'qr-feedback';
                     document.querySelector('.container').appendChild(feedbackEl);
                 }
                 if (!this.init()) {
@@ -256,7 +262,9 @@
                 }
                 this.webApp.HapticFeedback.impactOccurred('light');
                 try {
+                    console.log('Opening QR scanner'); // Діагностика
                     this.webApp.showScanQrPopup({ text: linksOnly ? 'Scan a QR code with a link' : 'Scan any QR code' }, (result) => {
+                        console.log('QR scan result:', result); // Діагностика
                         if (result) {
                             this.showFeedback(feedbackEl, `✅ Scanned: ${result}`, 5000);
                             this.webApp.HapticFeedback.notificationOccurred('success');
@@ -279,8 +287,6 @@
                 if (!element) return;
                 element.textContent = message;
                 element.style.display = 'block';
-                element.style.margin = '10px auto';
-                element.style.color = 'var(--tg-theme-text-color, #ffffff)';
                 setTimeout(() => {
                     element.textContent = '';
                     element.style.display = 'none';
@@ -364,7 +370,7 @@
             PayStarsApp.setupNavigation();
             PayStarsApp.setupButtonContextMenuPrevention();
             PayStarsApp.switchPage('main-page');
-            PayStarsApp.debugDisplay(); // Діагностика
+            PayStarsApp.debugDisplay();
 
             // Apply Telegram theme colors
             if (PayStarsApp.webApp) {
