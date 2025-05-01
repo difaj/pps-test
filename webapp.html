@@ -5,34 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pay Stars</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #1e1e2f 0%, #2a2a4a 100%);
+            font-family: Arial, sans-serif;
+            background-color: var(--tg-theme-bg-color, #121212);
             color: var(--tg-theme-text-color, #ffffff);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
         }
         .container {
             text-align: center;
+            animation: fadeIn 1s ease-in-out;
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
             padding: 20px;
             box-sizing: border-box;
             flex-grow: 1;
-            margin: 0 auto;
         }
         h1 {
-            font-size: 2.2rem;
-            margin-bottom: 30px;
-            color: var(--tg-theme-button-color, #7c4dff);
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            animation: slideIn 0.5s ease-in-out;
+            font-size: 2rem;
+            margin-bottom: 25px;
+            color: var(--tg-theme-button-color, #bb86fc);
         }
         .links {
             display: flex;
@@ -43,236 +39,50 @@
             margin: 0;
         }
         .links li a {
-            color: #ffffff;
+            color: var(--tg-theme-button-color, #bb86fc);
             text-decoration: none;
             font-size: 1.1rem;
-            padding: 15px 20px;
-            border-radius: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(45deg, #7c4dff, #b388ff);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            animation: fadeInUp 0.5s ease-in-out;
-        }
-        .links li a:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-        }
-        .status-feedback {
-            margin-left: 8px;
-            font-size: 0.9rem;
-            color: #ffffff;
-        }
-        .page {
-            display: none;
-        }
-        .page.active {
-            display: block;
-            animation: pageFadeIn 0.5s ease-in-out;
-        }
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -280px;
-            width: 280px;
-            height//
-
-System: You are Grok 3 built by xAI.
-
-It looks like the code was cut off in the previous response. I'll provide a complete solution that addresses your requirements: hiding URLs on long press, updating the design, and maintaining the sidebar with animations. Below is the full HTML, CSS, and JavaScript code with the requested changes.
-
----
-
-### Solution Overview
-1. **Hide URLs on Long Press**:
-   - Use `<button>` instead of `<a>` for navigation to avoid URL exposure.
-   - Disable the context menu with `contextmenu` event.
-   - Prevent default behavior for `touchstart` and `touchend` to block long-press actions.
-
-2. **Updated Design**:
-   - Modern color palette with gradients (purple-blue theme).
-   - Rounded buttons with shadows and hover effects.
-   - Stylish sidebar with icons (using Font Awesome) and smooth animations.
-   - Gradient background and subtle text shadows for a polished look.
-   - Enhanced animations for buttons, pages, and sidebar.
-
-3. **Functionality**:
-   - QR scan button in the sidebar triggers scanning immediately without opening a new page.
-   - Sidebar toggles with a hamburger icon and includes navigation to Main, Contact, and Test pages.
-   - All previous functionality (emoji status, QR scanning, haptic feedback) is preserved.
-
----
-
-### Complete Code
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pay Stars</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #1e1e2f 0%, #2a2a4a 100%);
-            color: var(--tg-theme-text-color, #ffffff);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-        }
-        .container {
-            text-align: center;
-            width: 100%;
-            max-width: 600px;
-            padding: 20px;
-            box-sizing: border-box;
-            flex-grow: 1;
-            margin: 0 auto;
-        }
-        h1 {
-            font-size: 2.2rem;
-            margin-bottom: 30px;
-            color: var(--tg-theme-button-color, #7c4dff);
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            animation: slideIn 0.5s ease-in-out;
-        }
-        .links {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .links li a {
-            color: #ffffff;
-            text-decoration: none;
-            font-size: 1.1rem;
-            padding: 15px 20px;
-            border-radius: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(45deg, #7c4dff, #b388ff);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            animation: fadeInUp 0.5s ease-in-out;
-        }
-        .links li a:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-        }
-        .status-feedback {
-            margin-left: 8px;
-            font-size: 0.9rem;
-            color: #ffffff;
-        }
-        .page {
-            display: none;
-        }
-        .page.active {
-            display: block;
-            animation: pageFadeIn 0.5s ease-in-out;
-        }
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -280px;
-            width: 280px;
-            height: 100%;
-            background: linear-gradient(180deg, #2a2a4a 0%, #1e1e2f 100%);
-            border-right: 1px solid var(--tg-theme-hint-color, #aaaaaa);
-            transition: left 0.3s ease-in-out;
-            z-index: 1000;
-            padding-top: 60px;
-        }
-        .sidebar.active {
-            left: 0;
-        }
-        .sidebar .nav-links {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            padding: 20px;
-            list-style: none;
-        }
-        .sidebar .nav-links li button {
-            color: var(--tg-theme-button-color, #ffffff);
-            font-size: 1.1rem;
-            padding: 12px 15px;
-            display: flex;
-            align-items: center;
-            background: none;
-            border: none;
-            width: 100%;
-            text-align: left;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-        .sidebar .nav-links li button:hover,
-        .sidebar .nav-links li button.active {
-            background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
-            border-radius: 8px;
-            transform: translateX(5px);
-        }
-        .sidebar .nav-links li button i {
-            margin-right: 10px;
-            width: 20px;
-        }
-        .hamburger {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            font-size: 1.8rem;
-            color: var(--tg-theme-button-color, #7c4dff);
-            background: none;
-            border: none;
-            cursor: pointer;
-            z-index: 1100;
-            transition: transform 0.3s ease;
-        }
-        .hamburger.active {
-            transform: rotate(90deg);
-        }
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            z-index: 900;
-            transition: opacity 0.3s ease;
-        }
-        .overlay.active {
-            display: block;
-            opacity: 1;
-        }
-        .global-feedback {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.8));
-            color: var(--tg-theme-text-color, #ffffff);
-            padding: 10px 20px;
+            padding: 12px 20px;
+            border: 2px solid var(--tg-theme-button-color, #bb86fc);
             border-radius: 10px;
-            display: none;
-            z-index: 1200;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
         }
-        .global-feedback.active {
+        .links li a:hover {
+            background-color: var(--tg-theme-button-color, #bb86fc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+        }
+        .status-feedback {
+            margin-left: 8px;
+            font-size: 0.9rem;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
             display: block;
-            animation: fadeInUp 0.3s ease-in-out;
+        }
+        .nav-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+            background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
+            border-top: 1px solid var(--tg-theme-hint-color, #aaaaaa);
+            position: sticky;
+            bottom: 0;
+        }
+        .nav-bar a {
+            color: var(--tg-theme-button-color, #bb86fc);
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 10px;
+        }
+        .nav-bar a.active {
+            font-weight: bold;
+            border-bottom: 2px solid var(--tg-theme-button-color, #bb86fc);
         }
         .tg-logo {
             margin-top: 30px;
@@ -280,59 +90,13 @@ It looks like the code was cut off in the previous response. I'll provide a comp
             font-size: 0.8rem;
             color: var(--tg-theme-hint-color, #aaaaaa);
         }
-        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        @keyframes slideIn {
-            from { transform: translateY(-30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes fadeInUp {
-            from { transform: translateY(15px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes pageFadeIn {
-            from { opacity: 0; transform: translateX(20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        .sidebar .nav-links li {
-            opacity: 0;
-            transform: translateX(-20px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-        .sidebar.active .nav-links li {
-            opacity: 1;
-            transform: translateX(0);
-        }
-        .sidebar .nav-links li:nth-child(1) { transition-delay: 0.1s; }
-        .sidebar .nav-links li:nth-child(2) { transition-delay: 0.2s; }
-        .sidebar .nav-links li:nth-child(3) { transition-delay: 0.3s; }
-        .sidebar .nav-links li:nth-child(4) { transition-delay: 0.4s; }
     </style>
 </head>
 <body>
-    <!-- Hamburger Button -->
-    <button class="hamburger" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
-
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <ul class="nav-links">
-            <li><button class="nav-link active" data-page="main-page"><i class="fas fa-home"></i> Main</button></li>
-            <li><button class="nav-link" data-page="contact-page"><i class="fas fa-envelope"></i> Contact</button></li>
-            <li><button class="nav-link" data-page="test-page"><i class="fas fa-flask"></i> Test</button></li>
-            <li><button class="nav-link" onclick="PayStarsApp.showScanQrPopup(true);" data-haptic="warning"><i class="fas fa-qrcode"></i> Scan QR</button></li>
-        </ul>
-    </div>
-
-    <!-- Overlay for sidebar -->
-    <div class="overlay"></div>
-
-    <!-- Global Feedback -->
-    <div class="global-feedback"></div>
-
-    <!-- Pages -->
     <div class="container">
         <!-- Main Page -->
         <div class="page" id="main-page">
@@ -369,6 +133,28 @@ It looks like the code was cut off in the previous response. I'll provide a comp
             </ul>
             <div class="tg-logo">Telegram WebApp</div>
         </div>
+
+        <!-- QR Scan Page -->
+        <div class="page" id="qr-page">
+            <h1>Scan QR Code</h1>
+            <ul class="links">
+                <li>
+                    <a href="javascript:;" onclick="PayStarsApp.showScanQrPopup(true);" data-haptic="warning">
+                        Scan QR Code
+                        <span class="status-feedback"></span>
+                    </a>
+                </li>
+            </ul>
+            <div class="tg-logo">Telegram WebApp</div>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="nav-bar">
+        <a href="#main-page" class="nav-link active" data-page="main-page">Main</a>
+        <a href="#contact-page" class="nav-link" data-page="contact-page">Contact</a>
+        <a href="#test-page" class="nav-link" data-page="test-page">Test</a>
+        <a href="#qr-page" class="nav-link" data-page="qr-page">QR Scan</a>
     </div>
 
     <script>
@@ -423,7 +209,7 @@ It looks like the code was cut off in the previous response. I'll provide a comp
 
             // Show QR code scanner popup
             showScanQrPopup: function(linksOnly) {
-                const feedbackEl = document.querySelector('.global-feedback');
+                const feedbackEl = document.querySelector('#qr-page .status-feedback');
                 if (!this.init()) {
                     this.showFeedback(feedbackEl, '❌ WebApp not available', 3000);
                     return;
@@ -456,9 +242,7 @@ It looks like the code was cut off in the previous response. I'll provide a comp
             showFeedback: function(element, message, duration) {
                 if (!element) return;
                 element.textContent = message;
-                element.classList.add('active');
                 setTimeout(() => {
-                    element.classList.remove('active');
                     element.textContent = '';
                 }, duration);
             },
@@ -470,36 +254,12 @@ It looks like the code was cut off in the previous response. I'll provide a comp
                 });
                 document.querySelector(`#${pageId}`).classList.add('active');
 
-                document.querySelectorAll('.nav-link').forEach(button => {
-                    button.classList.remove('active');
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
                 });
-                document.querySelector(`.nav-link[data-page="${pageId}"]`)?.classList.add('active');
+                document.querySelector(`.nav-link[data-page="${pageId}"]`).classList.add('active');
 
                 this.currentPage = pageId;
-                this.webApp.HapticFeedback.impactOccurred('light');
-                this.toggleSidebar(false); // Close sidebar after navigation
-            },
-
-            // Toggle sidebar
-            toggleSidebar: function(show) {
-                const sidebar = document.querySelector('.sidebar');
-                const hamburger = document.querySelector('.hamburger');
-                const overlay = document.querySelector('.overlay');
-                const isActive = sidebar.classList.contains('active');
-
-                if (show === undefined) {
-                    sidebar.classList.toggle('active');
-                    hamburger.classList.toggle('active');
-                    overlay.classList.toggle('active');
-                } else if (show && !isActive) {
-                    sidebar.classList.add('active');
-                    hamburger.classList.add('active');
-                    overlay.classList.add('active');
-                } else if (!show && isActive) {
-                    sidebar.classList.remove('active');
-                    hamburger.classList.remove('active');
-                    overlay.classList.remove('active');
-                }
                 this.webApp.HapticFeedback.impactOccurred('light');
             },
 
@@ -514,44 +274,14 @@ It looks like the code was cut off in the previous response. I'll provide a comp
                 });
             },
 
-            // Setup navigation and sidebar
+            // Setup navigation
             setupNavigation: function() {
-                document.querySelectorAll('.nav-link').forEach(button => {
-                    button.addEventListener('click', (e) => {
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
                         e.preventDefault();
-                        const pageId = button.dataset.page;
-                        if (pageId) {
-                            this.switchPage(pageId);
-                        }
+                        const pageId = link.dataset.page;
+                        this.switchPage(pageId);
                     });
-                    // Disable context menu and long press
-                    button.addEventListener('contextmenu', (e) => {
-                        e.preventDefault();
-                    });
-                    button.addEventListener('touchstart', (e) => {
-                        e.preventDefault();
-                        const pageId = button.dataset.page;
-                        if (pageId) {
-                            this.switchPage(pageId);
-                        } else {
-                            button.click(); // For QR button
-                        }
-                    });
-                });
-
-                document.querySelector('.hamburger').addEventListener('click', () => {
-                    this.toggleSidebar();
-                });
-
-                document.querySelector('.overlay').addEventListener('click', () => {
-                    this.toggleSidebar(false);
-                });
-
-                // Close sidebar on Escape key
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape') {
-                        this.toggleSidebar(false);
-                    }
                 });
             }
         };
