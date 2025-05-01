@@ -38,7 +38,7 @@
             padding: 0;
             margin: 0;
         }
-        .links li a {
+        .links li a, .links li button {
             color: var(--tg-theme-button-color, #bb86fc);
             text-decoration: none;
             font-size: 1.1rem;
@@ -50,8 +50,9 @@
             justify-content: center;
             align-items: center;
             background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
+            cursor: pointer;
         }
-        .links li a:hover {
+        .links li a:hover, .links li button:hover {
             background-color: var(--tg-theme-button-color, #bb86fc);
             color: var(--tg-theme-button-text-color, #ffffff);
         }
@@ -105,8 +106,8 @@
         <div class="page active" id="main-page">
             <h1>Pay Stars</h1>
             <ul class="links">
-                <li><a href="https://t.me/stars_telegram_vf" target="_blank" data-haptic="warning">Our Channel</a></li>
-                <li><a href="https://t.me/StarsPremiumBot" target="_blank" data-haptic="warning">Premium for Stars</a></li>
+                <li><button onclick="PayStarsApp.openLink('https://t.me/stars_telegram_vf')" data-haptic="warning">Our Channel</button></li>
+                <li><button onclick="PayStarsApp.openLink('https://t.me/StarsPremiumBot')" data-haptic="warning">Premium for Stars</button></li>
             </ul>
             <div class="tg-logo">Telegram WebApp</div>
         </div>
@@ -115,8 +116,8 @@
         <div class="page" id="contact-page">
             <h1>Contact Us</h1>
             <ul class="links">
-                <li><a href="https://t.me/lakel" target="_blank" data-haptic="warning">Contact Admin</a></li>
-                <li><a href="https://t.me/help_stars" target="_blank" data-haptic="warning">Feedback</a></li>
+                <li><button onclick="PayStarsApp.openLink('https://t.me/lakel')" data-haptic="warning">Contact Admin</button></li>
+                <li><button onclick="PayStarsApp.openLink('https://t.me/help_stars')" data-haptic="warning">Feedback</button></li>
             </ul>
             <div class="tg-logo">Telegram WebApp</div>
         </div>
@@ -125,13 +126,13 @@
         <div class="page" id="test-page">
             <h1>Test Features</h1>
             <ul class="links">
-                <li><a href="tg://nft?slug=aTCuqOAvWUsBAAAAj08P-4gBdtw" target="_blank" data-haptic="warning">Test Button</a></li>
-                <li><a href="https://t.me/$qEkvAY4AKEoGAAAA4lfaNB2EbVk" target="_blank" data-haptic="warning">Make a Payment</a></li>
+                <li><button onclick="PayStarsApp.openLink('tg://nft?slug=aTCuqOAvWUsBAAAAj08P-4gBdtw')" data-haptic="warning">Test Button</button></li>
+                <li><button onclick="PayStarsApp.openLink('https://t.me/$qEkvAY4AKEoGAAAA4lfaNB2EbVk')" data-haptic="warning">Make a Payment</button></li>
                 <li>
-                    <a href="#" onclick="PayStarsApp.setEmojiStatus(this, '5199784671814090753');" data-haptic="warning">
+                    <button onclick="PayStarsApp.setEmojiStatus(this, '5199784671814090753');" data-haptic="warning">
                         Set Emoji Status
                         <span class="status-feedback"></span>
-                    </a>
+                    </button>
                 </li>
             </ul>
             <div class="tg-logo">Telegram WebApp</div>
@@ -142,10 +143,10 @@
             <h1>Scan QR Code</h1>
             <ul class="links">
                 <li>
-                    <a href="javascript:;" onclick="PayStarsApp.showScanQrPopup(true);" data-haptic="warning">
+                    <button onclick="PayStarsApp.showScanQrPopup(true);" data-haptic="warning">
                         Scan QR Code
                         <span class="status-feedback"></span>
-                    </a>
+                    </button>
                 </li>
             </ul>
             <div class="tg-logo">Telegram WebApp</div>
@@ -192,6 +193,18 @@
                 }
                 console.error('Telegram WebApp not available');
                 return false;
+            },
+
+            // Відкрити посилання через Telegram WebApp
+            openLink: function(url) {
+                if (!this.init()) return;
+                this.webApp.HapticFeedback.impactOccurred('light');
+                try {
+                    this.webApp.openLink(url);
+                } catch (error) {
+                    console.error('Error opening link:', error);
+                    window.location.href = url; // Резервне перенаправлення
+                }
             },
 
             // Set emoji status permanently
@@ -281,7 +294,7 @@
                 history.pushState({ page: pageId }, '', window.location.pathname);
             },
 
-            // Add haptic feedback to links
+            // Add haptic feedback to links and buttons
             setupHapticFeedback: function() {
                 document.querySelectorAll('[data-haptic]').forEach(el => {
                     el.addEventListener('click', () => {
@@ -303,6 +316,15 @@
                         e.preventDefault();
                     });
                 });
+            },
+
+            // Setup context menu prevention for buttons
+            setupButtonContextMenuPrevention: function() {
+                document.querySelectorAll('.links button').forEach(button => {
+                    button.addEventListener('contextmenu', (e) => {
+                        e.preventDefault();
+                    });
+                });
             }
         };
 
@@ -317,6 +339,7 @@
             PayStarsApp.init();
             PayStarsApp.setupHapticFeedback();
             PayStarsApp.setupNavigation();
+            PayStarsApp.setupButtonContextMenuPrevention();
             PayStarsApp.switchPage('main-page');
 
             // Apply Telegram theme colors
