@@ -70,12 +70,6 @@
             margin-left: 8px;
             font-size: 0.9rem;
         }
-        .qr-feedback {
-            display: none;
-            margin: 10px auto;
-            font-size: 1rem;
-            color: var(--tg-theme-text-color, #ffffff);
-        }
         .page {
             display: none;
         }
@@ -166,7 +160,7 @@
         <button class="nav-link active" data-page="main-page" oncontextmenu="return false;">Main</button>
         <button class="nav-link" data-page="contact-page" oncontextmenu="return false;">Contact</button>
         <button class="nav-link" data-page="test-page" oncontextmenu="return false;">Test</button>
-        <button class="nav-link qr-scan" onclick="PayStarsApp.showScanQrPopup(true);" data-haptic="warning" oncontextmenu="return false;">QR Scan</button>
+        <button class="nav-link" onclick="PayStarsApp.showScanQrPopup(true);" data-haptic="warning" oncontextmenu="return false;">QR Scan</button>
     </div>
 
     <script>
@@ -245,44 +239,17 @@
 
             // Show QR code scanner popup
             showScanQrPopup: function(linksOnly) {
-                console.log('showScanQrPopup called'); // Діагностика
-                let feedbackEl = document.querySelector('.qr-feedback');
-                if (!feedbackEl) {
-                    feedbackEl = document.createElement('span');
-                    feedbackEl.className = 'qr-feedback';
-                    document.querySelector('.container').appendChild(feedbackEl);
-                }
-                if (!this.init()) {
-                    this.showFeedback(feedbackEl, '❌ WebApp not available', 3000);
-                    return;
-                }
-                if (!this.webApp.isVersionAtLeast('6.7')) {
-                    this.showFeedback(feedbackEl, '⚠️ Update Telegram app', 3000);
-                    return;
-                }
+                if (!this.init()) return;
+                if (!this.webApp.isVersionAtLeast('6.7')) return;
                 this.webApp.HapticFeedback.impactOccurred('light');
                 try {
-                    console.log('Opening QR scanner'); // Діагностика
-                    this.webApp.showScanQrPopup({ text: linksOnly ? 'Scan a QR code with a link' : 'Scan any QR code' }, (result) => {
-                        console.log('QR scan result:', result); // Діагностика
-                        if (result) {
-                            this.showFeedback(feedbackEl, `✅ Scanned: ${result}`, 5000);
-                            this.webApp.HapticFeedback.notificationOccurred('success');
-                            if (linksOnly && result.startsWith('http')) {
-                                this.webApp.openLink(result);
-                            }
-                        } else {
-                            this.showFeedback(feedbackEl, '❌ Scan cancelled', 3000);
-                            this.webApp.HapticFeedback.notificationOccurred('error');
-                        }
-                    });
+                    this.webApp.showScanQrPopup({ text: linksOnly ? 'Scan a QR code with a link' : 'Scan any QR code' });
                 } catch (error) {
                     console.error('Error scanning QR code:', error);
-                    this.showFeedback(feedbackEl, '⚠️ Error', 3000);
                 }
             },
 
-            // Show feedback message
+            // Show feedback message (для setEmojiStatus)
             showFeedback: function(element, message, duration) {
                 if (!element) return;
                 element.textContent = message;
@@ -347,13 +314,6 @@
                         e.preventDefault();
                     });
                 });
-            },
-
-            // Діагностика відображення кнопок
-            debugDisplay: function() {
-                console.log('Pages:', document.querySelectorAll('.page').length);
-                console.log('Nav buttons:', document.querySelectorAll('.nav-bar button').length);
-                console.log('Link buttons:', document.querySelectorAll('.links button').length);
             }
         };
 
@@ -370,7 +330,6 @@
             PayStarsApp.setupNavigation();
             PayStarsApp.setupButtonContextMenuPrevention();
             PayStarsApp.switchPage('main-page');
-            PayStarsApp.debugDisplay();
 
             // Apply Telegram theme colors
             if (PayStarsApp.webApp) {
