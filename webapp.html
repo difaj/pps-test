@@ -15,6 +15,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
         }
         .container {
             text-align: center;
@@ -24,11 +25,14 @@
             padding: 20px;
             box-sizing: border-box;
             flex-grow: 1;
+            margin-left: auto;
+            margin-right: auto;
         }
         h1 {
             font-size: 2rem;
             margin-bottom: 25px;
             color: var(--tg-theme-button-color, #bb86fc);
+            animation: slideIn 0.5s ease-in-out;
         }
         .links {
             display: flex;
@@ -45,44 +49,92 @@
             padding: 12px 20px;
             border: 2px solid var(--tg-theme-button-color, #bb86fc);
             border-radius: 10px;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             display: flex;
             justify-content: center;
             align-items: center;
             background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
+            animation: fadeInUp 0.5s ease-in-out;
         }
         .links li a:hover {
             background-color: var(--tg-theme-button-color, #bb86fc);
             color: var(--tg-theme-button-text-color, #ffffff);
+            transform: scale(1.05);
         }
         .status-feedback {
             margin-left: 8px;
             font-size: 0.9rem;
+            transition: all 0.3s;
         }
         .page {
             display: none;
         }
         .page.active {
             display: block;
+            animation: pageFadeIn 0.5s ease-in-out;
         }
-        .nav-bar {
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: var(--tg-theme-bg-color, #121212);
+            border-right: 1px solid var(--tg-theme-hint-color, #aaaaaa);
+            transition: left 0.3s ease-in-out;
+            z-index: 1000;
+            padding-top: 60px;
+        }
+        .sidebar.active {
+            left: 0;
+        }
+        .sidebar .nav-links {
             display: flex;
-            justify-content: space-around;
-            padding: 10px;
-            background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
-            border-top: 1px solid var(--tg-theme-hint-color, #aaaaaa);
-            position: sticky;
-            bottom: 0;
+            flex-direction: column;
+            gap: 10px;
+            padding: 20px;
+            list-style: none;
         }
-        .nav-bar a {
+        .sidebar .nav-links li a {
             color: var(--tg-theme-button-color, #bb86fc);
             text-decoration: none;
-            font-size: 1rem;
+            font-size: 1.1rem;
             padding: 10px;
+            display: block;
+            transition: background-color 0.3s ease;
         }
-        .nav-bar a.active {
-            font-weight: bold;
-            border-bottom: 2px solid var(--tg-theme-button-color, #bb86fc);
+        .sidebar .nav-links li a:hover,
+        .sidebar .nav-links li a.active {
+            background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
+            border-radius: 5px;
+        }
+        .hamburger {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            font-size: 1.5rem;
+            color: var(--tg-theme-button-color, #bb86fc);
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 1100;
+            transition: transform 0.3s ease;
+        }
+        .hamburger.active {
+            transform: rotate(90deg);
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 900;
+        }
+        .overlay.active {
+            display: block;
         }
         .tg-logo {
             margin-top: 30px;
@@ -90,13 +142,43 @@
             font-size: 0.8rem;
             color: var(--tg-theme-hint-color, #aaaaaa);
         }
+        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        @keyframes slideIn {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { transform: translateY(15px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes pageFadeIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
     </style>
 </head>
 <body>
+    <!-- Hamburger Button -->
+    <button class="hamburger" aria-label="Toggle menu">☰</button>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul class="nav-links">
+            <li><a href="#main-page" class="nav-link active" data-page="main-page">Main</a></li>
+            <li><a href="#contact-page" class="nav-link" data-page="contact-page">Contact</a></li>
+            <li><a href="#test-page" class="nav-link" data-page="test-page">Test</a></li>
+            <li><a href="javascript:;" class="nav-link" onclick="PayStarsApp.showScanQrPopup(true);" data-haptic="warning">Scan QR</a></li>
+        </ul>
+    </div>
+
+    <!-- Overlay for sidebar -->
+    <div class="overlay"></div>
+
+    <!-- Pages -->
     <div class="container">
         <!-- Main Page -->
         <div class="page" id="main-page">
@@ -133,28 +215,6 @@
             </ul>
             <div class="tg-logo">Telegram WebApp</div>
         </div>
-
-        <!-- QR Scan Page -->
-        <div class="page" id="qr-page">
-            <h1>Scan QR Code</h1>
-            <ul class="links">
-                <li>
-                    <a href="javascript:;" onclick="PayStarsApp.showScanQrPopup(true);" data-haptic="warning">
-                        Scan QR Code
-                        <span class="status-feedback"></span>
-                    </a>
-                </li>
-            </ul>
-            <div class="tg-logo">Telegram WebApp</div>
-        </div>
-    </div>
-
-    <!-- Navigation Bar -->
-    <div class="nav-bar">
-        <a href="#main-page" class="nav-link active" data-page="main-page">Main</a>
-        <a href="#contact-page" class="nav-link" data-page="contact-page">Contact</a>
-        <a href="#test-page" class="nav-link" data-page="test-page">Test</a>
-        <a href="#qr-page" class="nav-link" data-page="qr-page">QR Scan</a>
     </div>
 
     <script>
@@ -209,7 +269,7 @@
 
             // Show QR code scanner popup
             showScanQrPopup: function(linksOnly) {
-                const feedbackEl = document.querySelector('#qr-page .status-feedback');
+                const feedbackEl = document.querySelector('#test-page .status-feedback') || document.createElement('span');
                 if (!this.init()) {
                     this.showFeedback(feedbackEl, '❌ WebApp not available', 3000);
                     return;
@@ -257,9 +317,33 @@
                 document.querySelectorAll('.nav-link').forEach(link => {
                     link.classList.remove('active');
                 });
-                document.querySelector(`.nav-link[data-page="${pageId}"]`).classList.add('active');
+                document.querySelector(`.nav-link[data-page="${pageId}"]`)?.classList.add('active');
 
                 this.currentPage = pageId;
+                this.webApp.HapticFeedback.impactOccurred('light');
+                this.toggleSidebar(false); // Close sidebar after navigation
+            },
+
+            // Toggle sidebar
+            toggleSidebar: function(show) {
+                const sidebar = document.querySelector('.sidebar');
+                const hamburger = document.querySelector('.hamburger');
+                const overlay = document.querySelector('.overlay');
+                const isActive = sidebar.classList.contains('active');
+
+                if (show === undefined) {
+                    sidebar.classList.toggle('active');
+                    hamburger.classList.toggle('active');
+                    overlay.classList.toggle('active');
+                } else if (show && !isActive) {
+                    sidebar.classList.add('active');
+                    hamburger.classList.add('active');
+                    overlay.classList.add('active');
+                } else if (!show && isActive) {
+                    sidebar.classList.remove('active');
+                    hamburger.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
                 this.webApp.HapticFeedback.impactOccurred('light');
             },
 
@@ -274,14 +358,24 @@
                 });
             },
 
-            // Setup navigation
+            // Setup navigation and sidebar
             setupNavigation: function() {
                 document.querySelectorAll('.nav-link').forEach(link => {
                     link.addEventListener('click', (e) => {
                         e.preventDefault();
                         const pageId = link.dataset.page;
-                        this.switchPage(pageId);
+                        if (pageId) {
+                            this.switchPage(pageId);
+                        }
                     });
+                });
+
+                document.querySelector('.hamburger').addEventListener('click', () => {
+                    this.toggleSidebar();
+                });
+
+                document.querySelector('.overlay').addEventListener('click', () => {
+                    this.toggleSidebar(false);
                 });
             }
         };
