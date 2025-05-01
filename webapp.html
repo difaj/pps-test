@@ -21,14 +21,14 @@
             animation: fadeIn 1s ease-in-out;
             width: 100%;
             max-width: 500px;
-            margin: 0 auto; /* Центрування контейнера */
-            padding: 20px;
+            margin: 0 auto;
+            padding: 40px 20px; /* Збільшений верхній відступ */
             box-sizing: border-box;
             flex-grow: 1;
         }
         h1 {
             font-size: 2rem;
-            margin-bottom: 40px; /* Збільшений відступ знизу для тексту */
+            margin-bottom: 50px; /* Збільшений відступ для тексту "трохи вище" */
             color: var(--tg-theme-button-color, #bb86fc);
         }
         .links {
@@ -37,13 +37,13 @@
             gap: 15px;
             list-style: none;
             padding: 0;
-            margin: 0 auto; /* Центрування списку */
+            margin: 0 auto;
             width: 100%;
-            max-width: 400px; /* Обмеження ширини для кнопок */
+            max-width: 400px;
         }
         .links li {
             display: flex;
-            justify-content: center; /* Центрування кнопки в li */
+            justify-content: center;
         }
         .links li button {
             color: var(--tg-theme-button-color, #bb86fc);
@@ -58,8 +58,8 @@
             align-items: center;
             background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
             cursor: pointer;
-            width: 100%; /* Кнопки займають всю ширину li */
-            max-width: 300px; /* Обмеження ширини кнопок */
+            width: 100%;
+            max-width: 300px;
             box-sizing: border-box;
         }
         .links li button:hover {
@@ -78,7 +78,7 @@
         }
         .nav-bar {
             display: flex;
-            justify-content: space-around; /* Рівномірне розташування кнопок */
+            justify-content: space-around;
             padding: 10px;
             background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
             border-top: 1px solid var(--tg-theme-hint-color, #aaaaaa);
@@ -86,7 +86,7 @@
             bottom: 0;
             width: 100%;
             max-width: 500px;
-            margin: 0 auto; /* Центрування навігаційної панелі */
+            margin: 0 auto;
             box-sizing: border-box;
         }
         .nav-bar button.nav-link {
@@ -97,7 +97,7 @@
             background: none;
             border: none;
             cursor: pointer;
-            flex: 1; /* Кнопки займають однаковий простір */
+            flex: 1;
             text-align: center;
         }
         .nav-bar button.nav-link.active {
@@ -122,8 +122,8 @@
         <div class="page active" id="main-page">
             <h1>Pay Stars</h1>
             <ul class="links">
-                <li><button onclick="PayStarsApp.openLink('https://t.me/stars_telegram_vf')" data-haptic="warning">Our Channel</button></li>
-                <li><button onclick="PayStarsApp.openLink('https://t.me/StarsPremiumBot')" data-haptic="warning">Premium for Stars</button></li>
+                <li><button onclick="PayStarsApp.openLink('https://t.me/stars_telegram_vf')" data-haptic="warning" oncontextmenu="return false;">Our Channel</button></li>
+                <li><button onclick="PayStarsApp.openLink('https://t.me/StarsPremiumBot')" data-haptic="warning" oncontextmenu="return false;">Premium for Stars</button></li>
             </ul>
             <div class="tg-logo">Telegram WebApp</div>
         </div>
@@ -132,35 +132,20 @@
         <div class="page" id="contact-page">
             <h1>Contact Us</h1>
             <ul class="links">
-                <li><button onclick="PayStarsApp.openLink('https://t.me/lakel')" data-hапtic="warning">Contact Admin</button></li>
-                <li><button onclick="PayStarsApp.openLink('https://t.me/help_stars')" data-haptic="warning">Feedback</button></li>
+                <li><button onclick="PayStarsApp.openLink('https://t.me/lakel')" data-haptic="warning" oncontextmenu="return false;">Contact Admin</button></li>
+                <li><button onclick="PayStarsApp.openLink('https://t.me/help_stars')" data-haptic="warning" oncontextmenu="return false;">Feedback</button></li>
             </ul>
-            <div class="tg-logo">Telegram WebApp</div>
-        </div>
+            <div class="tg-logo">Telegram WebApp</ Genet
 
         <!-- Test Page -->
         <div class="page" id="test-page">
             <h1>Test Features</h1>
             <ul class="links">
-                <li><button onclick="PayStarsApp.openLink('tg://nft?slug=aTCuqOAvWUsBAAAAj08P-4gBdtw')" data-haptic="warning">Test Button</button></li>
-                <li><button onclick="PayStarsApp.openLink('https://t.me/$qEkvAY4AKEoGAAAA4lfaNB2EbVk')" data-haptic="warning">Make a Payment</button></li>
+                <li><button onclick="PayStarsApp.openLink('tg://nft?slug=aTCuqOAvWUsBAAAAj08P-4gBdtw')" data-haptic="warning" oncontextmenu="return false;">Test Button</button></li>
+                <li><button onclick="PayStarsApp.openLink('https://t.me/$qEkvAY4AKEoGAAAA4lfaNB2EbVk')" data-haptic="warning" oncontextmenu="return false;">Make a Payment</button></li>
                 <li>
-                    <button onclick="PayStarsApp.setEmojiStatus(this, '5199784671814090753');" data-haptic="warning">
+                    <button onclick="PayStarsApp.setEmojiStatus(this, '5199784671814090753');" data-haptic="warning" oncontextmenu="return false;">
                         Set Emoji Status
-                        <span class="status-feedback"></span>
-                    </button>
-                </li>
-            </ul>
-            <div class="tg-logo">Telegram WebApp</div>
-        </div>
-
-        <!-- QR Scan Page -->
-        <div class="page" id="qr-page">
-            <h1>Scan QR Code</h1>
-            <ul class="links">
-                <li>
-                    <button onclick="PayStarsApp.showScanQrPopup(true);" data-haptic="warning">
-                        Scan QR Code
                         <span class="status-feedback"></span>
                     </button>
                 </li>
@@ -171,10 +156,10 @@
 
     <!-- Navigation Bar -->
     <div class="nav-bar">
-        <button class="nav-link active" data-page="main-page">Main</button>
-        <button class="nav-link" data-page="contact-page">Contact</button>
-        <button class="nav-link" data-page="test-page">Test</button>
-        <button class="nav-link" data-page="qr-page">QR Scan</button>
+        <button class="nav-link active" data-page="main-page" oncontextmenu="return false;">Main</button>
+        <button class="nav-link" data-page="contact-page" oncontextmenu="return false;">Contact</button>
+        <button class="nav-link" data-page="test-page" oncontextmenu="return false;">Test</button>
+        <button class="nav-link" onclick="PayStarsApp.showScanQrPopup(true);" data-haptic="warning" oncontextmenu="return false;">QR Scan</button>
     </div>
 
     <script>
@@ -253,7 +238,7 @@
 
             // Show QR code scanner popup
             showScanQrPopup: function(linksOnly) {
-                const feedbackEl = document.querySelector('#qr-page .status-feedback');
+                const feedbackEl = document.querySelector('#test-page .status-feedback') || document.createElement('span');
                 if (!this.init()) {
                     this.showFeedback(feedbackEl, '❌ WebApp not available', 3000);
                     return;
@@ -301,7 +286,7 @@
                 document.querySelectorAll('.nav-link').forEach(link => {
                     link.classList.remove('active');
                 });
-                document.querySelector(`.nav-link[data-page="${pageId}"]`).classList.add('active');
+                document.querySelector(`.nav-link[data-page="${pageId}"]`)?.classList.add('active');
 
                 this.currentPage = pageId;
                 this.webApp.HapticFeedback.impactOccurred('light');
@@ -324,10 +309,12 @@
             // Setup navigation
             setupNavigation: function() {
                 document.querySelectorAll('.nav-link').forEach(button => {
-                    button.addEventListener('click', () => {
-                        const pageId = button.dataset.page;
-                        this.switchPage(pageId);
-                    });
+                    if (button.dataset.page) {
+                        button.addEventListener('click', () => {
+                            const pageId = button.dataset.page;
+                            this.switchPage(pageId);
+                        });
+                    }
                     button.addEventListener('contextmenu', (e) => {
                         e.preventDefault();
                     });
