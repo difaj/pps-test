@@ -15,6 +15,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         .container {
             text-align: center;
@@ -36,8 +37,8 @@
             flex-direction: column;
             gap: 15px;
             list-style: none;
-            padding: 0;
             margin: 0 auto;
+            padding: 0;
             width: 100%;
             max-width: 400px;
         }
@@ -114,6 +115,29 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        /* Стили для світлої теми */
+        body.light-theme {
+            --tg-theme-bg-color: #ffffff;
+            --tg-theme-text-color: #000000;
+            --tg-theme-button-color: #6200ea;
+            --tg-theme-button-text-color: #ffffff;
+            --tg-theme-secondary-bg-color: rgba(0, 0, 0, 0.05);
+            --tg-theme-hint-color: #666666;
+        }
+        body.light-theme .links li button {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        body.light-theme .links li button:hover {
+            background-color: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
+        }
+        body.light-theme .nav-bar {
+            background-color: rgba(0, 0, 0, 0.05);
+            border-top: 1px solid var(--tg-theme-hint-color);
+        }
+        body.light-theme .tg-logo {
+            color: var(--tg-theme-hint-color);
+        }
     </style>
 </head>
 <body>
@@ -149,6 +173,10 @@
                         Set Emoji Status
                         <span class="status-feedback"></span>
                     </button>
+                </li>
+                <!-- Нова кнопка для перемикання теми -->
+                <li>
+                    <button onclick="PayStarsApp.toggleTheme()" data-haptic="warning" oncontextmenu="return false;">Toggle Theme</button>
                 </li>
             </ul>
             <div class="tg-logo">Telegram WebApp</div>
@@ -281,6 +309,21 @@
                 history.pushState({ page: pageId }, '', window.location.pathname);
             },
 
+            // Toggle between dark and light theme
+            toggleTheme: function() {
+                const isLight = document.body.classList.toggle('light-theme');
+                localStorage.setItem('theme', isLight ? 'light' : 'dark');
+                this.webApp.HapticFeedback.impactOccurred('light');
+
+                // Оновлення кольорів теми
+                document.body.style.setProperty('--tg-theme-bg-color', isLight ? '#ffffff' : this.webApp.themeParams.bg_color || '#121212');
+                document.body.style.setProperty('--tg-theme-text-color', isLight ? '#000000' : this.webApp.themeParams.text_color || '#ffffff');
+                document.body.style.setProperty('--tg-theme-button-color', isLight ? '#6200ea' : this.webApp.themeParams.button_color || '#bb86fc');
+                document.body.style.setProperty('--tg-theme-button-text-color', isLight ? '#ffffff' : this.webApp.themeParams.button_text_color || '#ffffff');
+                document.body.style.setProperty('--tg-theme-secondary-bg-color', isLight ? 'rgba(0, 0, 0, 0.05)' : this.webApp.themeParams.secondary_bg_color || 'rgba(0,0,0,0.2)');
+                document.body.style.setProperty('--tg-theme-hint-color', isLight ? '#666666' : this.webApp.themeParams.hint_color || '#aaaaaa');
+            },
+
             // Add haptic feedback to buttons
             setupHapticFeedback: function() {
                 document.querySelectorAll('[data-haptic]').forEach(el => {
@@ -331,14 +374,20 @@
             PayStarsApp.setupButtonContextMenuPrevention();
             PayStarsApp.switchPage('main-page');
 
-            // Apply Telegram theme colors
-            if (PayStarsApp.webApp) {
-                document.body.style.setProperty('--tg-theme-bg-color', PayStarsApp.webApp.themeParams.bg_color);
-                document.body.style.setProperty('--tg-theme-text-color', PayStarsApp.webApp.themeParams.text_color);
-                document.body.style.setProperty('--tg-theme-button-color', PayStarsApp.webApp.themeParams.button_color);
-                document.body.style.setProperty('--tg-theme-button-text-color', PayStarsApp.webApp.themeParams.button_text_color);
-                document.body.style.setProperty('--tg-theme-secondary-bg-color', PayStarsApp.webApp.themeParams.secondary_bg_color);
-                document.body.style.setProperty('--tg-theme-hint-color', PayStarsApp.webApp.themeParams.hint_color);
+            // Застосувати збережену тему
+            if (localStorage.getItem('theme') === 'light') {
+                document.body.classList.add('light-theme');
+                PayStarsApp.toggleTheme(); // Виклик для встановлення світлих кольорів
+            } else {
+                // Застосувати тему Telegram за замовчуванням
+                if (PayStarsApp.webApp) {
+                    document.body.style.setProperty('--tg-theme-bg-color', PayStarsApp.webApp.themeParams.bg_color);
+                    document.body.style.setProperty('--tg-theme-text-color', PayStarsApp.webApp.themeParams.text_color);
+                    document.body.style.setProperty('--tg-theme-button-color', PayStarsApp.webApp.themeParams.button_color);
+                    document.body.style.setProperty('--tg-theme-button-text-color', PayStarsApp.webApp.themeParams.button_text_color);
+                    document.body.style.setProperty('--tg-theme-secondary-bg-color', PayStarsApp.webApp.themeParams.secondary_bg_color);
+                    document.body.style.setProperty('--tg-theme-hint-color', PayStarsApp.webApp.themeParams.hint_color);
+                }
             }
         });
     </script>
