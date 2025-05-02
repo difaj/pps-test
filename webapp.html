@@ -115,6 +115,7 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        /* Стили для світлої теми */
         body.light-theme {
             --tg-theme-bg-color: #ffffff;
             --tg-theme-text-color: #000000;
@@ -141,6 +142,7 @@
 </head>
 <body>
     <div class="container">
+        <!-- Main Page -->
         <div class="page active" id="main-page">
             <h1>Pay Stars</h1>
             <ul class="links">
@@ -149,6 +151,8 @@
             </ul>
             <div class="tg-logo">Telegram WebApp</div>
         </div>
+
+        <!-- Contact Page -->
         <div class="page" id="contact-page">
             <h1>Contact Us</h1>
             <ul class="links">
@@ -157,6 +161,8 @@
             </ul>
             <div class="tg-logo">Telegram WebApp</div>
         </div>
+
+        <!-- Test Page -->
         <div class="page" id="test-page">
             <h1>Test Features</h1>
             <ul class="links">
@@ -168,6 +174,7 @@
                         <span class="status-feedback"></span>
                     </button>
                 </li>
+                <!-- Нова кнопка для перемикання теми -->
                 <li>
                     <button onclick="PayStarsApp.toggleTheme()" data-haptic="warning" oncontextmenu="return false;">Toggle Theme</button>
                 </li>
@@ -175,20 +182,23 @@
             <div class="tg-logo">Telegram WebApp</div>
         </div>
     </div>
+
+    <!-- Navigation Bar -->
     <div class="nav-bar">
         <button class="nav-link active" data-page="main-page" oncontextmenu="return false;">Main</button>
         <button class="nav-link" data-page="contact-page" oncontextmenu="return false;">Contact</button>
         <button class="nav-link" data-page="test-page" oncontextmenu="return false;">Test</button>
         <button class="nav-link" onclick="PayStarsApp.showScanQrPopup(true);" data-haptic="warning" oncontextmenu="return false;">QR Scan</button>
     </div>
+
     <script>
+        // Main App Object
         const PayStarsApp = {
             initDone: false,
             webApp: null,
             currentPage: 'main-page',
-            shakeThreshold: 15,
-            lastShakeTime: 0,
-            shakeCooldown: 1000,
+
+            // Initialize Telegram WebApp
             init: function() {
                 if (this.initDone) return true;
                 if (window.Telegram && window.Telegram.WebApp) {
@@ -196,20 +206,26 @@
                     this.webApp.ready();
                     this.webApp.expand();
                     this.initDone = true;
+
+                    // Отримати userId
                     const user = this.webApp.initDataUnsafe?.user;
                     if (user) {
                         console.log('User ID:', user.id);
                     }
+
+                    // Очистити параметри URL
                     if (window.location.search) {
                         history.replaceState({}, '', window.location.pathname);
                     }
-                    this.setupShakeDetection();
+
                     console.log('Telegram WebApp initialized');
                     return true;
                 }
                 console.error('Telegram WebApp not available');
                 return false;
             },
+
+            // Відкрити посилання через Telegram WebApp
             openLink: function(url) {
                 if (!this.init()) return;
                 this.webApp.HapticFeedback.impactOccurred('light');
@@ -217,9 +233,11 @@
                     this.webApp.openLink(url);
                 } catch (error) {
                     console.error('Error opening link:', error);
-                    window.location.href = url;
+                    window.location.href = url; // Резервне перенаправлення
                 }
             },
+
+            // Set emoji status permanently
             setEmojiStatus: function(element, emojiId) {
                 const feedbackEl = element.querySelector('.status-feedback');
                 if (!this.init()) {
@@ -246,6 +264,8 @@
                     this.showFeedback(feedbackEl, '⚠️ Error', 3000);
                 }
             },
+
+            // Show QR code scanner popup
             showScanQrPopup: function(linksOnly) {
                 if (!this.init()) return;
                 if (!this.webApp.isVersionAtLeast('6.7')) return;
@@ -256,6 +276,8 @@
                     console.error('Error scanning QR code:', error);
                 }
             },
+
+            // Show feedback message (для setEmojiStatus)
             showFeedback: function(element, message, duration) {
                 if (!element) return;
                 element.textContent = message;
@@ -265,25 +287,35 @@
                     element.style.display = 'none';
                 }, duration);
             },
+
+            // Switch page
             switchPage: function(pageId) {
                 document.querySelectorAll('.page').forEach(page => {
                     page.classList.remove('active');
                 });
                 const page = document.querySelector(`#${pageId}`);
                 if (page) page.classList.add('active');
+
                 document.querySelectorAll('.nav-link').forEach(link => {
                     link.classList.remove('active');
                 });
                 const navLink = document.querySelector(`.nav-link[data-page="${pageId}"]`);
                 if (navLink) navLink.classList.add('active');
+
                 this.currentPage = pageId;
                 this.webApp.HapticFeedback.impactOccurred('light');
+
+                // Оновити URL без хеша
                 history.pushState({ page: pageId }, '', window.location.pathname);
             },
+
+            // Toggle between dark and light theme
             toggleTheme: function() {
                 const isLight = document.body.classList.toggle('light-theme');
                 localStorage.setItem('theme', isLight ? 'light' : 'dark');
                 this.webApp.HapticFeedback.impactOccurred('light');
+
+                // Оновлення кольорів теми
                 document.body.style.setProperty('--tg-theme-bg-color', isLight ? '#ffffff' : this.webApp.themeParams.bg_color || '#121212');
                 document.body.style.setProperty('--tg-theme-text-color', isLight ? '#000000' : this.webApp.themeParams.text_color || '#ffffff');
                 document.body.style.setProperty('--tg-theme-button-color', isLight ? '#6200ea' : this.webApp.themeParams.button_color || '#bb86fc');
@@ -291,26 +323,8 @@
                 document.body.style.setProperty('--tg-theme-secondary-bg-color', isLight ? 'rgba(0, 0, 0, 0.05)' : this.webApp.themeParams.secondary_bg_color || 'rgba(0,0,0,0.2)');
                 document.body.style.setProperty('--tg-theme-hint-color', isLight ? '#666666' : this.webApp.themeParams.hint_color || '#aaaaaa');
             },
-            setupShakeDetection: function() {
-                if (!this.init()) return;
-                if (!this.webApp.isVersionAtLeast('7.8')) return;
-                try {
-                    this.webApp.Accelerometer.start();
-                    this.webApp.onEvent('accelerometerChanged', (event) => {
-                        const now = Date.now();
-                        if (now - this.lastShakeTime < this.shakeCooldown) return;
-                        const { x, y, z } = event;
-                        const acceleration = Math.sqrt(x * x + y * y + z * z);
-                        if (acceleration > this.shakeThreshold) {
-                            this.lastShakeTime = now;
-                            this.showScanQrPopup(true);
-                            this.webApp.HapticFeedback.impactOccurred('heavy');
-                        }
-                    });
-                } catch (error) {
-                    console.error('Error setting up shake detection:', error);
-                }
-            },
+
+            // Add haptic feedback to buttons
             setupHapticFeedback: function() {
                 document.querySelectorAll('[data-haptic]').forEach(el => {
                     el.addEventListener('click', () => {
@@ -320,6 +334,8 @@
                     });
                 });
             },
+
+            // Setup navigation
             setupNavigation: function() {
                 document.querySelectorAll('.nav-link').forEach(button => {
                     if (button.dataset.page) {
@@ -333,6 +349,8 @@
                     });
                 });
             },
+
+            // Setup context menu prevention for buttons
             setupButtonContextMenuPrevention: function() {
                 document.querySelectorAll('.links button').forEach(button => {
                     button.addEventListener('contextmenu', (e) => {
@@ -341,20 +359,27 @@
                 });
             }
         };
+
+        // Обробка popstate
         window.addEventListener('popstate', (event) => {
             const pageId = event.state?.page || 'main-page';
             PayStarsApp.switchPage(pageId);
         });
+
+        // Initialize the app when page loads
         document.addEventListener('DOMContentLoaded', () => {
             PayStarsApp.init();
             PayStarsApp.setupHapticFeedback();
             PayStarsApp.setupNavigation();
             PayStarsApp.setupButtonContextMenuPrevention();
             PayStarsApp.switchPage('main-page');
+
+            // Застосувати збережену тему
             if (localStorage.getItem('theme') === 'light') {
                 document.body.classList.add('light-theme');
-                PayStarsApp.toggleTheme();
+                PayStarsApp.toggleTheme(); // Виклик для встановлення світлих кольорів
             } else {
+                // Застосувати тему Telegram за замовчуванням
                 if (PayStarsApp.webApp) {
                     document.body.style.setProperty('--tg-theme-bg-color', PayStarsApp.webApp.themeParams.bg_color);
                     document.body.style.setProperty('--tg-theme-text-color', PayStarsApp.webApp.themeParams.text_color);
