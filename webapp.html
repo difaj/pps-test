@@ -111,6 +111,20 @@
             font-size: 0.8rem;
             color: var(--tg-theme-hint-color, #aaaaaa);
         }
+        .scan-history {
+            margin-top: 20px;
+            text-align: left;
+            font-size: 0.9rem;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
+            border-radius: 10px;
+        }
+        .scan-history li {
+            padding: 5px 0;
+            word-break: break-all;
+        }
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -136,6 +150,9 @@
         }
         body.light-theme .tg-logo {
             color: var(--tg-theme-hint-color);
+        }
+        body.light-theme .scan-history {
+            background-color: rgba(0, 0, 0, 0.05);
         }
     </style>
 </head>
@@ -173,7 +190,14 @@
                 <li>
                     <button onclick="PayStarsApp.toggleTheme()" data-haptic="warning" oncontextmenu="return false;">Toggle Theme</button>
                 </li>
+                <li>
+                    <button onclick="PayStarsApp.showScanHistory()" data-haptic="warning" oncontextmenu="return false;">View Scan History</button>
+                </li>
             </ul>
+            <div class="scan-history" id="scan-history" style="display: none;">
+                <h3>Scan History</h3>
+                <ul id="scan-history-list"></ul>
+            </div>
             <div class="tg-logo">Telegram WebApp</div>
         </div>
     </div>
@@ -190,6 +214,7 @@
             initDone: false,
             webApp: null,
             currentPage: 'main-page',
+            userId: null,
 
             init: function() {
                 if (this.initDone) return true;
@@ -201,7 +226,8 @@
 
                     const user = this.webApp.initDataUnsafe?.user;
                     if (user) {
-                        console.log('User ID:', user.id);
+                        this.userId = user.id;
+                        console.log('User ID:', this.userId);
                     }
 
                     if (window.location.search) {
@@ -269,12 +295,69 @@
                             if (linksOnly && result.startsWith('http')) {
                                 this.openLink(result);
                             }
+                            this.saveScanHistory(result);
                             return true;
                         }
                     );
                 } catch (error) {
                     console.error('Error scanning QR code:', error);
                 }
+            },
+
+            saveScanHistory: function(result) {
+                if (!this.userId) return;
+                const key = `scan_history_${this.userId}`;
+                this.webApp.DeviceStorage.getItem(key, (error, value) => {
+                    let history = [];
+                    if (!error && value) {
+                        try {
+                            history = JSON.parse(value);
+                        } catch (e) {
+                            console.error('Error parsing scan history:', e);
+                        }
+                    }
+                    history.push({
+                        timestamp: new Date().toISOString(),
+                        result
+                    });
+                    this.webApp.DeviceStorage.setItem(key, JSON.stringify(history), (error, success) => {
+                        if (error) {
+                            console.error('Error saving scan history:', error);
+                        } else if (success) {
+                            console.log('Scan history saved');
+                        }
+                    });
+                });
+            },
+
+            showScanHistory: function() {
+                if (!this.userId) return;
+                const key = `scan_history_${this.userId}`;
+                const historyContainer = document.getElementById('scan-history');
+                const historyList = document.getElementById('scan-history-list');
+                historyList.innerHTML = '';
+                this.webApp.DeviceStorage.getItem(key, (error, value) => {
+                    if (error || !value) {
+                        historyList.innerHTML = '<li>No scan history available</li>';
+                    } else {
+                        try {
+                            const history = JSON.parse(value);
+                            if (history.length === 0) {
+                                historyList.innerHTML = '<li>No scan history available</li>';
+                            } else {
+                                history.forEach(item => {
+                                    const li = document.createElement('li');
+                                    li.textContent = `[${item.timestamp}] ${item.result}`;
+                                    historyList.appendChild(li);
+                                });
+                            }
+                        } catch (e) {
+                            console.error('Error parsing scan history:', e);
+                            historyList.innerHTML = '<li>Error loading scan history</li>';
+                        }
+                    }
+                    historyContainer.style.display = 'block';
+                });
             },
 
             showFeedback: function(element, message, duration) {
@@ -304,11 +387,15 @@
                 this.webApp.HapticFeedback.impactOccurred('light');
 
                 history.pushState({ page: pageId }, '', window.location.pathname);
+                if (pageId !== 'test-page') {
+                    document.getElementById('scan-history').style.display = 'none';
+                }
             },
 
             toggleTheme: function() {
+                if (!this.init()) return;
                 const isLight = document.body.classList.toggle('light-theme');
-                localStorage.setItem('theme', isLight ? 'light' : 'dark');
+                const theme = isLight ? 'light' : 'dark';
                 this.webApp.HapticFeedback.impactOccurred('light');
 
                 document.body.style.setProperty('--tg-theme-bg-color', isLight ? '#ffffff' : this.webApp.themeParams.bg_color || '#121212');
@@ -317,6 +404,40 @@
                 document.body.style.setProperty('--tg-theme-button-text-color', isLight ? '#ffffff' : this.webApp.themeParams.button_text_color || '#ffffff');
                 document.body.style.setProperty('--tg-theme-secondary-bg-color', isLight ? 'rgba(0, 0, 0, 0.05)' : this.webApp.themeParams.secondary_bg_color || 'rgba(0,0,0,0.2)');
                 document.body.style.setProperty('--tg-theme-hint-color', isLight ? '#666666' : this.webApp.themeParams.hint_color || '#aaaaaa');
+
+                if (this.userId) {
+                    this.webApp.DeviceStorage.setItem(`theme_${this.userId}`, theme, (error, success) => {
+                        if (error) {
+                            console.error('Error saving theme:', error);
+                        } else if (success) {
+                            console.log('Theme saved:', theme);
+                        }
+                    });
+                }
+            },
+
+            loadTheme: function() {
+                if (!this.userId) return;
+                this.webApp.DeviceStorage.getItem(`theme_${this.userId}`, (error, value) => {
+                    if (!error && value === 'light') {
+                        document.body.classList.add('light-theme');
+                        document.body.style.setProperty('--tg-theme-bg-color', '#ffffff');
+                        document.body.style.setProperty('--tg-theme-text-color', '#000000');
+                        document.body.style.setProperty('--tg-theme-button-color', '#6200ea');
+                        document.body.style.setProperty('--tg-theme-button-text-color', '#ffffff');
+                        document.body.style.setProperty('--tg-theme-secondary-bg-color', 'rgba(0, 0, 0, 0.05)');
+                        document.body.style.setProperty('--tg-theme-hint-color', '#666666');
+                    } else {
+                        if (this.webApp) {
+                            document.body.style.setProperty('--tg-theme-bg-color', this.webApp.themeParams.bg_color);
+                            document.body.style.setProperty('--tg-theme-text-color', this.webApp.themeParams.text_color);
+                            document.body.style.setProperty('--tg-theme-button-color', this.webApp.themeParams.button_color);
+                            document.body.style.setProperty('--tg-theme-button-text-color', this.webApp.themeParams.button_text_color);
+                            document.body.style.setProperty('--tg-theme-secondary-bg-color', this.webApp.themeParams.secondary_bg_color);
+                            document.body.style.setProperty('--tg-theme-hint-color', this.webApp.themeParams.hint_color);
+                        }
+                    }
+                });
             },
 
             setupHapticFeedback: function() {
@@ -363,20 +484,7 @@
             PayStarsApp.setupNavigation();
             PayStarsApp.setupButtonContextMenuPrevention();
             PayStarsApp.switchPage('main-page');
-
-            if (localStorage.getItem('theme') === 'light') {
-                document.body.classList.add('light-theme');
-                PayStarsApp.toggleTheme();
-            } else {
-                if (PayStarsApp.webApp) {
-                    document.body.style.setProperty('--tg-theme-bg-color', PayStarsApp.webApp.themeParams.bg_color);
-                    document.body.style.setProperty('--tg-theme-text-color', PayStarsApp.webApp.themeParams.text_color);
-                    document.body.style.setProperty('--tg-theme-button-color', PayStarsApp.webApp.themeParams.button_color);
-                    document.body.style.setProperty('--tg-theme-button-text-color', PayStarsApp.webApp.themeParams.button_text_color);
-                    document.body.style.setProperty('--tg-theme-secondary-bg-color', PayStarsApp.webApp.themeParams.secondary_bg_color);
-                    document.body.style.setProperty('--tg-theme-hint-color', PayStarsApp.webApp.themeParams.hint_color);
-                }
-            }
+            PayStarsApp.loadTheme();
         });
     </script>
 </body>
