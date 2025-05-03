@@ -362,9 +362,14 @@
                     let history = [];
                     if (!error && value) {
                         try {
-                            history = JSON.parse(value);
+                            const parsed = JSON.parse(value);
+                            if (Array.isArray(parsed)) {
+                                history = parsed;
+                            } else {
+                                console.warn('Invalid scan history format, resetting to empty array');
+                            }
                         } catch (e) {
-                            console.error('Error parsing scan history:', e);
+                            console.error('Error parsing scan history in saveScanHistory:', e, 'Value:', value);
                         }
                     }
                     history.push({
@@ -387,25 +392,39 @@
                 const historyList = document.getElementById('scan-history-list');
                 historyList.innerHTML = '';
                 this.webApp.DeviceStorage.getItem(key, (error, value) => {
-                    if (error || !value) {
+                    if (error) {
+                        console.error('DeviceStorage error in showScanHistory:', error);
+                        historyList.innerHTML = '<tr><td colspan="2">Error loading scan history</td></tr>';
+                        return;
+                    }
+                    if (!value) {
                         historyList.innerHTML = '<tr><td colspan="2">No scan history available</td></tr>';
-                    } else {
-                        try {
-                            const history = JSON.parse(value);
-                            if (history.length === 0) {
-                                historyList.innerHTML = '<tr><td colspan="2">No scan history available</td></tr>';
-                            } else {
-                                history.forEach(item => {
+                        return;
+                    }
+                    try {
+                        const history = JSON.parse(value);
+                        if (!Array.isArray(history)) {
+                            console.warn('Scan history is not an array:', history);
+                            historyList.innerHTML = '<tr><td colspan="2">Invalid scan history format</td></tr>';
+                            return;
+                        }
+                        if (history.length === 0) {
+                            historyList.innerHTML = '<tr><td colspan="2">No scan history available</td></tr>';
+                        } else {
+                            history.forEach(item => {
+                                if (item.timestamp && item.result) {
                                     const tr = document.createElement('tr');
                                     const date = new Date(item.timestamp).toLocaleString();
                                     tr.innerHTML = `<td>${date}</td><td>${item.result}</td>`;
                                     historyList.appendChild(tr);
-                                });
-                            }
-                        } catch (e) {
-                            console.error('Error parsing scan history:', e);
-                            historyList.innerHTML = '<tr><td colspan="2">Error loading scan history</td></tr>';
+                                } else {
+                                    console.warn('Invalid history item:', item);
+                                }
+                            });
                         }
+                    } catch (e) {
+                        console.error('Error parsing scan history in showScanHistory:', e, 'Value:', value);
+                        historyList.innerHTML = '<tr><td colspan="2">Error loading scan history</td></tr>';
                     }
                 });
             },
