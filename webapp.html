@@ -141,6 +141,15 @@
         .scan-history th {
             font-weight: bold;
         }
+        .no-history {
+            margin-top: 20px;
+            font-size: 1rem;
+            text-align: center;
+            color: var(--tg-theme-hint-color, #aaaaaa);
+            padding: 20px;
+            background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
+            border-radius: 10px;
+        }
         .clear-history-btn {
             margin-top: 15px;
             color: var(--tg-theme-button-color, #bb86fc);
@@ -184,6 +193,10 @@
         body.light-theme .scan-history {
             background-color: rgba(0, 0, 0, 0.05);
         }
+        body.light-theme .no-history {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--tg-theme-hint-color);
+        }
         body.light-theme .clear-history-btn {
             background-color: rgba(0, 0, 0, 0.05);
         }
@@ -215,8 +228,8 @@
 
         <div class="page" id="scan-history-page">
             <h1>Scan History</h1>
-            <div class="scan-history">
-                <table id="scan-history-table">
+            <div class="scan-history" id="scan-history-table" style="display: none;">
+                <table>
                     <thead>
                         <tr>
                             <th>Date</th>
@@ -226,6 +239,7 @@
                     <tbody id="scan-history-list"></tbody>
                 </table>
             </div>
+            <div class="no-history" id="no-history-message">You don't have any scan history yet.</div>
             <button class="clear-history-btn" onclick="PayStarsApp.clearScanHistory()" data-haptic="warning">Clear Scan History</button>
             <div class="tg-logo">Telegram WebApp</div>
         </div>
@@ -253,8 +267,8 @@
         <button class="nav-link active" data-page="main-page" oncontextmenu="return false;">Main</button>
         <button class="nav-link" data-page="contact-page" oncontextmenu="return false;">Contact</button>
         <button class="nav-link" data-page="scan-history-page" oncontextmenu="return false;">History</button>
-        <button class="nav-link" data-page="test-page" oncontextmenu="return false;">Test</button>
         <button class="nav-link" onclick="PayStarsApp.showScanQrPopup(true);" data-haptic="warning" oncontextmenu="return false;">QR Scan</button>
+        <button class="nav-link" data-page="test-page" oncontextmenu="return false;">Test</button>
     </div>
 
     <script>
@@ -389,28 +403,40 @@
             showScanHistory: function() {
                 if (!this.userId) return;
                 const key = `scan_history_${this.userId}`;
+                const historyTable = document.getElementById('scan-history-table');
                 const historyList = document.getElementById('scan-history-list');
+                const noHistoryMessage = document.getElementById('no-history-message');
                 historyList.innerHTML = '';
                 this.webApp.DeviceStorage.getItem(key, (error, value) => {
                     if (error) {
                         console.error('DeviceStorage error in showScanHistory:', error);
-                        historyList.innerHTML = '<tr><td colspan="2">Error loading scan history</td></tr>';
+                        historyTable.style.display = 'none';
+                        noHistoryMessage.style.display = 'block';
+                        noHistoryMessage.textContent = 'Error loading scan history';
                         return;
                     }
                     if (!value) {
-                        historyList.innerHTML = '<tr><td colspan="2">No scan history available</td></tr>';
+                        historyTable.style.display = 'none';
+                        noHistoryMessage.style.display = 'block';
+                        noHistoryMessage.textContent = "You don't have any scan history yet.";
                         return;
                     }
                     try {
                         const history = JSON.parse(value);
                         if (!Array.isArray(history)) {
                             console.warn('Scan history is not an array:', history);
-                            historyList.innerHTML = '<tr><td colspan="2">Invalid scan history format</td></tr>';
+                            historyTable.style.display = 'none';
+                            noHistoryMessage.style.display = 'block';
+                            noHistoryMessage.textContent = 'Invalid scan history format';
                             return;
                         }
                         if (history.length === 0) {
-                            historyList.innerHTML = '<tr><td colspan="2">No scan history available</td></tr>';
+                            historyTable.style.display = 'none';
+                            noHistoryMessage.style.display = 'block';
+                            noHistoryMessage.textContent = "You don't have any scan history yet.";
                         } else {
+                            historyTable.style.display = 'block';
+                            noHistoryMessage.style.display = 'none';
                             history.forEach(item => {
                                 if (item.timestamp && item.result) {
                                     const tr = document.createElement('tr');
@@ -424,7 +450,9 @@
                         }
                     } catch (e) {
                         console.error('Error parsing scan history in showScanHistory:', e, 'Value:', value);
-                        historyList.innerHTML = '<tr><td colspan="2">Error loading scan history</td></tr>';
+                        historyTable.style.display = 'none';
+                        noHistoryMessage.style.display = 'block';
+                        noHistoryMessage.textContent = 'Error loading scan history';
                     }
                 });
             },
