@@ -255,7 +255,10 @@
 
             showScanQrPopup: function(linksOnly) {
                 if (!this.init()) return;
-                if (!this.webApp.isVersionAtLeast('6.7')) return;
+                if (!this.webApp.isVersionAtLeast('6.7')) {
+                    console.error('QR scanning requires Telegram WebApp version 6.7 or higher');
+                    return;
+                }
                 this.webApp.HapticFeedback.impactOccurred('light');
                 try {
                     this.webApp.showScanQrPopup(
@@ -263,6 +266,9 @@
                         (result) => {
                             console.log('QR code scanned:', result);
                             this.webApp.closeScanQrPopup();
+                            if (linksOnly && result.startsWith('http')) {
+                                this.openLink(result);
+                            }
                             return true;
                         }
                     );
