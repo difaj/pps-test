@@ -131,12 +131,19 @@
         .scan-history table {
             width: 100%;
             border-collapse: collapse;
+            table-layout: fixed;
         }
         .scan-history th, .scan-history td {
             padding: 8px;
             text-align: left;
             border-bottom: 1px solid var(--tg-theme-hint-color, #aaaaaa);
+        }
+        .scan-history th:first-child, .scan-history td:first-child {
+            width: 120px; /* Збільшена ширина для стовпця Date */
+        }
+        .scan-history th:last-child, .scan-history td:last-child {
             word-break: break-all;
+            overflow-wrap: break-word;
         }
         .scan-history th {
             font-weight: bold;
