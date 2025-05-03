@@ -115,15 +115,38 @@
             margin-top: 20px;
             text-align: left;
             font-size: 0.9rem;
-            max-height: 200px;
+            max-height: 300px;
             overflow-y: auto;
             padding: 10px;
             background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
             border-radius: 10px;
         }
-        .scan-history li {
-            padding: 5px 0;
+        .scan-history table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .scan-history th, .scan-history td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid var(--tg-theme-hint-color, #aaaaaa);
             word-break: break-all;
+        }
+        .scan-history th {
+            font-weight: bold;
+        }
+        .clear-history-btn {
+            margin-top: 15px;
+            color: var(--tg-theme-button-color, #bb86fc);
+            font-size: 1rem;
+            padding: 10px 20px;
+            border: 2px solid var(--tg-theme-button-color, #bb86fc);
+            border-radius: 10px;
+            background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
+            cursor: pointer;
+        }
+        .clear-history-btn:hover {
+            background-color: var(--tg-theme-button-color, #bb86fc);
+            color: var(--tg-theme-button-text-color, #ffffff);
         }
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -154,6 +177,13 @@
         body.light-theme .scan-history {
             background-color: rgba(0, 0, 0, 0.05);
         }
+        body.light-theme .clear-history-btn {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        body.light-theme .clear-history-btn:hover {
+            background-color: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
+        }
     </style>
 </head>
 <body>
@@ -176,6 +206,23 @@
             <div class="tg-logo">Telegram WebApp</div>
         </div>
 
+        <div class="page" id="scan-history-page">
+            <h1>Scan History</h1>
+            <div class="scan-history">
+                <table id="scan-history-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scan-history-list"></tbody>
+                </table>
+            </div>
+            <button class="clear-history-btn" onclick="PayStarsApp.clearScanHistory()" data-haptic="warning">Clear Scan History</button>
+            <div class="tg-logo">Telegram WebApp</div>
+        </div>
+
         <div class="page" id="test-page">
             <h1>Test Features</h1>
             <ul class="links">
@@ -190,14 +237,7 @@
                 <li>
                     <button onclick="PayStarsApp.toggleTheme()" data-haptic="warning" oncontextmenu="return false;">Toggle Theme</button>
                 </li>
-                <li>
-                    <button onclick="PayStarsApp.showScanHistory()" data-haptic="warning" oncontextmenu="return false;">View Scan History</button>
-                </li>
             </ul>
-            <div class="scan-history" id="scan-history" style="display: none;">
-                <h3>Scan History</h3>
-                <ul id="scan-history-list"></ul>
-            </div>
             <div class="tg-logo">Telegram WebApp</div>
         </div>
     </div>
@@ -205,6 +245,7 @@
     <div class="nav-bar">
         <button class="nav-link active" data-page="main-page" oncontextmenu="return false;">Main</button>
         <button class="nav-link" data-page="contact-page" oncontextmenu="return false;">Contact</button>
+        <button class="nav-link" data-page="scan-history-page" oncontextmenu="return false;">History</button>
         <button class="nav-link" data-page="test-page" oncontextmenu="return false;">Test</button>
         <button class="nav-link" onclick="PayStarsApp.showScanQrPopup(true);" data-haptic="warning" oncontextmenu="return false;">QR Scan</button>
     </div>
@@ -333,30 +374,46 @@
             showScanHistory: function() {
                 if (!this.userId) return;
                 const key = `scan_history_${this.userId}`;
-                const historyContainer = document.getElementById('scan-history');
                 const historyList = document.getElementById('scan-history-list');
                 historyList.innerHTML = '';
                 this.webApp.DeviceStorage.getItem(key, (error, value) => {
                     if (error || !value) {
-                        historyList.innerHTML = '<li>No scan history available</li>';
+                        historyList.innerHTML = '<tr><td colspan="2">No scan history available</td></tr>';
                     } else {
                         try {
                             const history = JSON.parse(value);
                             if (history.length === 0) {
-                                historyList.innerHTML = '<li>No scan history available</li>';
+                                historyList.innerHTML = '<tr><td colspan="2">No scan history available</td></tr>';
                             } else {
                                 history.forEach(item => {
-                                    const li = document.createElement('li');
-                                    li.textContent = `[${item.timestamp}] ${item.result}`;
-                                    historyList.appendChild(li);
+                                    const tr = document.createElement('tr');
+                                    const date = new Date(item.timestamp).toLocaleString();
+                                    tr.innerHTML = `<td>${date}</td><td>${item.result}</td>`;
+                                    historyList.appendChild(tr);
                                 });
                             }
                         } catch (e) {
                             console.error('Error parsing scan history:', e);
-                            historyList.innerHTML = '<li>Error loading scan history</li>';
+                            historyList.innerHTML = '<tr><td colspan="2">Error loading scan history</td></tr>';
                         }
                     }
-                    historyContainer.style.display = 'block';
+                });
+            },
+
+            clearScanHistory: function() {
+                if (!this.userId) return;
+                this.webApp.showConfirm('Are you sure you want to clear your scan history?', (confirmed) => {
+                    if (confirmed) {
+                        const key = `scan_history_${this.userId}`;
+                        this.webApp.DeviceStorage.removeItem(key, (error, success) => {
+                            if (error) {
+                                console.error('Error clearing scan history:', error);
+                            } else if (success) {
+                                console.log('Scan history cleared');
+                                this.showScanHistory();
+                            }
+                        });
+                    }
                 });
             },
 
@@ -387,8 +444,8 @@
                 this.webApp.HapticFeedback.impactOccurred('light');
 
                 history.pushState({ page: pageId }, '', window.location.pathname);
-                if (pageId !== 'test-page') {
-                    document.getElementById('scan-history').style.display = 'none';
+                if (pageId === 'scan-history-page') {
+                    this.showScanHistory();
                 }
             },
 
@@ -465,7 +522,7 @@
             },
 
             setupButtonContextMenuPrevention: function() {
-                document.querySelectorAll('.links button').forEach(button => {
+                document.querySelectorAll('.links button, .clear-history-btn').forEach(button => {
                     button.addEventListener('contextmenu', (e) => {
                         e.preventDefault();
                     });
