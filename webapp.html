@@ -141,6 +141,11 @@
         .scan-history th {
             font-weight: bold;
         }
+        .date-time {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.4;
+        }
         .no-history {
             margin-top: 20px;
             font-size: 1rem;
@@ -440,8 +445,10 @@
                             history.forEach(item => {
                                 if (item.timestamp && item.result) {
                                     const tr = document.createElement('tr');
-                                    const date = new Date(item.timestamp).toLocaleString();
-                                    tr.innerHTML = `<td>${date}</td><td>${item.result}</td>`;
+                                    const date = new Date(item.timestamp);
+                                    const formattedDate = `${date.getUTCDate().toString().padStart(2, '0')}.${(date.getUTCMonth() + 1).toString().padStart(2, '0')}.${date.getUTCFullYear()}`;
+                                    const formattedTime = `${date.getUTCHours().toString().padStart(2, '0')}:${date.getUTCMinutes().toString().padStart(2, '0')}:${date.getUTCSeconds().toString().padStart(2, '0')}`;
+                                    tr.innerHTML = `<td><div class="date-time">${formattedDate}<br>${formattedTime}</div></td><td>${item.result}</td>`;
                                     historyList.appendChild(tr);
                                 } else {
                                     console.warn('Invalid history item:', item);
