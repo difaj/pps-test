@@ -340,16 +340,16 @@
                 try {
                     this.webApp.setEmojiStatus(emojiId, null, (success) => {
                         if (success) {
-                            this.showFeedback(feedbackEl, '✅ Status set!', 2000);
+                            this.showFeedback(feedbackEl, 'Status set', 2000);
                             this.webApp.HapticFeedback.notificationOccurred('success');
                         } else {
-                            this.showFeedback(feedbackEl, '❌ Not set', 3000);
+                            this.showFeedback(feedbackEl, 'Not set', 3000);
                             this.webApp.HapticFeedback.notificationOccurred('error');
                         }
                     });
                 } catch (error) {
                     console.error('Error setting emoji status:', error);
-                    this.showFeedback(feedbackEl, '⚠️ Error', 3000);
+                    this.showFeedback(feedbackEl, 'Error', 3000);
                 }
             },
 
