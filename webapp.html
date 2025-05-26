@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pay Stars</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.7.7/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cheerio@1.0.0-rc.12/+esm"></script>
     <style>
         body {
             margin: 0;
@@ -90,11 +92,11 @@
             box-sizing: border-box;
             overflow-x: auto;
             white-space: nowrap;
-            scrollbar-width: none; /* Для Firefox */
-            -ms-overflow-style: none; /* Для IE/Edge */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
         .nav-bar::-webkit-scrollbar {
-            display: none; /* Для Chrome, Safari */
+            display: none;
         }
         .nav-bar button.nav-link {
             color: var(--tg-theme-button-color, #bb86fc);
@@ -118,7 +120,7 @@
             font-size: 0.8rem;
             color: var(--tg-theme-hint-color, #aaaaaa);
         }
-        .scan-history {
+        .scan-history, .nft-search-history {
             margin-top: 20px;
             text-align: left;
             font-size: 0.9rem;
@@ -128,24 +130,26 @@
             background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
             border-radius: 10px;
         }
-        .scan-history table {
+        .scan-history table, .nft-search-history table {
             width: 100%;
             border-collapse: collapse;
             table-layout: fixed;
         }
-        .scan-history th, .scan-history td {
+        .scan-history th, .scan-history td, .nft-search-history th, .nft-search-history td {
             padding: 8px;
             text-align: left;
             border-bottom: 1px solid var(--tg-theme-hint-color, #aaaaaa);
         }
-        .scan-history th:first-child, .scan-history td:first-child {
-            width: 120px; /* Збільшена ширина для стовпця Date */
+        .scan-history th:first-child, .scan-history td:first-child,
+        .nft-search-history th:first-child, .nft-search-history td:first-child {
+            width: 120px;
         }
-        .scan-history th:last-child, .scan-history td:last-child {
+        .scan-history th:last-child, .scan-history td:last-child,
+        .nft-search-history th:last-child, .nft-search-history td:last-child {
             word-break: break-all;
             overflow-wrap: break-word;
         }
-        .scan-history th {
+        .scan-history th, .nft-search-history th {
             font-weight: bold;
         }
         .date-time {
@@ -176,6 +180,78 @@
             background-color: var(--tg-theme-button-color, #bb86fc);
             color: var(--tg-theme-button-text-color, #ffffff);
         }
+        .nft-search-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .nft-search-form input {
+            padding: 10px;
+            font-size: 1rem;
+            border: 2px solid var(--tg-theme-button-color, #bb86fc);
+            border-radius: 10px;
+            background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
+            color: var(--tg-theme-text-color, #ffffff);
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .nft-search-form input::placeholder {
+            color: var(--tg-theme-hint-color, #aaaaaa);
+        }
+        .nft-search-form button {
+            padding: 10px;
+            font-size: 1rem;
+            border: 2px solid var(--tg-theme-button-color, #bb86fc);
+            border-radius: 10px;
+            background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
+            color: var(--tg-theme-button-color, #bb86fc);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .nft-search-form button:hover {
+            background-color: var(--tg-theme-button-color, #bb86fc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+        }
+        .nft-result {
+            margin-top: 20px;
+            text-align: left;
+            padding: 15px;
+            background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
+            border-radius: 10px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .nft-image {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .nft-result p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+        .nft-result a {
+            color: var(--tg-theme-button-color, #bb86fc);
+            text-decoration: none;
+        }
+        .nft-result a:hover {
+            text-decoration: underline;
+        }
+        .nft-error {
+            margin-top: 20px;
+            font-size: 1rem;
+            text-align: center;
+            color: var(--tg-theme-hint-color, #aaaaaa);
+            padding: 20px;
+            background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
+            border-radius: 10px;
+        }
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -188,10 +264,10 @@
             --tg-theme-secondary-bg-color: rgba(0, 0, 0, 0.05);
             --tg-theme-hint-color: #666666;
         }
-        body.light-theme .links li button {
+        body.light-theme .links li button, body.light-theme .nft-search-form button {
             background-color: rgba(0, 0, 0, 0.05);
         }
-        body.light-theme .links li button:hover {
+        body.light-theme .links li button:hover, body.light-theme .nft-search-form button:hover {
             background-color: var(--tg-theme-button-color);
             color: var(--tg-theme-button-text-color);
         }
@@ -202,10 +278,10 @@
         body.light-theme .tg-logo {
             color: var(--tg-theme-hint-color);
         }
-        body.light-theme .scan-history {
+        body.light-theme .scan-history, body.light-theme .nft-search-history {
             background-color: rgba(0, 0, 0, 0.05);
         }
-        body.light-theme .no-history {
+        body.light-theme .no-history, body.light-theme .nft-error {
             background-color: rgba(0, 0, 0, 0.05);
             color: var(--tg-theme-hint-color);
         }
@@ -215,6 +291,13 @@
         body.light-theme .clear-history-btn:hover {
             background-color: var(--tg-theme-button-color);
             color: var(--tg-theme-button-text-color);
+        }
+        body.light-theme .nft-search-form input {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--tg-theme-text-color);
+        }
+        body.light-theme .nft-result {
+            background-color: rgba(0, 0, 0, 0.05);
         }
     </style>
 </head>
@@ -256,6 +339,30 @@
             <div class="tg-logo">Telegram WebApp</div>
         </div>
 
+        <div class="page" id="nft-search-page">
+            <h1>NFT Search</h1>
+            <div class="nft-search-form">
+                <input type="text" id="nft-search-input" placeholder="Enter NFT ID (e.g., cake-85, drink-1)" oncontextmenu="return false;">
+                <button onclick="PayStarsApp.searchNFT()" data-haptic="warning" oncontextmenu="return false;">Search NFT</button>
+            </div>
+            <div class="nft-result" id="nft-result" style="display: none;"></div>
+            <div class="nft-error" id="nft-error" style="display: none;">Enter an NFT ID to start searching.</div>
+            <div class="nft-search-history" id="nft-search-history-table" style="display: none;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>NFT ID</th>
+                        </tr>
+                    </thead>
+                    <tbody id="nft-search-history-list"></tbody>
+                </table>
+            </div>
+            <div class="no-history" id="nft-no-history-message">You don't have any NFT search history yet.</div>
+            <button class="clear-history-btn" onclick="PayStarsApp.clearNFTSearchHistory()" data-haptic="warning">Clear NFT Search History</button>
+            <div class="tg-logo">Telegram WebApp</div>
+        </div>
+
         <div class="page" id="test-page">
             <h1>Test Features</h1>
             <ul class="links">
@@ -279,7 +386,8 @@
         <button class="nav-link active" data-page="main-page" oncontextmenu="return false;">Main</button>
         <button class="nav-link" data-page="contact-page" oncontextmenu="return false;">Contact</button>
         <button class="nav-link" data-page="scan-history-page" oncontextmenu="return false;">History</button>
-        <button class="nav-link" onclick="PayStarsApp.showScanQrPopup(true);" data-haptic="warning" oncontextmenu="return false;">QR Scan</button>
+        <button class="nav-link" data-page="nft-search-page" oncontextmenu="return false;">NFT Search</button>
+        <button class="nav-link" data-action="scan-qr" data-haptic="light" oncontextmenu="return false;">QR Scan</button>
         <button class="nav-link" data-page="test-page" oncontextmenu="return false;">Test</button>
     </div>
 
@@ -354,8 +462,12 @@
             },
 
             showScanQrPopup: function(linksOnly) {
-                if (!this.init()) return;
+                if (!this.init()) {
+                    this.webApp && this.webApp.showAlert('Telegram WebApp is not available');
+                    return;
+                }
                 if (!this.webApp.isVersionAtLeast('6.7')) {
+                    this.webApp.showAlert('QR scanning requires Telegram version 6.7 or higher');
                     console.error('QR scanning requires Telegram WebApp version 6.7 or higher');
                     return;
                 }
@@ -378,6 +490,7 @@
                     );
                 } catch (error) {
                     console.error('Error scanning QR code:', error);
+                    this.webApp.showAlert('Failed to scan QR code');
                 }
             },
 
@@ -488,6 +601,199 @@
                 });
             },
 
+            getGiftInfo: async function(nftId) {
+                try {
+                    const url = `https://a-ttgme.stel.com/nft/${nftId}`;
+                    const response = await axios.get(url);
+                    const $ = cheerio.load(response.data);
+
+                    const ownerFragmentAddress = $('td').find('.tgme_gift_owner_address').text().trim();
+                    if (ownerFragmentAddress) {
+                        return {
+                            owner: "Fragment",
+                            ownerLink: `https://fragment.com/gift/${nftId}`,
+                            model: $('th:contains("Model")').next('td').text().trim(),
+                            backdrop: $('th:contains("Backdrop")').next('td').text().trim(),
+                            symbol: $('th:contains("Symbol")').next('td').text().trim(),
+                            quantity: $('th:contains("Quantity")').next('td').text().trim().replace(/ /g, ',').replace(/,issued$/, ''),
+                            image: `https://a-tnft.stel.com/gift/${nftId}.webp`
+                        };
+                    }
+
+                    const ownerLink = $('th:contains("Owner")').next('td').find('a').attr('href');
+                    const ownerName = $('th:contains("Owner")').next('td').find('span').text().trim();
+
+                    return {
+                        owner: ownerName || "Unknown",
+                        ownerLink: ownerLink || "",
+                        model: $('th:contains("Model")').next('td').text().trim(),
+                        backdrop: $('th:contains("Backdrop")').next('td').text().trim(),
+                        symbol: $('th:contains("Symbol")').next('td').text().trim(),
+                        quantity: $('th:contains("Quantity")').next('td').text().trim().replace(/ /g, ',').replace(/,issued$/, ''),
+                        image: `https://a-tnft.stel.com/gift/${nftId}.webp`
+                    };
+                } catch (error) {
+                    console.error('Error fetching gift info:', error);
+                    return null;
+                }
+            },
+
+            searchNFT: async function() {
+                if (!this.init()) return;
+                const input = document.getElementById('nft-search-input');
+                const nftId = input.value.trim();
+                const resultDiv = document.getElementById('nft-result');
+                const errorDiv = document.getElementById('nft-error');
+                resultDiv.style.display = 'none';
+                errorDiv.style.display = 'none';
+
+                if (!nftId) {
+                    errorDiv.textContent = 'Please enter an NFT ID';
+                    errorDiv.style.display = 'block';
+                    this.webApp.HapticFeedback.notificationOccurred('error');
+                    return;
+                }
+
+                if (!nftId.match(/^[a-zA-Z0-9-]+$/)) {
+                    errorDiv.textContent = 'Invalid NFT ID format';
+                    errorDiv.style.display = 'block';
+                    this.webApp.HapticFeedback.notificationOccurred('error');
+                    return;
+                }
+
+                this.webApp.HapticFeedback.impactOccurred('light');
+                const giftInfo = await this.getGiftInfo(nftId);
+                if (!giftInfo || !giftInfo.model) {
+                    errorDiv.textContent = 'NFT not found or error occurred';
+                    errorDiv.style.display = 'block';
+                    this.webApp.HapticFeedback.notificationOccurred('error');
+                    return;
+                }
+
+                resultDiv.innerHTML = `
+                    <img class="nft-image" src="${giftInfo.image}" alt="${nftId}" onerror="this.src='https://via.placeholder.com/150?text=NFT+Image+Not+Found';">
+                    <p><strong>Model:</strong> ${giftInfo.model}</p>
+                    <p><strong>Owner:</strong> ${giftInfo.ownerLink ? `<a href="${giftInfo.ownerLink}" onclick="PayStarsApp.openLink('${giftInfo.ownerLink}'); return false;">${giftInfo.owner}</a>` : giftInfo.owner}</p>
+                    <p><strong>Backdrop:</strong> ${giftInfo.backdrop}</p>
+                    <p><strong>Symbol:</strong> ${giftInfo.symbol}</p>
+                    <p><strong>Quantity:</strong> ${giftInfo.quantity}</p>
+                `;
+                resultDiv.style.display = 'block';
+                this.webApp.HapticFeedback.notificationOccurred('success');
+
+                this.saveNFTSearchHistory(nftId);
+                if (this.currentPage === 'nft-search-page') {
+                    this.showNFTSearchHistory();
+                }
+            },
+
+            saveNFTSearchHistory: function(nftId) {
+                if (!this.userId) return;
+                const key = `nft_search_history_${this.userId}`;
+                this.webApp.DeviceStorage.getItem(key, (error, value) => {
+                    let history = [];
+                    if (!error && value) {
+                        try {
+                            const parsed = JSON.parse(value);
+                            if (Array.isArray(parsed)) {
+                                history = parsed;
+                            } else {
+                                console.warn('Invalid NFT search history format, resetting to empty array');
+                            }
+                        } catch (e) {
+                            console.error('Error parsing NFT search history:', e, 'Value:', value);
+                        }
+                    }
+                    history.push({
+                        timestamp: new Date().toISOString(),
+                        nftId
+                    });
+                    this.webApp.DeviceStorage.setItem(key, JSON.stringify(history), (error, success) => {
+                        if (error) {
+                            console.error('Error saving NFT search history:', error);
+                        } else if (success) {
+                            console.log('NFT search history saved');
+                        }
+                    });
+                });
+            },
+
+            showNFTSearchHistory: function() {
+                if (!this.userId) return;
+                const key = `nft_search_history_${this.userId}`;
+                const historyTable = document.getElementById('nft-search-history-table');
+                const historyList = document.getElementById('nft-search-history-list');
+                const noHistoryMessage = document.getElementById('nft-no-history-message');
+                historyList.innerHTML = '';
+                this.webApp.DeviceStorage.getItem(key, (error, value) => {
+                    if (error) {
+                        console.error('DeviceStorage error in showNFTSearchHistory:', error);
+                        historyTable.style.display = 'none';
+                        noHistoryMessage.style.display = 'block';
+                        noHistoryMessage.textContent = 'Error loading NFT search history';
+                        return;
+                    }
+                    if (!value) {
+                        historyTable.style.display = 'none';
+                        noHistoryMessage.style.display = 'block';
+                        noHistoryMessage.textContent = "You don't have any NFT search history yet.";
+                        return;
+                    }
+                    try {
+                        const history = JSON.parse(value);
+                        if (!Array.isArray(history)) {
+                            console.warn('NFT search history is not an array:', history);
+                            historyTable.style.display = 'none';
+                            noHistoryMessage.style.display = 'block';
+                            noHistoryMessage.textContent = 'Invalid NFT search history format';
+                            return;
+                        }
+                        if (history.length === 0) {
+                            historyTable.style.display = 'none';
+                            noHistoryMessage.style.display = 'block';
+                            noHistoryMessage.textContent = "You don't have any NFT search history yet.";
+                        } else {
+                            historyTable.style.display = 'block';
+                            noHistoryMessage.style.display = 'none';
+                            history.forEach(item => {
+                                if (item.timestamp && item.nftId) {
+                                    const tr = document.createElement('tr');
+                                    const date = new Date(item.timestamp);
+                                    const formattedDate = `${date.getUTCDate().toString().padStart(2, '0')}.${(date.getUTCMonth() + 1).toString().padStart(2, '0')}.${date.getUTCFullYear()}`;
+                                    const formattedTime = `${date.getUTCHours().toString().padStart(2, '0')}:${date.getUTCMinutes().toString().padStart(2, '0')}:${date.getUTCSeconds().toString().padStart(2, '0')}`;
+                                    tr.innerHTML = `<td><div class="date-time">${formattedDate}<br>${formattedTime}</div></td><td>${item.nftId}</td>`;
+                                    historyList.appendChild(tr);
+                                } else {
+                                    console.warn('Invalid NFT history item:', item);
+                                }
+                            });
+                        }
+                    } catch (e) {
+                        console.error('Error parsing NFT search history:', e, 'Value:', value);
+                        historyTable.style.display = 'none';
+                        noHistoryMessage.style.display = 'block';
+                        noHistoryMessage.textContent = 'Error loading NFT search history';
+                    }
+                });
+            },
+
+            clearNFTSearchHistory: function() {
+                if (!this.userId) return;
+                this.webApp.showConfirm('Are you sure you want to clear your NFT search history?', (confirmed) => {
+                    if (confirmed) {
+                        const key = `nft_search_history_${this.userId}`;
+                        this.webApp.DeviceStorage.removeItem(key, (error, success) => {
+                            if (error) {
+                                console.error('Error clearing NFT search history:', error);
+                            } else if (success) {
+                                console.log('NFT search history cleared');
+                                this.showNFTSearchHistory();
+                            }
+                        });
+                    }
+                });
+            },
+
             showFeedback: function(element, message, duration) {
                 if (!element) return;
                 element.textContent = message;
@@ -499,11 +805,22 @@
             },
 
             switchPage: function(pageId) {
+                if (!this.init()) {
+                    this.webApp && this.webApp.showAlert('Telegram WebApp is not available');
+                    return;
+                }
+                console.log('Switching to page:', pageId);
                 document.querySelectorAll('.page').forEach(page => {
                     page.classList.remove('active');
                 });
-                const page = document.querySelector(`#${pageId}`);
-                if (page) page.classList.add('active');
+                const page = document.getElementById(pageId);
+                if (page) {
+                    page.classList.add('active');
+                } else {
+                    console.warn(`Page with ID ${pageId} not found`);
+                    this.webApp.showAlert(`Page ${pageId} not found`);
+                    return;
+                }
 
                 document.querySelectorAll('.nav-link').forEach(link => {
                     link.classList.remove('active');
@@ -517,6 +834,8 @@
                 history.pushState({ page: pageId }, '', window.location.pathname);
                 if (pageId === 'scan-history-page') {
                     this.showScanHistory();
+                } else if (pageId === 'nft-search-page') {
+                    this.showNFTSearchHistory();
                 }
             },
 
@@ -580,12 +899,14 @@
 
             setupNavigation: function() {
                 document.querySelectorAll('.nav-link').forEach(button => {
-                    if (button.dataset.page) {
-                        button.addEventListener('click', () => {
-                            const pageId = button.dataset.page;
-                            this.switchPage(pageId);
-                        });
-                    }
+                    button.addEventListener('click', () => {
+                        console.log('Nav button clicked:', button.dataset);
+                        if (button.dataset.page) {
+                            this.switchPage(button.dataset.page);
+                        } else if (button.dataset.action === 'scan-qr') {
+                            this.showScanQrPopup(true);
+                        }
+                    });
                     button.addEventListener('contextmenu', (e) => {
                         e.preventDefault();
                     });
@@ -593,8 +914,8 @@
             },
 
             setupButtonContextMenuPrevention: function() {
-                document.querySelectorAll('.links button, .clear-history-btn').forEach(button => {
-                    button.addEventListener('contextmenu', (e) => {
+                document.querySelectorAll('.links button, .clear-history-btn, .nft-search-form input, .nft-search-form button').forEach(element => {
+                    element.addEventListener('contextmenu', (e) => {
                         e.preventDefault();
                     });
                 });
