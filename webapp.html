@@ -329,11 +329,11 @@
             setEmojiStatus: function(element, emojiId) {
                 const feedbackEl = element.querySelector('.status-feedback');
                 if (!this.init()) {
-                    this.showFeedback(feedbackEl, '❌ WebApp not available', 3000);
+                    this.showFeedback(feedbackEl, 'WebApp not available', 3000);
                     return;
                 }
                 if (!this.webApp.isVersionAtLeast('8.0')) {
-                    this.showFeedback(feedbackEl, '⚠️ Update Telegram app', 3000);
+                    this.showFeedback(feedbackEl, 'Update Telegram app', 3000);
                     return;
                 }
                 this.webApp.HapticFeedback.impactOccurred('light');
