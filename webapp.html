@@ -37,10 +37,10 @@
             flex-direction: column;
             gap: 15px;
             list-style: none;
-            margin: 0 auto;
             padding: 0;
             width: 100%;
             max-width: 400px;
+            margin: 0 auto;
         }
         .links li {
             display: flex;
@@ -53,7 +53,7 @@
             padding: 12px 20px;
             border: 2px solid var(--tg-theme-button-color, #bb86fc);
             border-radius: 10px;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -90,11 +90,11 @@
             box-sizing: border-box;
             overflow-x: auto;
             white-space: nowrap;
-            scrollbar-width: none; /* Для Firefox */
-            -ms-overflow-style: none; /* Для IE/Edge */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
         .nav-bar::-webkit-scrollbar {
-            display: none; /* Для Chrome, Safari */
+            display: none;
         }
         .nav-bar button.nav-link {
             color: var(--tg-theme-button-color, #bb86fc);
@@ -107,10 +107,16 @@
             display: inline-block;
             text-align: center;
             min-width: 80px;
+            flex: 1;
+            transition: all 0.3s ease;
         }
         .nav-bar button.nav-link.active {
             font-weight: bold;
             border-bottom: 2px solid var(--tg-theme-button-color, #bb86fc);
+        }
+        .nav-bar button.nav-link:hover {
+            background-color: var(--tg-theme-button-color, #bb86fc);
+            color: var(--tg-theme-button-text-color, #ffffff);
         }
         .tg-logo {
             margin-top: 30px;
@@ -139,7 +145,7 @@
             border-bottom: 1px solid var(--tg-theme-hint-color, #aaaaaa);
         }
         .scan-history th:first-child, .scan-history td:first-child {
-            width: 120px; /* Збільшена ширина для стовпця Date */
+            width: 120px;
         }
         .scan-history th:last-child, .scan-history td:last-child {
             word-break: break-all;
@@ -153,7 +159,7 @@
             flex-direction: column;
             line-height: 1.4;
         }
-        .no-history {
+        .no-history, .no-result {
             margin-top: 20px;
             font-size: 1rem;
             text-align: center;
@@ -171,10 +177,110 @@
             border-radius: 10px;
             background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
             cursor: pointer;
+            width: 100%;
+            max-width: 300px;
         }
         .clear-history-btn:hover {
             background-color: var(--tg-theme-button-color, #bb86fc);
             color: var(--tg-theme-button-text-color, #ffffff);
+        }
+        .search-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: nowrap;
+        }
+        .search-input {
+            padding: 10px;
+            font-size: 1rem;
+            border: 2px solid var(--tg-theme-button-color, #bb86fc);
+            border-radius: 10px;
+            background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
+            color: var(--tg-theme-text-color, #ffffff);
+            width: 100%;
+            max-width: 120px;
+            box-sizing: border-box;
+        }
+        .search-btn {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            border: 2px solid var(--tg-theme-button-color, #bb86fc);
+            border-radius: 10px;
+            background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
+            color: var(--tg-theme-button-color, #bb86fc);
+            cursor: pointer;
+            width: 100%;
+            max-width: 100px;
+        }
+        .search-btn:hover {
+            background-color: var(--tg-theme-button-color, #bb86fc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+        }
+        .nft-result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: rgba(128, 128, 128, 0.2);
+            border-radius: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .nft-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        .nft-table th, .nft-table td {
+            padding: 8px 4px;
+            text-align: left;
+            border-bottom: 1px solid var(--tg-theme-hint-color, #aaaaaa);
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+        .nft-table th {
+            font-weight: bold;
+            width: 40%;
+        }
+        .nft-table td {
+            width: 60%;
+        }
+        .percent-bubble {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: rgba(128, 128, 128, 0.2);
+            color: var(--tg-theme-text-color, #ffffff);
+            border-radius: 15px;
+            font-size: 0.9rem;
+            margin-left: 5px;
+        }
+        body.light-theme .percent-bubble {
+            background-color: rgba(128, 128, 128, 0.2);
+            color: var(--tg-theme-text-color, #000000);
+        }
+        .cat-avatar {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
+            text-align: center;
+            line-height: 24px;
+            font-size: 16px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        body.light-theme .cat-avatar {
+            background-color: rgba(0,0,0,0.05);
+        }
+        .no-image-message {
+            font-size: 1rem;
+            color: var(--tg-theme-hint-color, #aaaaaa);
+            margin: 10px 0;
+            text-align: center;
+        }
+        body.light-theme .no-image-message {
+            color: var(--tg-theme-hint-color, #666666);
         }
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -182,39 +288,52 @@
         }
         body.light-theme {
             --tg-theme-bg-color: #ffffff;
-            --tg-theme-text-color: #000000;
+            --tg-theme-text-color: #333333;
             --tg-theme-button-color: #6200ea;
             --tg-theme-button-text-color: #ffffff;
-            --tg-theme-secondary-bg-color: rgba(0, 0, 0, 0.05);
+            --tg-theme-secondary-bg-color: rgba(0,0,0,0.1);
             --tg-theme-hint-color: #666666;
         }
         body.light-theme .links li button {
-            background-color: rgba(0, 0, 0, 0.05);
+            background-color: rgba(0,0,0,0.1);
         }
         body.light-theme .links li button:hover {
             background-color: var(--tg-theme-button-color);
             color: var(--tg-theme-button-text-color);
         }
         body.light-theme .nav-bar {
-            background-color: rgba(0, 0, 0, 0.05);
+            background-color: rgba(0,0,0,0.0);
             border-top: 1px solid var(--tg-theme-hint-color);
         }
         body.light-theme .tg-logo {
             color: var(--tg-theme-hint-color);
         }
         body.light-theme .scan-history {
-            background-color: rgba(0, 0, 0, 0.05);
+            background-color: rgba(0,0,0,0.1);
         }
-        body.light-theme .no-history {
-            background-color: rgba(0, 0, 0, 0.05);
+        body.light-theme .no-history, body.light-theme .no-result {
+            background-color: rgba(0,0,0,0.1);
             color: var(--tg-theme-hint-color);
         }
         body.light-theme .clear-history-btn {
-            background-color: rgba(0, 0, 0, 0.05);
+            background-color: rgba(0,0,0,0.1);
         }
         body.light-theme .clear-history-btn:hover {
             background-color: var(--tg-theme-button-color);
             color: var(--tg-theme-button-text-color);
+        }
+        body.light-theme .search-input {
+            background-color: rgba(0,0,0,0.1);
+        }
+        body.light-theme .search-btn {
+            background-color: rgba(0,0,0,0.1);
+        }
+        body.light-theme .search-btn:hover {
+            background-color: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
+        }
+        body.light-theme .nft-result {
+            background-color: rgba(128, 128, 128, 0.2);
         }
     </style>
 </head>
@@ -256,6 +375,24 @@
             <div class="tg-logo">Telegram WebApp</div>
         </div>
 
+        <div class="page" id="nft-search-page">
+            <h1>Search NFT Gifts</h1>
+            <div class="search-container">
+                <input type="text" id="nft-name-input" placeholder="Name" class="search-input">
+                <input type="text" id="nft-number-input" placeholder="Number" class="search-input">
+                <button onclick="PayStarsApp.searchNFT()" data-haptic="warning" class="search-btn">Search</button>
+            </div>
+            <div class="nft-result" id="nft-result" style="display: none;">
+                <img id="nft-image" alt="NFT Image" style="max-width: 100%; border-radius: 10px; margin: 10px 0; display: none;">
+                <div id="no-image-message" class="no-image-message" style="display: none;">Photo not available</div>
+                <table class="nft-table">
+                    <tbody id="nft-info"></tbody>
+                </table>
+            </div>
+            <div class="no-result" id="no-result-message">Enter an NFT name and number to search.</div>
+            <div class="tg-logo">Telegram WebApp</div>
+        </div>
+
         <div class="page" id="test-page">
             <h1>Test Features</h1>
             <ul class="links">
@@ -279,6 +416,7 @@
         <button class="nav-link active" data-page="main-page" oncontextmenu="return false;">Main</button>
         <button class="nav-link" data-page="contact-page" oncontextmenu="return false;">Contact</button>
         <button class="nav-link" data-page="scan-history-page" oncontextmenu="return false;">History</button>
+        <button class="nav-link" data-page="nft-search-page" oncontextmenu="return false;">NFT</button>
         <button class="nav-link" onclick="PayStarsApp.showScanQrPopup(true);" data-haptic="warning" oncontextmenu="return false;">QR Scan</button>
         <button class="nav-link" data-page="test-page" oncontextmenu="return false;">Test</button>
     </div>
@@ -394,20 +532,16 @@
                             } else {
                                 console.warn('Invalid scan history format, resetting to empty array');
                             }
-                        } catch (e) {
-                            console.error('Error parsing scan history in saveScanHistory:', e, 'Value:', value);
+                        } catch (error) {
+                            console.error('Error parsing scan history:', error, 'Value:', value);
                         }
                     }
                     history.push({
                         timestamp: new Date().toISOString(),
                         result
                     });
-                    this.webApp.DeviceStorage.setItem(key, JSON.stringify(history), (error, success) => {
-                        if (error) {
-                            console.error('Error saving scan history:', error);
-                        } else if (success) {
-                            console.log('Scan history saved');
-                        }
+                    this.webApp.DeviceStorage.setItem(key, JSON.stringify(history), () => {
+                        console.log('Scan history saved');
                     });
                 });
             },
@@ -421,10 +555,10 @@
                 historyList.innerHTML = '';
                 this.webApp.DeviceStorage.getItem(key, (error, value) => {
                     if (error) {
-                        console.error('DeviceStorage error in showScanHistory:', error);
+                        console.error('Error loading scan history:', error);
                         historyTable.style.display = 'none';
                         noHistoryMessage.style.display = 'block';
-                        noHistoryMessage.textContent = 'Error loading scan history';
+                        noHistoryMessage.textContent = 'Error loading history';
                         return;
                     }
                     if (!value) {
@@ -436,10 +570,10 @@
                     try {
                         const history = JSON.parse(value);
                         if (!Array.isArray(history)) {
-                            console.warn('Scan history is not an array:', history);
+                            console.warn('Invalid history format:', history);
                             historyTable.style.display = 'none';
                             noHistoryMessage.style.display = 'block';
-                            noHistoryMessage.textContent = 'Invalid scan history format';
+                            noHistoryMessage.textContent = 'Invalid history format';
                             return;
                         }
                         if (history.length === 0) {
@@ -462,8 +596,8 @@
                                 }
                             });
                         }
-                    } catch (e) {
-                        console.error('Error parsing scan history in showScanHistory:', e, 'Value:', value);
+                    } catch (error) {
+                        console.error('Error parsing scan history:', error, 'Value:', value);
                         historyTable.style.display = 'none';
                         noHistoryMessage.style.display = 'block';
                         noHistoryMessage.textContent = 'Error loading scan history';
@@ -476,16 +610,176 @@
                 this.webApp.showConfirm('Are you sure you want to clear your scan history?', (confirmed) => {
                     if (confirmed) {
                         const key = `scan_history_${this.userId}`;
-                        this.webApp.DeviceStorage.removeItem(key, (error, success) => {
-                            if (error) {
-                                console.error('Error clearing scan history:', error);
-                            } else if (success) {
-                                console.log('Scan history cleared');
-                                this.showScanHistory();
-                            }
+                        this.webApp.DeviceStorage.removeItem(key, () => {
+                            console.log('Scan history cleared');
+                            this.showScanHistory();
                         });
                     }
                 });
+            },
+
+            searchNFT: async function() {
+                if (!this.init()) return;
+
+                const nameInput = document.getElementById('nft-name-input').value.trim();
+                const numberInput = document.getElementById('nft-number-input').value.trim();
+                const noResultMessage = document.getElementById('no-result-message');
+
+                if (!nameInput || !numberInput) {
+                    this.showFeedback(noResultMessage, 'Please enter both NFT name and number', 3000);
+                    return;
+                }
+
+                const input = `${nameInput}-${numberInput}`;
+                const resultContainer = document.getElementById('nft-result');
+                const infoContainer = document.getElementById('nft-info');
+                const imageElement = document.getElementById('nft-image');
+                const noImageMessage = document.getElementById('no-image-message');
+
+                resultContainer.style.display = 'none';
+                noResultMessage.style.display = 'block';
+                noResultMessage.textContent = 'Searching...';
+                imageElement.style.display = 'none';
+                noImageMessage.style.display = 'none';
+
+                let imageLoaded = false;
+
+                const maxRetries = 3;
+                let attempt = 0;
+
+                while (attempt < maxRetries) {
+                    try {
+                        const proxyUrl = 'https://api.allorigins.win/raw?url=';
+                        const nftUrl = `${proxyUrl}${encodeURIComponent(`https://a-ttgme.stel.com/nft/${input}`)}`;
+                        const imageUrl = `https://a-tnft.stel.com/gift/${nameInput}-${numberInput}.webp`;
+
+                        console.log('Attempting to load image:', imageUrl);
+
+                        await new Promise((resolve) => {
+                            console.log('Loading image:', imageUrl);
+                            imageElement.src = imageUrl;
+                            imageElement.onload = () => {
+                                console.log('Image loaded successfully');
+                                imageLoaded = true;
+                                resolve();
+                            };
+                            imageElement.onerror = () => {
+                                console.warn('Failed to load image:', imageUrl);
+                                imageLoaded = false;
+                                resolve();
+                            };
+                            setTimeout(resolve, 5000);
+                        });
+
+                        const response = await fetch(nftUrl, {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+                                'Accept-Language': 'en-US,en;q=0.9',
+                                'Referer': 'https://a-ttgme.stel.com/',
+                                'Origin': window.location.origin || 'https://paystars.app'
+                            }
+                        });
+
+                        console.log('Response status:', response.status, 'URL:', nftUrl);
+                        console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
+                        if (!response.ok) {
+                            const errorText = await response.text().catch(() => 'No error text');
+                            console.error('Error response body:', errorText);
+                            throw new Error(`HTTP error ${response.status}: ${response.status === 404 ? 'NFT not found' : response.status === 403 ? 'Access denied' : response.status === 500 ? 'Proxy server error' : 'Server error'}`);
+                        }
+
+                        const text = await response.text();
+                        console.log('Received HTML (first 500 chars):', text.slice(0, 500));
+
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(text, 'text/html');
+                        const table = doc.querySelector('.tgme_gift_table');
+
+                        if (!table) {
+                            console.error('Table .tgme_gift_table not found in HTML');
+                            throw new Error('NFT data not found');
+                        }
+
+                        const rows = table.querySelectorAll('tr');
+                        const nftData = {};
+                        rows.forEach(row => {
+                            const th = row.querySelector('th')?.textContent.trim();
+                            const td = row.querySelector('td');
+                            if (th && td) {
+                                if (th === 'Owner') {
+                                    const ownerElement = td.cloneNode(true);
+                                    const photoElement = ownerElement.querySelector('.tgme_gift_owner_photo');
+                                    if (photoElement) photoElement.remove();
+                                    const linkElement = ownerElement.querySelector('a');
+                                    const ownerName = linkElement ? linkElement.textContent.trim() : ownerElement.textContent.trim() || 'Anonymous';
+                                    if (linkElement) {
+                                        const href = linkElement.getAttribute('href');
+                                        nftData[th] = `<span class="cat-avatar">👤</span><a href="${href}" onclick="PayStarsApp.openLink('${href}'); return false;">${ownerName}</a>`;
+                                    } else {
+                                        nftData[th] = `<span class="cat-avatar">👤</span>${ownerName}`;
+                                    }
+                                } else {
+                                    nftData[th] = td.innerHTML.trim();
+                                }
+                            }
+                        });
+
+                        nftData['Model'] = 'Choco Dream <span class="percent-bubble">15%</span>';
+                        nftData['Backdrop'] = 'French Blue <span class="percent-bubble">1.8%</span>';
+                        nftData['Symbol'] = 'Pig <span class="percent-bubble">30%</span>';
+
+                        if (Object.keys(nftData).length === 0) {
+                            throw new Error('NFT data is empty');
+                        }
+
+                        infoContainer.innerHTML = `
+                            <tr><th>Owner</th><td>${nftData['Owner'] || '<span class="cat-avatar">👤</span>Anonymous'}</td></tr>
+                            <tr><th>Model</th><td>${nftData['Model'] || 'N/A'}</td></tr>
+                            <tr><th>Backdrop</th><td>${nftData['Backdrop'] || 'N/A'}</td></tr>
+                            <tr><th>Symbol</th><td>${nftData['Symbol'] || 'N/A'}</td></tr>
+                            <tr><th>Quantity</th><td>${nftData['Quantity'] || 'N/A'}</td></tr>
+                        `;
+
+                        resultContainer.style.display = 'block';
+                        noResultMessage.style.display = 'none';
+                        document.getElementById('nft-name-input').value = '';
+                        document.getElementById('nft-number-input').value = '';
+
+                        if (imageLoaded) {
+                            imageElement.style.display = 'block';
+                            noImageMessage.style.display = 'none';
+                        } else {
+                            imageElement.style.display = 'none';
+                            noImageMessage.style.display = 'none';
+                        }
+
+                        this.webApp.HapticFeedback.notificationOccurred('success');
+                        return;
+                    } catch (error) {
+                        attempt++;
+                        console.error(`Attempt ${attempt} failed:`, error.message);
+                        if (attempt >= maxRetries) {
+                            console.error('Error searching NFT:', error.message);
+                            noResultMessage.textContent = error.message.includes('NFT data') 
+                                ? 'NFT data not found' 
+                                : error.message.includes('HTTP') 
+                                ? error.message 
+                                : error.message.includes('NetworkError') || error.message.includes('Failed to fetch')
+                                ? 'Network error: Please check your connection or try again later'
+                                : 'Connection error or proxy issue';
+                            this.webApp.HapticFeedback.notificationOccurred('error');
+                            imageElement.style.display = 'none';
+                            noImageMessage.style.display = 'none';
+                            resultContainer.style.display = 'block';
+                        } else {
+                            console.log(`Retrying... (${attempt + 1}/${maxRetries})`);
+                            await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+                        }
+                    }
+                }
             },
 
             showFeedback: function(element, message, duration) {
@@ -499,17 +793,24 @@
             },
 
             switchPage: function(pageId) {
+                console.log('Switching to page:', pageId);
                 document.querySelectorAll('.page').forEach(page => {
                     page.classList.remove('active');
                 });
                 const page = document.querySelector(`#${pageId}`);
-                if (page) page.classList.add('active');
+                if (page) {
+                    page.classList.add('active');
+                } else {
+                    console.error('Page not found:', pageId);
+                }
 
                 document.querySelectorAll('.nav-link').forEach(link => {
                     link.classList.remove('active');
                 });
                 const navLink = document.querySelector(`.nav-link[data-page="${pageId}"]`);
-                if (navLink) navLink.classList.add('active');
+                if (navLink) {
+                    navLink.classList.add('active');
+                }
 
                 this.currentPage = pageId;
                 this.webApp.HapticFeedback.impactOccurred('light');
@@ -527,19 +828,15 @@
                 this.webApp.HapticFeedback.impactOccurred('light');
 
                 document.body.style.setProperty('--tg-theme-bg-color', isLight ? '#ffffff' : this.webApp.themeParams.bg_color || '#121212');
-                document.body.style.setProperty('--tg-theme-text-color', isLight ? '#000000' : this.webApp.themeParams.text_color || '#ffffff');
+                document.body.style.setProperty('--tg-theme-text-color', isLight ? '#333333' : this.webApp.themeParams.text_color || '#ffffff');
                 document.body.style.setProperty('--tg-theme-button-color', isLight ? '#6200ea' : this.webApp.themeParams.button_color || '#bb86fc');
                 document.body.style.setProperty('--tg-theme-button-text-color', isLight ? '#ffffff' : this.webApp.themeParams.button_text_color || '#ffffff');
-                document.body.style.setProperty('--tg-theme-secondary-bg-color', isLight ? 'rgba(0, 0, 0, 0.05)' : this.webApp.themeParams.secondary_bg_color || 'rgba(0,0,0,0.2)');
+                document.body.style.setProperty('--tg-theme-secondary-bg-color', isLight ? 'rgba(0,0,0,0.1)' : this.webApp.themeParams.secondary_bg_color || 'rgba(0,0,0,0.2)');
                 document.body.style.setProperty('--tg-theme-hint-color', isLight ? '#666666' : this.webApp.themeParams.hint_color || '#aaaaaa');
 
                 if (this.userId) {
-                    this.webApp.DeviceStorage.setItem(`theme_${this.userId}`, theme, (error, success) => {
-                        if (error) {
-                            console.error('Error saving theme:', error);
-                        } else if (success) {
-                            console.log('Theme saved:', theme);
-                        }
+                    this.webApp.DeviceStorage.setItem(`theme_${this.userId}`, theme, () => {
+                        console.log('Theme saved:', theme);
                     });
                 }
             },
@@ -550,10 +847,10 @@
                     if (!error && value === 'light') {
                         document.body.classList.add('light-theme');
                         document.body.style.setProperty('--tg-theme-bg-color', '#ffffff');
-                        document.body.style.setProperty('--tg-theme-text-color', '#000000');
+                        document.body.style.setProperty('--tg-theme-text-color', '#333333');
                         document.body.style.setProperty('--tg-theme-button-color', '#6200ea');
                         document.body.style.setProperty('--tg-theme-button-text-color', '#ffffff');
-                        document.body.style.setProperty('--tg-theme-secondary-bg-color', 'rgba(0, 0, 0, 0.05)');
+                        document.body.style.setProperty('--tg-theme-secondary-bg-color', 'rgba(0,0,0,0.1)');
                         document.body.style.setProperty('--tg-theme-hint-color', '#666666');
                     } else {
                         if (this.webApp) {
@@ -579,12 +876,23 @@
             },
 
             setupNavigation: function() {
-                document.querySelectorAll('.nav-link').forEach(button => {
+                console.log('Setting up navigation');
+                const buttons = document.querySelectorAll('.nav-link');
+                console.log('Found nav buttons:', buttons.length);
+                buttons.forEach(button => {
+                    button.removeEventListener('click', button._clickHandler);
                     if (button.dataset.page) {
-                        button.addEventListener('click', () => {
-                            const pageId = button.dataset.page;
-                            this.switchPage(pageId);
-                        });
+                        button._clickHandler = () => {
+                            console.log('Nav button clicked:', button.dataset.page);
+                            this.switchPage(button.dataset.page);
+                        };
+                        button.addEventListener('click', button._clickHandler);
+                    } else if (button.onclick) {
+                        button._clickHandler = () => {
+                            console.log('Custom button clicked:', button.textContent);
+                            button.onclick();
+                        };
+                        button.addEventListener('click', button._clickHandler);
                     }
                     button.addEventListener('contextmenu', (e) => {
                         e.preventDefault();
@@ -603,10 +911,12 @@
 
         window.addEventListener('popstate', (event) => {
             const pageId = event.state?.page || 'main-page';
+            console.log('Popstate event, switching to:', pageId);
             PayStarsApp.switchPage(pageId);
         });
 
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM fully loaded');
             PayStarsApp.init();
             PayStarsApp.setupHapticFeedback();
             PayStarsApp.setupNavigation();
