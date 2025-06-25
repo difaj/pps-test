@@ -235,9 +235,7 @@
             padding: 8px 4px;
             text-align: left;
             border-bottom: 1px solid var(--tg-theme-hint-color, #aaaaaa);
-            word-break:ക
-
-            break-word;
+            word-break: break-word;
             overflow-wrap: break-word;
         }
         .nft-table th {
@@ -270,8 +268,7 @@
             line-height: 24px;
             font-size: 16px;
             margin-right: 8px;
-            vertical-align:წ
-            middle;
+            vertical-align: middle;
         }
         body.light-theme .cat-avatar {
             background-color: rgba(0,0,0,0.05);
@@ -374,7 +371,7 @@
                 </table>
             </div>
             <div class="no-history" id="no-history-message">You don't have any scan history yet.</div>
-            <button class="clear-history-btn" data-haptic="warning" oncontextmenu="return false;">Clear Scan History</button>
+            <button class="clear-history-btn" data-action="clear-history" data-haptic="warning" oncontextmenu="return false;">Clear Scan History</button>
             <div class="tg-logo">Telegram WebApp</div>
         </div>
 
@@ -383,7 +380,7 @@
             <div class="search-container">
                 <input type="text" id="nft-name-input" placeholder="Name" class="search-input">
                 <input type="text" id="nft-number-input" placeholder="Number" class="search-input">
-                <button data-haptic="warning" class="search-btn" onclick="PayStarsApp.searchNFT()">Search</button>
+                <button data-action="search-nft" data-haptic="warning" class="search-btn">Search</button>
             </div>
             <div class="nft-result" id="nft-result" style="display: none;">
                 <img id="nft-image" alt="NFT Image" style="max-width: 100%; border-radius: 10px; margin: 10px 0; display: none;">
@@ -420,7 +417,7 @@
         <button class="nav-link" data-page="contact-page" oncontextmenu="return false;">Contact</button>
         <button class="nav-link" data-page="scan-history-page" oncontextmenu="return false;">History</button>
         <button class="nav-link" data-page="nft-search-page" oncontextmenu="return false;">NFT</button>
-        <button class="nav-link" data-haptic="warning" oncontextmenu="return false;" onclick="PayStarsApp.showScanQrPopup(true);">QR Scan</button>
+        <button class="nav-link" data-action="scan-qr" data-haptic="warning" oncontextmenu="return false;">QR Scan</button>
         <button class="nav-link" data-page="test-page" oncontextmenu="return false;">Test</button>
     </div>
 
@@ -460,22 +457,25 @@
                 return false;
             },
 
-            openLink: function(url) {
+            openLink: function(url, feedbackEl = null) {
+                console.log('Attempting to open link:', url);
                 if (!this.init()) {
                     console.error('Telegram WebApp not initialized');
-                    this.showFeedback(document.querySelector('.status-feedback'), 'Failed to open link', 3000);
+                    this.showFeedback(feedbackEl, 'WebApp not initialized', 3000);
                     return;
                 }
                 try {
                     this.webApp.HapticFeedback.impactOccurred('light');
                     this.webApp.openLink(url);
+                    console.log('Link opened successfully:', url);
                 } catch (error) {
                     console.error('Error opening link:', error);
-                    this.showFeedback(document.querySelector('.status-feedback'), 'Failed to open link', 3000);
+                    this.showFeedback(feedbackEl, 'Failed to open link', 3000);
                 }
             },
 
             setEmojiStatus: function(element, emojiId) {
+                console.log('Setting emoji status:', emojiId);
                 const feedbackEl = element.querySelector('.status-feedback');
                 if (!this.init()) {
                     this.showFeedback(feedbackEl, 'WebApp not available', 3000);
@@ -503,6 +503,7 @@
             },
 
             showScanQrPopup: function(linksOnly) {
+                console.log('Showing QR scan popup, linksOnly:', linksOnly);
                 if (!this.init()) return;
                 if (!this.webApp.isVersionAtLeast('6.7')) {
                     console.error('QR scanning requires Telegram WebApp version 6.7 or higher');
@@ -532,6 +533,7 @@
 
             saveScanHistory: function(result) {
                 if (!this.userId) return;
+                console.log('Saving scan history:', result);
                 const key = `scan_history_${this.userId}`;
                 this.webApp.DeviceStorage.getItem(key, (error, value) => {
                     let history = [];
@@ -547,8 +549,6 @@
                             console.error('Error parsing scan history:', error, 'Value:', value);
                         }
                     }
-
-
                     history.push({
                         timestamp: new Date().toISOString(),
                         result
@@ -561,6 +561,7 @@
 
             showScanHistory: function() {
                 if (!this.userId) return;
+                console.log('Showing scan history');
                 const key = `scan_history_${this.userId}`;
                 const historyTable = document.getElementById('scan-history-table');
                 const historyList = document.getElementById('scan-history-list');
@@ -620,6 +621,7 @@
 
             clearScanHistory: function() {
                 if (!this.userId) return;
+                console.log('Clearing scan history');
                 this.webApp.showConfirm('Are you sure you want to clear your scan history?', (confirmed) => {
                     if (confirmed) {
                         const key = `scan_history_${this.userId}`;
@@ -632,6 +634,7 @@
             },
 
             searchNFT: async function() {
+                console.log('Searching NFT');
                 if (!this.init()) return;
 
                 const nameInput = document.getElementById('nft-name-input').value.trim();
@@ -796,7 +799,11 @@
             },
 
             showFeedback: function(element, message, duration) {
-                if (!element) return;
+                if (!element) {
+                    console.warn('Feedback element not found');
+                    return;
+                }
+                console.log('Showing feedback:', message);
                 element.textContent = message;
                 element.style.display = 'block';
                 setTimeout(() => {
@@ -835,6 +842,7 @@
             },
 
             toggleTheme: function() {
+                console.log('Toggling theme');
                 if (!this.init()) return;
                 const isLight = document.body.classList.toggle('light-theme');
                 const theme = isLight ? 'light' : 'dark';
@@ -856,6 +864,7 @@
 
             loadTheme: function() {
                 if (!this.userId) return;
+                console.log('Loading theme');
                 this.webApp.DeviceStorage.getItem(`theme_${this.userId}`, (error, value) => {
                     if (!error && value === 'light') {
                         document.body.classList.add('light-theme');
@@ -879,6 +888,7 @@
             },
 
             setupHapticFeedback: function() {
+                console.log('Setting up haptic feedback');
                 document.querySelectorAll('[data-haptic]').forEach(el => {
                     el.addEventListener('click', () => {
                         if (this.webApp) {
@@ -894,19 +904,16 @@
                 console.log('Found nav buttons:', buttons.length);
                 buttons.forEach(button => {
                     button.removeEventListener('click', button._clickHandler);
-                    if (button.dataset.page) {
-                        button._clickHandler = () => {
-                            console.log('Nav button clicked:', button.dataset.page);
+                    button._clickHandler = (e) => {
+                        e.preventDefault();
+                        console.log('Nav button clicked:', button.dataset.page || button.textContent);
+                        if (button.dataset.page) {
                             this.switchPage(button.dataset.page);
-                        };
-                        button.addEventListener('click', button._clickHandler);
-                    } else if (button.onclick) {
-                        button._clickHandler = () => {
-                            console.log('Custom button clicked:', button.textContent);
-                            button.onclick();
-                        };
-                        button.addEventListener('click', button._clickHandler);
-                    }
+                        } else if (button.dataset.action === 'scan-qr') {
+                            this.showScanQrPopup(true);
+                        }
+                    };
+                    button.addEventListener('click', button._clickHandler);
                     button.addEventListener('contextmenu', (e) => {
                         e.preventDefault();
                     });
@@ -914,22 +921,33 @@
             },
 
             setupButtonContextMenuPrevention: function() {
-                document.querySelectorAll('.links button, .clear-history-btn').forEach(button => {
+                console.log('Setting up button context menu prevention');
+                document.querySelectorAll('.links button, .clear-history-btn, .search-btn').forEach(button => {
                     button.addEventListener('contextmenu', (e) => {
                         e.preventDefault();
                     });
                     button.addEventListener('click', (e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        if (this.webApp && button.dataset.haptic) {
+                        console.log('Button clicked:', button.dataset.link || button.dataset.action || button.textContent);
+                        if (!this.init()) {
+                            console.error('WebApp not initialized');
+                            return;
+                        }
+                        if (button.dataset.haptic) {
                             this.webApp.HapticFeedback.impactOccurred(button.dataset.haptic);
                         }
+                        const feedbackEl = button.querySelector('.status-feedback') || document.querySelector('.no-result-message');
                         if (button.dataset.link) {
-                            this.openLink(button.dataset.link);
+                            this.openLink(button.dataset.link, feedbackEl);
                         } else if (button.dataset.emojiStatus) {
                             this.setEmojiStatus(button, button.dataset.emojiStatus);
                         } else if (button.dataset.action === 'toggle-theme') {
                             this.toggleTheme();
+                        } else if (button.dataset.action === 'clear-history') {
+                            this.clearScanHistory();
+                        } else if (button.dataset.action === 'search-nft') {
+                            this.searchNFT();
                         }
                     });
                 });
