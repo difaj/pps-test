@@ -14,8 +14,6 @@
             --glass-shadow-dark:0 12px 32px rgba(0,0,0,0.55),0 0 0 1px rgba(255,255,255,0.1);
             --glass-shadow-light:0 12px 32px rgba(0,0,0,0.22),0 0 0 1px rgba(0,0,0,0.08);
             --glass-blur:8px;
-            --glass-glow-dark:0 0 20px rgba(187,134,252,0.4);
-            --glass-glow-light:0 0 20px rgba(98,0,234,0.35);
             --bg-pattern-dark:url('https://i.ibb.co/Q7s6vJh4/image.png');
             --bg-pattern-light:url('https://i.ibb.co/zWYJtrDG/image.png');
         }
@@ -38,7 +36,7 @@
         .container{
             text-align:center;animation:fadeIn 1s ease-in-out;
             width:100%;max-width:500px;margin:0 auto;
-            padding:40px 20px;box-sizing:border-box;flex-grow:1;
+            padding:40px 20px 100px;box-sizing:border-box;flex-grow:1;
             position:relative;z-index:1;
         }
         h1{
@@ -54,81 +52,89 @@
             list-style:none;padding:0;width:100%;max-width:400px;margin:0 auto;
         }
         .links li{display:flex;justify-content:center;}
-        .glass{
-            position:relative;background:var(--glass-bg-dark);
-            border:1px solid var(--glass-border-dark);border-radius:20px;
-            backdrop-filter:blur(var(--glass-blur));
-            -webkit-backdrop-filter:blur(var(--glass-blur));
-            box-shadow:var(--glass-shadow-dark);
-            transition:all .4s cubic-bezier(.4,0,.2,1);overflow:hidden;
-        }
-        .glass::before{
-            content:'';position:absolute;top:0;left:0;right:0;bottom:0;
-            background:linear-gradient(135deg,rgba(255,255,255,.25)0%,transparent 40%,rgba(255,255,255,.12)100%);
-            pointer-events:none;opacity:0;transition:opacity .4s ease;
-        }
-        .glass::after{
-            content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
-            background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.20),transparent 70%);
-            opacity:0;transition:opacity .4s ease;pointer-events:none;
-        }
-        .glass:hover::before,.glass:hover::after{opacity:1;}
-        .glass:active{transform:translateY(2px);box-shadow:0 6px 20px rgba(0,0,0,.5);}
-        .links li button,.clear-history-btn,.search-btn{
-            position:relative;background:var(--glass-bg-dark);
-            border:1px solid var(--glass-border-dark);border-radius:20px;
-            backdrop-filter:blur(var(--glass-blur));
-            -webkit-backdrop-filter:blur(var(--glass-blur));
-            box-shadow:var(--glass-shadow-dark);
-            color:var(--tg-theme-button-color,#bb86fc);
-            font-size:1.1rem;padding:16px 28px;cursor:pointer;
+
+        /* РІДКЕ СКЛО — НАСТОЯЩЕ! */
+        .liquidGlass-wrapper{
+            position:relative;display:flex;justify-content:center;align-items:center;
+            font-weight:600;overflow:hidden;
+            border-radius:20px;
+            box-shadow:0 6px 6px rgba(0,0,0,0.2),0 0 20px rgba(0,0,0,0.1);
+            transition:all .4s cubic-bezier(.175,.885,.32,2.2);
+            cursor:pointer;
             width:100%;max-width:300px;box-sizing:border-box;
-            font-weight:600;transition:all .4s ease;overflow:hidden;
+            padding:16px 28px;
+            filter:url(#glass-distortion);
+            backdrop-filter:blur(3px);
+            -webkit-backdrop-filter:blur(3px);
         }
-        .links li button:hover,.clear-history-btn:hover,.search-btn:hover{
-            background:var(--tg-theme-button-color,#bb86fc);
-            color:#fff;border-color:transparent;
-            box-shadow:var(--glass-glow-dark),0 8px 24px rgba(0,0,0,.35);
-            transform:translateY(-1px);
+        .liquidGlass-effect{
+            position:absolute;z-index:0;inset:0;
+            backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+            overflow:hidden;
         }
+        .liquidGlass-tint{
+            z-index:1;position:absolute;inset:0;
+            background:rgba(255,255,255,.4);
+        }
+        .liquidGlass-shine{
+            position:absolute;inset:0;z-index:2;
+            overflow:hidden;
+            box-shadow:inset 2px 2px 1px 0 rgba(255,255,255,.5),
+                        inset -1px -1px 1px 1px rgba(255,255,255,.5);
+        }
+        .liquidGlass-text{
+            z-index:3;position:relative;
+            font-size:1.1rem;font-weight:600;
+            color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.6);
+        }
+        body.light-theme .liquidGlass-text{
+            color:#000;text-shadow:none;
+        }
+        .liquidGlass-wrapper:hover{
+            transform:translateY(-2px);
+            box-shadow:0 10px 20px rgba(0,0,0,.3),0 0 30px rgba(187,134,252,.4);
+        }
+        .liquidGlass-wrapper:active{
+            transform:translateY(1px);
+        }
+
+        /* СВІТЛА ТЕМА */
+        body.light-theme .liquidGlass-wrapper{
+            box-shadow:0 6px 6px rgba(0,0,0,.15),0 0 20px rgba(0,0,0,.08);
+        }
+        body.light-theme .liquidGlass-tint{
+            background:rgba(0,0,0,.1);
+        }
+        body.light-theme .liquidGlass-shine{
+            box-shadow:inset 2px 2px 1px 0 rgba(0,0,0,.1),
+                        inset -1px -1px 1px 1px rgba(0,0,0,.08);
+        }
+
+        /* НАВІГАЦІЙНИЙ БАР — БЕЗ ФОНУ, МАЛЕНЬКІ КНОПКИ */
         .nav-bar{
-            position:relative;z-index:1;display:flex;padding:10px 8px;
-            background:var(--glass-bg-dark);border-top:1px solid var(--glass-border-dark);
-            border-radius:0;backdrop-filter:blur(var(--glass-blur));
-            -webkit-backdrop-filter:blur(var(--glass-blur));
-            box-shadow:var(--glass-shadow-dark);
-            width:100%;max-width:500px;margin:0 auto;box-sizing:border-box;
-            overflow-x:auto;overflow-y:hidden;white-space:nowrap;
-            scrollbar-width:none;-ms-overflow-style:none;
-            -webkit-overflow-scrolling:touch;touch-action:pan-x;
-            scroll-behavior:smooth;-webkit-user-select:none;user-select:none;
+            position:fixed;bottom:0;left:0;right:0;z-index:1000;
+            display:flex;padding:6px 10px;
+            background:transparent;
+            width:100%;max-width:500px;margin:0 auto;
+            box-sizing:border-box;overflow-x:auto;overflow-y:hidden;
+            white-space:nowrap;scrollbar-width:none;
+            -ms-overflow-style:none;-webkit-overflow-scrolling:touch;
+            touch-action:pan-x;scroll-behavior:smooth;
+            -webkit-user-select:none;user-select:none;
+            gap:6px;
+            backdrop-filter:blur(8px);
+            -webkit-backdrop-filter:blur(8px);
         }
         .nav-bar::-webkit-scrollbar{display:none;}
-        .nav-bar button.nav-link{
-            flex:0 0 auto;min-width:80px;padding:12px 16px;margin:0 4px;
-            font-size:.9rem;font-weight:600;background:transparent;
-            border:none;border-radius:16px;transition:all .4s ease;
-            position:relative;overflow:hidden;touch-action:pan-y;
+
+        .nav-bar .liquidGlass-wrapper{
+            width:auto;min-width:70px;max-width:none;
+            padding:10px 14px;
+            border-radius:16px;
+            font-size:.85rem;
+            filter:url(#glass-distortion);
         }
-        .nav-bar button.nav-link{color:#bb86fc;}
-        .nav-bar button.nav-link::before{
-            content:'';position:absolute;inset:0;background:#bb86fc;
-            opacity:0;transition:opacity .4s ease;border-radius:16px;
-        }
-        .nav-bar button.nav-link.active::before{opacity:.28;}
-        .nav-bar button.nav-link.active{
-            color:#fff;font-weight:700;
-            box-shadow:0 0 15px rgba(187,134,252,.45);
-        }
-        .nav-bar button.nav-link:hover::before{opacity:.20;}
-        body.light-theme .nav-bar button.nav-link{color:#000;}
-        body.light-theme .nav-bar button.nav-link::before{background:#6200ea;}
-        body.light-theme .nav-bar button.nav-link.active{
-            color:#6200ea;font-weight:700;
-            box-shadow:0 0 15px rgba(98,0,234,.4);
-        }
-        body.light-theme .nav-bar button.nav-link.active::before{opacity:.25;}
-        body.light-theme .nav-bar button.nav-link:hover::before{opacity:.18;}
+
         .search-container{
             display:flex;flex-direction:row;align-items:center;gap:12px;
             margin-bottom:20px;flex-wrap:nowrap;
@@ -142,8 +148,12 @@
             max-width:120px;box-sizing:border-box;
             box-shadow:var(--glass-shadow-dark);
         }
-        body.light-theme .search-input{color:#000;}
+        body.light-theme .search-input{
+            background:var(--glass-bg-light);border-color:var(--glass-border-light);
+            box-shadow:var(--glass-shadow-light);color:#000;
+        }
         .search-btn{max-width:100px;}
+
         .scan-history,.nft-result,.no-history,.no-result{
             margin:25px 0;padding:20px;border-radius:20px;
             background:var(--glass-bg-dark);
@@ -152,82 +162,92 @@
             -webkit-backdrop-filter:blur(var(--glass-blur));
             box-shadow:var(--glass-shadow-dark);text-align:center;
         }
+        body.light-theme .scan-history,
+        body.light-theme .nft-result,
+        body.light-theme .no-history,
+        body.light-theme .no-result{
+            background:var(--glass-bg-light);border-color:var(--glass-border-light);
+            box-shadow:var(--glass-shadow-light);
+        }
+
         .clear-history-btn{margin-top:15px;}
         .tg-logo{
             margin-top:30px;opacity:.7;font-size:.8rem;
             color:var(--tg-theme-hint-color,#aaa);
         }
         body.light-theme .tg-logo{color:#666;}
+
         .page{display:none;}
         .page.active{display:block;}
+
         @keyframes fadeIn{
             from{opacity:0;transform:translateY(10px);}
             to{opacity:1;transform:translateY(0);}
         }
-        body.light-theme{
-            --glass-bg-dark:var(--glass-bg-light);
-            --glass-border-dark:var(--glass-border-light);
-            --glass-shadow-dark:var(--glass-shadow-light);
-            --glass-glow-dark:var(--glass-glow-light);
-        }
-        body.light-theme .glass,
-        body.light-theme .links li button,
-        body.light-theme .clear-history-btn,
-        body.light-theme .search-btn,
-        body.light-theme .nav-bar,
-        body.light-theme .search-input,
-        body.light-theme .scan-history,
-        body.light-theme .nft-result,
-        body.light-theme .no-history,
-        body.light-theme .no-result{
-            background:var(--glass-bg-light);
-            border-color:var(--glass-border-light);
-            box-shadow:var(--glass-shadow-light);
-        }
-        body.light-theme .glass::before{
-            background:linear-gradient(135deg,rgba(0,0,0,.16)0%,transparent 40%,rgba(0,0,0,.08)100%);
-        }
-        body.light-theme .glass::after{
-            background:radial-gradient(circle at 50% 50%,rgba(0,0,0,.16),transparent 70%);
-        }
-        body.light-theme .links li button:hover,
-        body.light-theme .clear-history-btn:hover,
-        body.light-theme .search-btn:hover{
-            box-shadow:var(--glass-glow-light),0 8px 24px rgba(0,0,0,.22);
-            color:#fff;
-        }
+
         html,body{-webkit-overflow-scrolling:touch;}
         input,textarea,select{font-size:16px;}
         .status-feedback{display:none;}
     </style>
 </head>
 <body>
+    <!-- SVG ФІЛЬТР ДЛЯ РІДКОГО СКЛА -->
+    <svg style="display: none">
+      <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox">
+        <feTurbulence type="fractalNoise" baseFrequency="0.01 0.01" numOctaves="1" seed="5" result="turbulence"/>
+        <feComponentTransfer in="turbulence" result="mapped">
+          <feFuncR type="gamma" amplitude="1" exponent="10" offset="0.5"/>
+          <feFuncG type="gamma" amplitude="0" exponent="1" offset="0"/>
+          <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5"/>
+        </feComponentTransfer>
+        <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap"/>
+        <feSpecularLighting in="softMap" surfaceScale="5" specularConstant="1" specularExponent="100" lighting-color="white" result="specLight">
+          <fePointLight x="-200" y="-200" z="300"/>
+        </feSpecularLighting>
+        <feComposite in="specLight" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="litImage"/>
+        <feDisplacementMap in="SourceGraphic" in2="softMap" scale="150" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </svg>
+
     <div class="container">
         <div class="page active" id="main-page">
             <h1>Pay Stars</h1>
             <ul class="links">
-                <li><button onclick="PayStarsApp.openLink('https://t.me/stars_telegram_vf')" data-haptic="warning">Our Channel</button></li>
-                <li><button onclick="PayStarsApp.openLink('https://t.me/StarsPremiumBot')" data-haptic="warning">Premium for Stars</button></li>
+                <li>
+                    <div class="liquidGlass-wrapper" onclick="PayStarsApp.openLink('https://t.me/stars_telegram_vf')" data-haptic="warning">
+                        <div class="liquidGlass-effect"></div>
+                        <div class="liquidGlass-tint"></div>
+                        <div class="liquidGlass-shine"></div>
+                        <div class="liquidGlass-text">Our Channel</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="liquidGlass-wrapper" onclick="PayStarsApp.openLink('https://t.me/StarsPremiumBot')" data-haptic="warning">
+                        <div class="liquidGlass-effect"></div>
+                        <div class="liquidGlass-tint"></div>
+                        <div class="liquidGlass-shine"></div>
+                        <div class="liquidGlass-text">Premium for Stars</div>
+                    </div>
+                </li>
             </ul>
             <div class="tg-logo">Telegram WebApp</div>
         </div>
 
+        <!-- Інші сторінки — аналогічно -->
         <div class="page" id="contact-page">
             <h1>Contact Us</h1>
             <ul class="links">
-                <li><button onclick="PayStarsApp.openLink('https://t.me/lakel')" data-haptic="warning">Contact Admin</button></li>
-                <li><button onclick="PayStarsApp.openLink('https://t.me/help_stars')" data-haptic="warning">Feedback</button></li>
+                <li><div class="liquidGlass-wrapper" onclick="PayStarsApp.openLink('https://t.me/lakel')" data-haptic="warning"><div class="liquidGlass-effect"></div><div class="liquidGlass-tint"></div><div class="liquidGlass-shine"></div><div class="liquidGlass-text">Contact Admin</div></div></li>
+                <li><div class="liquidGlass-wrapper" onclick="PayStarsApp.openLink('https://t.me/help_stars')" data-haptic="warning"><div class="liquidGlass-effect"></div><div class="liquidGlass-tint"></div><div class="liquidGlass-shine"></div><div class="liquidGlass-text">Feedback</div></div></li>
             </ul>
             <div class="tg-logo">Telegram WebApp</div>
         </div>
 
         <div class="page" id="scan-history-page">
             <h1>Scan History</h1>
-            <div class="scan-history" id="scan-history-table" style="display:none;">
-                <table><thead><tr><th>Date</th><th>Result</th></tr></thead><tbody id="scan-history-list"></tbody></table>
-            </div>
+            <div class="scan-history" id="scan-history-table" style="display:none;"><table><thead><tr><th>Date</th><th>Result</th></tr></thead><tbody id="scan-history-list"></tbody></table></div>
             <div class="no-history" id="no-history-message">You don't have any scan history yet.</div>
-            <button class="clear-history-btn glass" onclick="PayStarsApp.clearScanHistory()" data-haptic="warning">Clear Scan History</button>
+            <div class="liquidGlass-wrapper clear-history-btn" onclick="PayStarsApp.clearScanHistory()" data-haptic="warning"><div class="liquidGlass-effect"></div><div class="liquidGlass-tint"></div><div class="liquidGlass-shine"></div><div class="liquidGlass-text">Clear Scan History</div></div>
             <div class="tg-logo">Telegram WebApp</div>
         </div>
 
@@ -236,13 +256,9 @@
             <div class="search-container">
                 <input type="text" id="nft-name-input" placeholder="Name" class="search-input glass">
                 <input type="text" id="nft-number-input" placeholder="Number" class="search-input glass">
-                <button onclick="PayStarsApp.searchNFT()" data-haptic="warning" class="search-btn glass">Search</button>
+                <div class="liquidGlass-wrapper search-btn" onclick="PayStarsApp.searchNFT()" data-haptic="warning"><div class="liquidGlass-effect"></div><div class="liquidGlass-tint"></div><div class="liquidGlass-shine"></div><div class="liquidGlass-text">Search</div></div>
             </div>
-            <div class="nft-result glass" id="nft-result" style="display:none;">
-                <img id="nft-image" alt="NFT Image" style="max-width:100%;border-radius:16px;margin:12px 0;display:none;">
-                <div id="no-image-message" style="display:none;">Photo not available</div>
-                <table class="nft-table"><tbody id="nft-info"></tbody></table>
-            </div>
+            <div class="nft-result glass" id="nft-result" style="display:none;"><img id="nft-image" alt="NFT Image" style="max-width:100%;border-radius:16px;margin:12px 0;display:none;"><div id="no-image-message" style="display:none;">Photo not available</div><table class="nft-table"><tbody id="nft-info"></tbody></table></div>
             <div class="no-result glass" id="no-result-message">Enter an NFT name and number to search.</div>
             <div class="tg-logo">Telegram WebApp</div>
         </div>
@@ -250,22 +266,23 @@
         <div class="page" id="test-page">
             <h1>Test Features</h1>
             <ul class="links">
-                <li><button onclick="PayStarsApp.openLink('tg://nft?slug=aTCuqOAvWUsBAAAAj08P-4gBdtw')" data-haptic="warning">Test Button</button></li>
-                <li><button onclick="PayStarsApp.openLink('https://t.me/$qEkvAY4AKEoGAAAA4lfaNB2EbVk')" data-haptic="warning">Make a Payment</button></li>
-                <li><button onclick="PayStarsApp.setEmojiStatus(this,'5258115417230016513');" data-haptic="warning">Set Emoji Status</button></li>
-                <li><button onclick="PayStarsApp.toggleTheme()" data-haptic="warning">Toggle Theme</button></li>
+                <li><div class="liquidGlass-wrapper" onclick="PayStarsApp.openLink('tg://nft?slug=aTCuqOAvWUsBAAAAj08P-4gBdtw')" data-haptic="warning"><div class="liquidGlass-effect"></div><div class="liquidGlass-tint"></div><div class="liquidGlass-shine"></div><div class="liquidGlass-text">Test Button</div></div></li>
+                <li><div class="liquidGlass-wrapper" onclick="PayStarsApp.openLink('https://t.me/$qEkvAY4AKEoGAAAA4lfaNB2EbVk')" data-haptic="warning"><div class="liquidGlass-effect"></div><div class="liquidGlass-tint"></div><div class="liquidGlass-shine"></div><div class="liquidGlass-text">Make a Payment</div></div></li>
+                <li><div class="liquidGlass-wrapper" onclick="PayStarsApp.setEmojiStatus(this,'5258115417230016513');" data-haptic="warning"><div class="liquidGlass-effect"></div><div class="liquidGlass-tint"></div><div class="liquidGlass-shine"></div><div class="liquidGlass-text">Set Emoji Status</div></div></li>
+                <li><div class="liquidGlass-wrapper" onclick="PayStarsApp.toggleTheme()" data-haptic="warning"><div class="liquidGlass-effect"></div><div class="liquidGlass-tint"></div><div class="liquidGlass-shine"></div><div class="liquidGlass-text">Toggle Theme</div></div></li>
             </ul>
             <div class="tg-logo">Telegram WebApp</div>
         </div>
     </div>
 
+    <!-- НИЖНЯ ПАНЕЛЬ — МАЛЕНЬКІ КНОПКИ, БЕЗ ФОНУ -->
     <div class="nav-bar" id="nav-bar">
-        <button class="nav-link active" data-page="main-page">Main</button>
-        <button class="nav-link" data-page="contact-page">Contact</button>
-        <button class="nav-link" data-page="scan-history-page">History</button>
-        <button class="nav-link" data-page="nft-search-page">NFT</button>
-        <button class="nav-link" onclick="PayStarsApp.showScanQrPopup(true);" data-haptic="warning">QR Scan</button>
-        <button class="nav-link" data-page="test-page">Test</button>
+        <div class="liquidGlass-wrapper" data-page="main-page"><div class="liquidGlass-effect"></div><div class="liquidGlass-tint"></div><div class="liquidGlass-shine"></div><div class="liquidGlass-text">Main</div></div>
+        <div class="liquidGlass-wrapper" data-page="contact-page"><div class="liquidGlass-effect"></div><div class="liquidGlass-tint"></div><div class="liquidGlass-shine"></div><div class="liquidGlass-text">Contact</div></div>
+        <div class="liquidGlass-wrapper" data-page="scan-history-page"><div class="liquidGlass-effect"></div><div class="liquidGlass-tint"></div><div class="liquidGlass-shine"></div><div class="liquidGlass-text">History</div></div>
+        <div class="liquidGlass-wrapper" data-page="nft-search-page"><div class="liquidGlass-effect"></div><div class="liquidGlass-tint"></div><div class="liquidGlass-shine"></div><div class="liquidGlass-text">NFT</div></div>
+        <div class="liquidGlass-wrapper" onclick="PayStarsApp.showScanQrPopup(true);" data-haptic="warning"><div class="liquidGlass-effect"></div><div class="liquidGlass-tint"></div><div class="liquidGlass-shine"></div><div class="liquidGlass-text">QR Scan</div></div>
+        <div class="liquidGlass-wrapper" data-page="test-page"><div class="liquidGlass-effect"></div><div class="liquidGlass-tint"></div><div class="liquidGlass-shine"></div><div class="liquidGlass-text">Test</div></div>
     </div>
 
     <script>
@@ -284,9 +301,21 @@
                     this.applyTelegramTheme(isLight);
                     const navBar=document.getElementById('nav-bar');
                     if(navBar){
-                        navBar.addEventListener('touchstart',e=>{if(e.touches.length===1){this._startX=e.touches[0].clientX;this._startScroll=this.scrollLeft;}},{passive:true});
-                        navBar.addEventListener('touchmove',e=>{if(e.touches.length===1&&this._startX!=null){const d=this._startX-e.touches[0].clientX;this.scrollLeft=this._startScroll+d;e.preventDefault();}},{passive:false});
-                        navBar.addEventListener('touchend',()=>{this._startX=null;this._startScroll=null;});
+                        let startX=0,startScroll=0;
+                        navBar.addEventListener('touchstart',e=>{
+                            if(e.touches.length===1){
+                                startX=e.touches[0].clientX;
+                                startScroll=navBar.scrollLeft;
+                            }
+                        },{passive:true});
+                        navBar.addEventListener('touchmove',e=>{
+                            if(e.touches.length===1){
+                                const delta=startX-e.touches[0].clientX;
+                                navBar.scrollLeft=startScroll+delta;
+                                e.preventDefault();
+                            }
+                        },{passive:false});
+                        navBar.addEventListener('touchend',()=>{startX=0;startScroll=0;});
                     }
                     return true;
                 }
@@ -439,8 +468,8 @@
             switchPage:function(id){
                 document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
                 const pg=document.getElementById(id);if(pg)pg.classList.add('active');
-                document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
-                const nl=document.querySelector(`.nav-link[data-page="${id}"]`);if(nl)nl.classList.add('active');
+                document.querySelectorAll('.nav-bar .liquidGlass-wrapper').forEach(l=>l.classList.remove('active'));
+                const nl=document.querySelector(`.nav-bar .liquidGlass-wrapper[data-page="${id}"]`);if(nl)nl.classList.add('active');
                 this.currentPage=id;
                 this.webApp.HapticFeedback.impactOccurred('light');
                 history.pushState({page:id},'',window.location.pathname);
@@ -457,7 +486,7 @@
                 document.querySelectorAll('[data-haptic]').forEach(el=>el.addEventListener('click',()=>{if(this.webApp)this.webApp.HapticFeedback.notificationOccurred(el.dataset.haptic);}));
             },
             setupNavigation:function(){
-                document.querySelectorAll('.nav-link').forEach(b=>{
+                document.querySelectorAll('.nav-bar .liquidGlass-wrapper').forEach(b=>{
                     b.removeEventListener('click',b._handler);
                     if(b.dataset.page){b._handler=()=>this.switchPage(b.dataset.page);}
                     else{b._handler=()=>b.onclick();}
@@ -466,7 +495,7 @@
                 });
             },
             setupButtonContextMenuPrevention:function(){
-                document.querySelectorAll('.links button, .clear-history-btn').forEach(b=>b.addEventListener('contextmenu',e=>e.preventDefault()));
+                document.querySelectorAll('.links .liquidGlass-wrapper, .clear-history-btn').forEach(b=>b.addEventListener('contextmenu',e=>e.preventDefault()));
             }
         };
         window.addEventListener('popstate',e=>PayStarsApp.switchPage(e.state?.page||'main-page'));
@@ -476,6 +505,7 @@
             PayStarsApp.setupNavigation();
             PayStarsApp.setupButtonContextMenuPrevention();
             PayStarsApp.switchPage('main-page');
+            document.querySelector('.nav-bar .liquidGlass-wrapper[data-page="main-page"]').classList.add('active');
             document.addEventListener('gesturestart',e=>e.preventDefault());
             document.addEventListener('touchmove',e=>{if(e.scale!==1)e.preventDefault();},{passive:false});
         });
