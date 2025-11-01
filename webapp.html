@@ -35,7 +35,7 @@
             width: 100%;
             max-width: 500px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 40px 20px 100px;
             box-sizing: border-box;
             flex-grow: 1;
             position: relative;
@@ -65,14 +65,8 @@
             justify-content: center;
         }
 
-        .links li button,
-        .clear-history-btn,
-        .search-btn {
-            position: relative;
-            color: var(--...
-
-        /* === РІДКЕ СКЛО — ОСНОВНИЙ ЕФЕКТ === */
         .glass {
+            position: relative;
             background: var(--glass-bg-dark);
             border: 1px solid var(--glass-border-dark);
             border-radius: 16px;
@@ -106,11 +100,16 @@
             box-shadow: 0 4px 16px rgba(0,0,0,0.3);
         }
 
-        /* === КНОПКИ === */
         .links li button,
         .clear-history-btn,
         .search-btn {
-            @extend .glass;
+            position: relative;
+            background: var(--glass-bg-dark);
+            border: 1px solid var(--glass-border-dark);
+            border-radius: 16px;
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            box-shadow: var(--glass-shadow-dark);
             color: var(--tg-theme-button-color, #bb86fc);
             font-size: 1.1rem;
             padding: 14px 24px;
@@ -119,6 +118,7 @@
             max-width: 300px;
             box-sizing: border-box;
             font-weight: 500;
+            transition: all 0.3s ease;
         }
 
         .links li button:hover,
@@ -127,11 +127,10 @@
             background: var(--tg-theme-button-color, #bb86fc);
             color: #ffffff;
             border-color: transparent;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
         }
 
-        /* === НАВІГАЦІЙНА ПАНЕЛЬ === */
         .nav-bar {
-            @extend .glass;
             display: flex;
             padding: 8px;
             position: fixed;
@@ -141,8 +140,12 @@
             max-width: 500px;
             margin: 0 auto;
             z-index: 1000;
-            border-top: none;
+            background: var(--glass-bg-dark);
+            border-top: 1px solid var(--glass-border-dark);
             border-radius: 20px 20px 0 0;
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            box-shadow: var(--glass-shadow-dark);
         }
 
         .nav-bar button.nav-link {
@@ -170,29 +173,99 @@
             border-radius: 14px;
         }
 
+        .nav-bar button.nav-link.active::before {
+            opacity: 0.2;
+        }
+
         .nav-bar button.nav-link.active {
             color: #ffffff;
             font-weight: 700;
-        }
-
-        .nav-bar button.nav-link.active::before {
-            opacity: 0.2;
         }
 
         .nav-bar button.nav-link:hover::before {
             opacity: 0.15;
         }
 
-        /* === БІЛА ТЕМА — РІДКЕ СКЛО === */
+        .search-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: nowrap;
+        }
+
+        .search-input {
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid var(--glass-border-dark);
+            border-radius: 16px;
+            background: var(--glass-bg-dark);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            color: var(--tg-theme-text-color, #ffffff);
+            width: 100%;
+            max-width: 120px;
+            box-sizing: border-box;
+            box-shadow: var(--glass-shadow-dark);
+        }
+
+        .search-btn {
+            max-width: 100px;
+        }
+
+        .scan-history,
+        .nft-result,
+        .no-history,
+        .no-result {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 16px;
+            background: var(--glass-bg-dark);
+            border: 1px solid var(--glass-border-dark);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            box-shadow: var(--glass-shadow-dark);
+        }
+
+        .tg-logo {
+            margin-top: 30px;
+            opacity: 0.6;
+            font-size: 0.8rem;
+            color: var(--tg-theme-hint-color, #aaaaaa);
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         body.light-theme {
             --glass-bg-dark: var(--glass-bg-light);
             --glass-border-dark: var(--glass-border-light);
             --glass-shadow-dark: var(--glass-shadow-light);
         }
 
-        body.light-theme .glass {
+        body.light-theme .glass,
+        body.light-theme .links li button,
+        body.light-theme .clear-history-btn,
+        body.light-theme .search-btn,
+        body.light-theme .nav-bar,
+        body.light-theme .search-input,
+        body.light-theme .scan-history,
+        body.light-theme .nft-result,
+        body.light-theme .no-history,
+        body.light-theme .no-result {
             background: var(--glass-bg-light);
-            border: 1px solid var(--glass-border-light);
+            border-color: var(--glass-border-light);
             box-shadow: var(--glass-shadow-light);
         }
 
@@ -204,49 +277,8 @@
             );
         }
 
-        /* === ІНПУТИ === */
-        .search-input {
-            @extend .glass;
-            padding: 12px;
-            font-size: 16px;
-            border: none;
-            outline: none;
-            color: var(--tg-theme-text-color, #ffffff);
-            width: 100%;
-            max-width: 120px;
-            box-sizing: border-box;
-        }
-
-        /* === ІНШІ ЕЛЕМЕНТИ === */
-        .scan-history,
-        .nft-result,
-        .no-history,
-        .no-result {
-            @extend .glass;
-            margin-top: 20px;
-            padding: 16px;
-            border-radius: 16px;
-        }
-
-        .tg-logo {
-            margin-top: 30px;
-            opacity: 0.6;
-            font-size: 0.8rem;
-            color: var(--tg-theme-hint-color, #aaaaaa);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* === СКРОЛ НА АНДРОЇД === */
         html, body {
             -webkit-overflow-scrolling: touch;
-        }
-
-        .container {
-            padding-bottom: 90px;
         }
 
         input, textarea, select {
