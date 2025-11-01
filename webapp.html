@@ -6,291 +6,170 @@
     <title>Pay Stars</title>
     <script src="https://a-telegram.stel.com/js/telegram-web-app.js"></script>
     <style>
-        :root {
-            --glass-bg-dark: rgba(255, 255, 255, 0.10);
-            --glass-bg-light: rgba(0, 0, 0, 0.08);
-            --glass-border-dark: rgba(255, 255, 255, 0.20);
-            --glass-border-light: rgba(0, 0, 0, 0.12);
-            --glass-shadow-dark: 0 12px 32px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.05);
-            --glass-shadow-light: 0 12px 32px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
-            --glass-blur: 16px;
-            --glass-glow-dark: 0 0 20px rgba(187, 134, 252, 0.3);
-            --glass-glow-light: 0 0 20px rgba(98, 0, 234, 0.25);
+        :root{
+            --glass-bg-dark:rgba(18,18,18,0.85);
+            --glass-bg-light:rgba(255,255,255,0.88);
+            --glass-border-dark:rgba(255,255,255,0.35);
+            --glass-border-light:rgba(0,0,0,0.25);
+            --glass-shadow-dark:0 12px 32px rgba(0,0,0,0.55),0 0 0 1px rgba(255,255,255,0.1);
+            --glass-shadow-light:0 12px 32px rgba(0,0,0,0.22),0 0 0 1px rgba(0,0,0,0.08);
+            --glass-blur:8px;
+            --glass-glow-dark:0 0 20px rgba(187,134,252,0.4);
+            --glass-glow-light:0 0 20px rgba(98,0,234,0.35);
+            --bg-pattern-dark:url('https://i.ibb.co/Q7s6vJh4/image.png');
+            --bg-pattern-light:url('https://i.ibb.co/zWYJtrDG/image.png');
         }
-
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--tg-theme-bg-color, #121212);
-            color: var(--tg-theme-text-color, #ffffff);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            overflow-x: hidden;
-            touch-action: pan-y;
+        body{
+            margin:0;padding:0;
+            font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+            background:var(--tg-theme-bg-color,#121212);
+            color:var(--tg-theme-text-color,#fff);
+            min-height:100vh;display:flex;flex-direction:column;
+            transition:background-color .3s ease,color .3s ease;
+            overflow-x:hidden;touch-action:pan-y;
+            background-image:var(--bg-pattern-dark);
+            background-size:300px;background-repeat:repeat;
+            background-attachment:fixed;background-position:center;
         }
-
-        .container {
-            text-align: center;
-            animation: fadeIn 1s ease-in-out;
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            box-sizing: border-box;
-            flex-grow: 1;
-            position: relative;
-            z-index: 1;
+        body.light-theme{
+            background-image:var(--bg-pattern-light);
+            color:#000;
         }
-
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 50px;
-            color: var(--tg-theme-button-color, #bb86fc);
-            text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        .container{
+            text-align:center;animation:fadeIn 1s ease-in-out;
+            width:100%;max-width:500px;margin:0 auto;
+            padding:40px 20px;box-sizing:border-box;flex-grow:1;
+            position:relative;z-index:1;
         }
-
-        .links {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            list-style: none;
-            padding: 0;
-            width: 100%;
-            max-width: 400px;
-            margin: 0 auto;
+        h1{
+            font-size:2rem;margin-bottom:50px;
+            color:var(--tg-theme-button-color,#bb86fc);
+            text-shadow:0 2px 8px rgba(0,0,0,.5);font-weight:700;
         }
-
-        .links li {
-            display: flex;
-            justify-content: center;
+        body.light-theme h1{
+            color:#6200ea;text-shadow:0 2px 8px rgba(0,0,0,.2);
         }
-
-        .glass {
-            position: relative;
-            background: var(--glass-bg-dark);
-            border: 1px solid var(--glass-border-dark);
-            border-radius: 20px;
-            backdrop-filter: blur(var(--glass-blur));
-            -webkit-backdrop-filter: blur(var(--glass-blur));
-            box-shadow: var(--glass-shadow-dark);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden;
+        .links{
+            display:flex;flex-direction:column;gap:18px;
+            list-style:none;padding:0;width:100%;max-width:400px;margin:0 auto;
         }
-
-        .glass::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg,
-                rgba(255,255,255,0.18) 0%,
-                transparent 40%,
-                rgba(255,255,255,0.08) 100%
-            );
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.4s ease;
+        .links li{display:flex;justify-content:center;}
+        .glass{
+            position:relative;background:var(--glass-bg-dark);
+            border:1px solid var(--glass-border-dark);border-radius:20px;
+            backdrop-filter:blur(var(--glass-blur));
+            -webkit-backdrop-filter:blur(var(--glass-blur));
+            box-shadow:var(--glass-shadow-dark);
+            transition:all .4s cubic-bezier(.4,0,.2,1);overflow:hidden;
         }
-
-        .glass::after {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15), transparent 70%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            pointer-events: none;
+        .glass::before{
+            content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+            background:linear-gradient(135deg,rgba(255,255,255,.25)0%,transparent 40%,rgba(255,255,255,.12)100%);
+            pointer-events:none;opacity:0;transition:opacity .4s ease;
         }
-
-        .glass:hover::before,
-        .glass:hover::after {
-            opacity: 1;
+        .glass::after{
+            content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+            background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.20),transparent 70%);
+            opacity:0;transition:opacity .4s ease;pointer-events:none;
         }
-
-        .glass:active {
-            transform: translateY(2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        .glass:hover::before,.glass:hover::after{opacity:1;}
+        .glass:active{transform:translateY(2px);box-shadow:0 6px 20px rgba(0,0,0,.5);}
+        .links li button,.clear-history-btn,.search-btn{
+            position:relative;background:var(--glass-bg-dark);
+            border:1px solid var(--glass-border-dark);border-radius:20px;
+            backdrop-filter:blur(var(--glass-blur));
+            -webkit-backdrop-filter:blur(var(--glass-blur));
+            box-shadow:var(--glass-shadow-dark);
+            color:var(--tg-theme-button-color,#bb86fc);
+            font-size:1.1rem;padding:16px 28px;cursor:pointer;
+            width:100%;max-width:300px;box-sizing:border-box;
+            font-weight:600;transition:all .4s ease;overflow:hidden;
         }
-
-        .links li button,
-        .clear-history-btn,
-        .search-btn {
-            position: relative;
-            background: var(--glass-bg-dark);
-            border: 1px solid var(--glass-border-dark);
-            border-radius: 20px;
-            backdrop-filter: blur(var(--glass-blur));
-            -webkit-backdrop-filter: blur(var(--glass-blur));
-            box-shadow: var(--glass-shadow-dark);
-            color: var(--tg-theme-button-color, #bb86fc);
-            font-size: 1.1rem;
-            padding: 16px 28px;
-            cursor: pointer;
-            width: 100%;
-            max-width: 300px;
-            box-sizing: border-box;
-            font-weight: 600;
-            transition: all 0.4s ease;
-            overflow: hidden;
+        .links li button:hover,.clear-history-btn:hover,.search-btn:hover{
+            background:var(--tg-theme-button-color,#bb86fc);
+            color:#fff;border-color:transparent;
+            box-shadow:var(--glass-glow-dark),0 8px 24px rgba(0,0,0,.35);
+            transform:translateY(-1px);
         }
-
-        .links li button:hover,
-        .clear-history-btn:hover,
-        .search-btn:hover {
-            background: var(--tg-theme-button-color, #bb86fc);
-            color: #ffffff;
-            border-color: transparent;
-            box-shadow: var(--glass-glow-dark), 0 8px 24px rgba(0,0,0,0.35);
-            transform: translateY(-1px);
+        .nav-bar{
+            position:relative;z-index:1;display:flex;padding:10px 8px;
+            background:var(--glass-bg-dark);border-top:1px solid var(--glass-border-dark);
+            border-radius:0;backdrop-filter:blur(var(--glass-blur));
+            -webkit-backdrop-filter:blur(var(--glass-blur));
+            box-shadow:var(--glass-shadow-dark);
+            width:100%;max-width:500px;margin:0 auto;box-sizing:border-box;
+            overflow-x:auto;overflow-y:hidden;white-space:nowrap;
+            scrollbar-width:none;-ms-overflow-style:none;
+            -webkit-overflow-scrolling:touch;touch-action:pan-x;
+            scroll-behavior:smooth;-webkit-user-select:none;user-select:none;
         }
-
-        .nav-bar {
-            display: flex;
-            padding: 10px 8px;
-            background: var(--glass-bg-dark);
-            border-top: 1px solid var(--glass-border-dark);
-            border-radius: 0;
-            backdrop-filter: blur(var(--glass-blur));
-            -webkit-backdrop-filter: blur(var(--glass-blur));
-            box-shadow: var(--glass-shadow-dark);
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
-            box-sizing: border-box;
-            overflow-x: auto;
-            overflow-y: hidden;
-            white-space: nowrap;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            -webkit-overflow-scrolling: touch;
-            touch-action: pan-x;
-            scroll-behavior: smooth;
-            -webkit-user-select: none;
-            user-select: none;
+        .nav-bar::-webkit-scrollbar{display:none;}
+        .nav-bar button.nav-link{
+            flex:0 0 auto;min-width:80px;padding:12px 16px;margin:0 4px;
+            font-size:.9rem;font-weight:600;background:transparent;
+            border:none;border-radius:16px;transition:all .4s ease;
+            position:relative;overflow:hidden;touch-action:pan-y;
         }
-
-        .nav-bar::-webkit-scrollbar {
-            display: none;
+        .nav-bar button.nav-link{color:#bb86fc;}
+        .nav-bar button.nav-link::before{
+            content:'';position:absolute;inset:0;background:#bb86fc;
+            opacity:0;transition:opacity .4s ease;border-radius:16px;
         }
-
-        .nav-bar button.nav-link {
-            flex: 0 0 auto;
-            min-width: 80px;
-            padding: 12px 16px;
-            margin: 0 4px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--tg-theme-button-color, #bb86fc);
-            background: transparent;
-            border: none;
-            border-radius: 16px;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-            touch-action: pan-y;
+        .nav-bar button.nav-link.active::before{opacity:.28;}
+        .nav-bar button.nav-link.active{
+            color:#fff;font-weight:700;
+            box-shadow:0 0 15px rgba(187,134,252,.45);
         }
-
-        .nav-bar button.nav-link::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: var(--tg-theme-button-color, #bb86fc);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            border-radius: 16px;
+        .nav-bar button.nav-link:hover::before{opacity:.20;}
+        body.light-theme .nav-bar button.nav-link{color:#000;}
+        body.light-theme .nav-bar button.nav-link::before{background:#6200ea;}
+        body.light-theme .nav-bar button.nav-link.active{
+            color:#6200ea;font-weight:700;
+            box-shadow:0 0 15px rgba(98,0,234,.4);
         }
-
-        .nav-bar button.nav-link.active::before {
-            opacity: 0.25;
+        body.light-theme .nav-bar button.nav-link.active::before{opacity:.25;}
+        body.light-theme .nav-bar button.nav-link:hover::before{opacity:.18;}
+        .search-container{
+            display:flex;flex-direction:row;align-items:center;gap:12px;
+            margin-bottom:20px;flex-wrap:nowrap;
         }
-
-        .nav-bar button.nav-link.active {
-            color: #ffffff;
-            font-weight: 700;
-            box-shadow: 0 0 15px rgba(187, 134, 252, 0.4);
+        .search-input{
+            padding:14px;font-size:16px;border:1px solid var(--glass-border-dark);
+            border-radius:20px;background:var(--glass-bg-dark);
+            backdrop-filter:blur(var(--glass-blur));
+            -webkit-backdrop-filter:blur(var(--glass-blur));
+            color:var(--tg-theme-text-color,#fff);width:100%;
+            max-width:120px;box-sizing:border-box;
+            box-shadow:var(--glass-shadow-dark);
         }
-
-        .nav-bar button.nav-link:hover::before {
-            opacity: 0.18;
+        body.light-theme .search-input{color:#000;}
+        .search-btn{max-width:100px;}
+        .scan-history,.nft-result,.no-history,.no-result{
+            margin:25px 0;padding:20px;border-radius:20px;
+            background:var(--glass-bg-dark);
+            border:1px solid var(--glass-border-dark);
+            backdrop-filter:blur(var(--glass-blur));
+            -webkit-backdrop-filter:blur(var(--glass-blur));
+            box-shadow:var(--glass-shadow-dark);text-align:center;
         }
-
-        .search-container {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-            flex-wrap: nowrap;
+        .clear-history-btn{margin-top:15px;}
+        .tg-logo{
+            margin-top:30px;opacity:.7;font-size:.8rem;
+            color:var(--tg-theme-hint-color,#aaa);
         }
-
-        .search-input {
-            padding: 14px;
-            font-size: 16px;
-            border: 1px solid var(--glass-border-dark);
-            border-radius: 20px;
-            background: var(--glass-bg-dark);
-            backdrop-filter: blur(var(--glass-blur));
-            -webkit-backdrop-filter: blur(var(--glass-blur));
-            color: var(--tg-theme-text-color, #ffffff);
-            width: 100%;
-            max-width: 120px;
-            box-sizing: border-box;
-            box-shadow: var(--glass-shadow-dark);
+        body.light-theme .tg-logo{color:#666;}
+        .page{display:none;}
+        .page.active{display:block;}
+        @keyframes fadeIn{
+            from{opacity:0;transform:translateY(10px);}
+            to{opacity:1;transform:translateY(0);}
         }
-
-        .search-btn {
-            max-width: 100px;
+        body.light-theme{
+            --glass-bg-dark:var(--glass-bg-light);
+            --glass-border-dark:var(--glass-border-light);
+            --glass-shadow-dark:var(--glass-shadow-light);
+            --glass-glow-dark:var(--glass-glow-light);
         }
-
-        .scan-history,
-        .nft-result,
-        .no-history,
-        .no-result {
-            margin: 25px 0;
-            padding: 20px;
-            border-radius: 20px;
-            background: var(--glass-bg-dark);
-            border: 1px solid var(--glass-border-dark);
-            backdrop-filter: blur(var(--glass-blur));
-            -webkit-backdrop-filter: blur(var(--glass-blur));
-            box-shadow: var(--glass-shadow-dark);
-            text-align: center;
-        }
-
-        .clear-history-btn {
-            margin-top: 15px;
-        }
-
-        .tg-logo {
-            margin-top: 30px;
-            opacity: 0.6;
-            font-size: 0.8rem;
-            color: var(--tg-theme-hint-color, #aaaaaa);
-        }
-
-        .page {
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        body.light-theme {
-            --glass-bg-dark: var(--glass-bg-light);
-            --glass-border-dark: var(--glass-border-light);
-            --glass-shadow-dark: var(--glass-shadow-light);
-            --glass-glow-dark: var(--glass-glow-light);
-        }
-
         body.light-theme .glass,
         body.light-theme .links li button,
         body.light-theme .clear-history-btn,
@@ -300,41 +179,26 @@
         body.light-theme .scan-history,
         body.light-theme .nft-result,
         body.light-theme .no-history,
-        body.light-theme .no-result {
-            background: var(--glass-bg-light);
-            border-color: var(--glass-border-light);
-            box-shadow: var(--glass-shadow-light);
+        body.light-theme .no-result{
+            background:var(--glass-bg-light);
+            border-color:var(--glass-border-light);
+            box-shadow:var(--glass-shadow-light);
         }
-
-        body.light-theme .glass::before {
-            background: linear-gradient(135deg,
-                rgba(0,0,0,0.12) 0%,
-                transparent 40%,
-                rgba(0,0,0,0.05) 100%
-            );
+        body.light-theme .glass::before{
+            background:linear-gradient(135deg,rgba(0,0,0,.16)0%,transparent 40%,rgba(0,0,0,.08)100%);
         }
-
-        body.light-theme .glass::after {
-            background: radial-gradient(circle at 50% 50%, rgba(0,0,0,0.12), transparent 70%);
+        body.light-theme .glass::after{
+            background:radial-gradient(circle at 50% 50%,rgba(0,0,0,.16),transparent 70%);
         }
-
         body.light-theme .links li button:hover,
         body.light-theme .clear-history-btn:hover,
-        body.light-theme .search-btn:hover {
-            box-shadow: var(--glass-glow-light), 0 8px 24px rgba(0,0,0,0.2);
+        body.light-theme .search-btn:hover{
+            box-shadow:var(--glass-glow-light),0 8px 24px rgba(0,0,0,.22);
+            color:#fff;
         }
-
-        html, body {
-            -webkit-overflow-scrolling: touch;
-        }
-
-        input, textarea, select {
-            font-size: 16px;
-        }
-
-        .status-feedback {
-            display: none;
-        }
+        html,body{-webkit-overflow-scrolling:touch;}
+        input,textarea,select{font-size:16px;}
+        .status-feedback{display:none;}
     </style>
 </head>
 <body>
@@ -359,11 +223,8 @@
 
         <div class="page" id="scan-history-page">
             <h1>Scan History</h1>
-            <div class="scan-history" id="scan-history-table" style="display: none;">
-                <table>
-                    <thead><tr><th>Date</th><th>Result</th></tr></thead>
-                    <tbody id="scan-history-list"></tbody>
-                </table>
+            <div class="scan-history" id="scan-history-table" style="display:none;">
+                <table><thead><tr><th>Date</th><th>Result</th></tr></thead><tbody id="scan-history-list"></tbody></table>
             </div>
             <div class="no-history" id="no-history-message">You don't have any scan history yet.</div>
             <button class="clear-history-btn glass" onclick="PayStarsApp.clearScanHistory()" data-haptic="warning">Clear Scan History</button>
@@ -377,12 +238,10 @@
                 <input type="text" id="nft-number-input" placeholder="Number" class="search-input glass">
                 <button onclick="PayStarsApp.searchNFT()" data-haptic="warning" class="search-btn glass">Search</button>
             </div>
-            <div class="nft-result glass" id="nft-result" style="display: none;">
-                <img id="nft-image" alt="NFT Image" style="max-width: 100%; border-radius: 16px; margin: 12px 0; display: none;">
-                <div id="no-image-message" style="display: none;">Photo not available</div>
-                <table class="nft-table">
-                    <tbody id="nft-info"></tbody>
-                </table>
+            <div class="nft-result glass" id="nft-result" style="display:none;">
+                <img id="nft-image" alt="NFT Image" style="max-width:100%;border-radius:16px;margin:12px 0;display:none;">
+                <div id="no-image-message" style="display:none;">Photo not available</div>
+                <table class="nft-table"><tbody id="nft-info"></tbody></table>
             </div>
             <div class="no-result glass" id="no-result-message">Enter an NFT name and number to search.</div>
             <div class="tg-logo">Telegram WebApp</div>
@@ -393,9 +252,7 @@
             <ul class="links">
                 <li><button onclick="PayStarsApp.openLink('tg://nft?slug=aTCuqOAvWUsBAAAAj08P-4gBdtw')" data-haptic="warning">Test Button</button></li>
                 <li><button onclick="PayStarsApp.openLink('https://t.me/$qEkvAY4AKEoGAAAA4lfaNB2EbVk')" data-haptic="warning">Make a Payment</button></li>
-                <li><button onclick="PayStarsApp.setEmojiStatus(this, '5258115417230016513');" data-haptic="warning">
-                    Set Emoji Status
-                </button></li>
+                <li><button onclick="PayStarsApp.setEmojiStatus(this,'5258115417230016513');" data-haptic="warning">Set Emoji Status</button></li>
                 <li><button onclick="PayStarsApp.toggleTheme()" data-haptic="warning">Toggle Theme</button></li>
             </ul>
             <div class="tg-logo">Telegram WebApp</div>
@@ -412,311 +269,215 @@
     </div>
 
     <script>
-        const PayStarsApp = {
-            initDone: false,
-            webApp: null,
-            currentPage: 'main-page',
-            userId: null,
-
-            init: function() {
-                if (this.initDone) return true;
-                if (window.Telegram && window.Telegram.WebApp) {
-                    this.webApp = Telegram.WebApp;
-                    this.webApp.ready();
-                    this.webApp.expand();
-                    this.initDone = true;
-                    const user = this.webApp.initDataUnsafe?.user;
-                    if (user) this.userId = user.id;
-                    if (window.location.search) history.replaceState({}, '', window.location.pathname);
-
-                    const systemTheme = this.webApp.colorScheme || 'dark';
-                    const isLight = systemTheme === 'light';
-                    document.body.classList.toggle('light-theme', isLight);
+        const PayStarsApp={initDone:false,webApp:null,currentPage:'main-page',userId:null,
+            init:function(){
+                if(this.initDone)return true;
+                if(window.Telegram&&window.Telegram.WebApp){
+                    this.webApp=Telegram.WebApp;
+                    this.webApp.ready();this.webApp.expand();this.initDone=true;
+                    const user=this.webApp.initDataUnsafe?.user;
+                    if(user)this.userId=user.id;
+                    if(window.location.search)history.replaceState({},'',window.location.pathname);
+                    const systemTheme=this.webApp.colorScheme||'dark';
+                    const isLight=systemTheme==='light';
+                    document.body.classList.toggle('light-theme',isLight);
                     this.applyTelegramTheme(isLight);
-
-                    // Фікс горизонтального скролу на Android
-                    const navBar = document.getElementById('nav-bar');
-                    if (navBar) {
-                        navBar.addEventListener('touchstart', function(e) {
-                            if (e.touches.length === 1) {
-                                this._startX = e.touches[0].clientX;
-                                this._startScroll = this.scrollLeft;
-                            }
-                        }, { passive: true });
-
-                        navBar.addEventListener('touchmove', function(e) {
-                            if (e.touches.length === 1 && this._startX != null) {
-                                const deltaX = this._startX - e.touches[0].clientX;
-                                this.scrollLeft = this._startScroll + deltaX;
-                                e.preventDefault();
-                            }
-                        }, { passive: false });
-
-                        navBar.addEventListener('touchend', function() {
-                            this._startX = null;
-                            this._startScroll = null;
-                        });
+                    const navBar=document.getElementById('nav-bar');
+                    if(navBar){
+                        navBar.addEventListener('touchstart',e=>{if(e.touches.length===1){this._startX=e.touches[0].clientX;this._startScroll=this.scrollLeft;}},{passive:true});
+                        navBar.addEventListener('touchmove',e=>{if(e.touches.length===1&&this._startX!=null){const d=this._startX-e.touches[0].clientX;this.scrollLeft=this._startScroll+d;e.preventDefault();}},{passive:false});
+                        navBar.addEventListener('touchend',()=>{this._startX=null;this._startScroll=null;});
                     }
-
                     return true;
                 }
                 return false;
             },
-
-            applyTelegramTheme: function(isLight) {
-                const colors = isLight ? {
-                    bg: '#ffffff',
-                    text: '#000000',
-                    button: '#6200ea',
-                    buttonText: '#ffffff',
-                    secondary: 'rgba(0,0,0,0.08)',
-                    hint: '#666666'
-                } : {
-                    bg: '#121212',
-                    text: '#ffffff',
-                    button: '#bb86fc',
-                    buttonText: '#ffffff',
-                    secondary: 'rgba(255,255,255,0.08)',
-                    hint: '#aaaaaa'
-                };
-
-                Object.entries(colors).forEach(([key, value]) => {
-                    const prop = `--tg-theme-${key === 'bg' ? 'bg-color' :
-                                  key === 'secondary' ? 'secondary-bg-color' :
-                                  key === 'buttonText' ? 'button-text-color' :
-                                  key === 'button' ? 'button-color' :
-                                  key === 'hint' ? 'hint-color' : 'text-color'}`;
-                    document.body.style.setProperty(prop, value);
+            applyTelegramTheme:function(isLight){
+                const colors=isLight?{bg:'#ffffff',text:'#000000',button:'#6200ea',buttonText:'#ffffff',secondary:'rgba(0,0,0,0.08)',hint:'#666666'}:{bg:'#121212',text:'#ffffff',button:'#bb86fc',buttonText:'#ffffff',secondary:'rgba(255,255,255,0.08)',hint:'#aaaaaa'};
+                Object.entries(colors).forEach(([k,v])=>{
+                    const p=`--tg-theme-${k==='bg'?'bg-color':k==='secondary'?'secondary-bg-color':k==='buttonText'?'button-text-color':k==='button'?'button-color':k==='hint'?'hint-color':'text-color'}`;
+                    document.body.style.setProperty(p,v);
                 });
+                document.body.style.backgroundImage=isLight?'var(--bg-pattern-light)':'var(--bg-pattern-dark)';
             },
-
-            openLink: function(url) {
-                if (!this.init()) return;
+            openLink:function(url){
+                if(!this.init())return;
                 this.webApp.HapticFeedback.impactOccurred('light');
-                try { this.webApp.openLink(url); } catch (e) { window.location.href = url; }
+                try{this.webApp.openLink(url);}catch(e){window.location.href=url;}
             },
-
-            setEmojiStatus: function(el, id) {
-                if (!this.init()) return;
-                if (!this.webApp.isVersionAtLeast('8.0')) return;
+            setEmojiStatus:function(el,id){
+                if(!this.init())return;
+                if(!this.webApp.isVersionAtLeast('8.0'))return;
                 this.webApp.HapticFeedback.impactOccurred('light');
-                try {
-                    this.webApp.setEmojiStatus(id, null, (s) => {
-                        this.webApp.HapticFeedback.notificationOccurred(s ? 'success' : 'error');
-                    });
-                } catch (e) {}
+                try{this.webApp.setEmojiStatus(id,null,s=>this.webApp.HapticFeedback.notificationOccurred(s?'success':'error'));}catch(e){}
             },
-
-            showScanQrPopup: function(links) {
-                if (!this.init() || !this.webApp.isVersionAtLeast('6.7')) return;
+            showScanQrPopup:function(links){
+                if(!this.init()||!this.webApp.isVersionAtLeast('6.7'))return;
                 this.webApp.HapticFeedback.impactOccurred('light');
-                try {
-                    this.webApp.showScanQrPopup({ text: links ? 'Scan link QR' : 'Scan QR' }, (res) => {
+                try{
+                    this.webApp.showScanQrPopup({text:links?'Scan link QR':'Scan QR'},res=>{
                         this.webApp.closeScanQrPopup();
-                        if (links && res.startsWith('http')) this.openLink(res);
+                        if(links&&res.startsWith('http'))this.openLink(res);
                         this.saveScanHistory(res);
-                        if (this.currentPage === 'scan-history-page') this.showScanHistory();
+                        if(this.currentPage==='scan-history-page')this.showScanHistory();
                         return true;
                     });
-                } catch (e) {}
+                }catch(e){}
             },
-
-            saveScanHistory: function(res) {
-                if (!this.userId) return;
-                const k = `scan_history_${this.userId}`;
-                this.webApp.DeviceStorage.getItem(k, (e, v) => {
-                    let h = [];
-                    if (!e && v) try { const p = JSON.parse(v); if (Array.isArray(p)) h = p; } catch (e) {}
-                    h.push({ timestamp: new Date().toISOString(), result: res });
-                    this.webApp.DeviceStorage.setItem(k, JSON.stringify(h), () => {});
+            saveScanHistory:function(res){
+                if(!this.userId)return;
+                const k=`scan_history_${this.userId}`;
+                this.webApp.DeviceStorage.getItem(k,(e,v)=>{
+                    let h=[];if(!e&&v)try{const p=JSON.parse(v);if(Array.isArray(p))h=p;}catch(e){}
+                    h.push({timestamp:new Date().toISOString(),result:res});
+                    this.webApp.DeviceStorage.setItem(k,JSON.stringify(h),()=>{});
                 });
             },
-
-            showScanHistory: function() {
-                if (!this.userId) return;
-                const k = `scan_history_${this.userId}`;
-                const t = document.getElementById('scan-history-table');
-                const l = document.getElementById('scan-history-list');
-                const m = document.getElementById('no-history-message');
-                l.innerHTML = '';
-                this.webApp.DeviceStorage.getItem(k, (e, v) => {
-                    if (e || !v || !Array.isArray(JSON.parse(v || '[]')) || (JSON.parse(v || '[]')).length === 0) {
-                        t.style.display = 'none'; m.style.display = 'block'; return;
+            showScanHistory:function(){
+                if(!this.userId)return;
+                const k=`scan_history_${this.userId}`;
+                const t=document.getElementById('scan-history-table');
+                const l=document.getElementById('scan-history-list');
+                const m=document.getElementById('no-history-message');
+                l.innerHTML='';
+                this.webApp.DeviceStorage.getItem(k,(e,v)=>{
+                    if(e||!v||!Array.isArray(JSON.parse(v||'[]'))||(JSON.parse(v||'[]')).length===0){
+                        t.style.display='none';m.style.display='block';return;
                     }
-                    try {
-                        const h = JSON.parse(v);
-                        t.style.display = 'block'; m.style.display = 'none';
-                        h.forEach(i => {
-                            if (i.timestamp && i.result) {
-                                const d = new Date(i.timestamp);
-                                const fd = `${d.getUTCDate().toString().padStart(2,'0')}.${(d.getUTCMonth()+1).toString().padStart(2,'0')}.${d.getUTCFullYear()}`;
-                                const ft = `${d.getUTCHours().toString().padStart(2,'0')}:${d.getUTCMinutes().toString().padStart(2,'0')}:${d.getUTCSeconds().toString().padStart(2,'0')}`;
-                                const tr = document.createElement('tr');
-                                tr.innerHTML = `<td><div class="date-time">${fd}<br>${ft}</div></td><td>${i.result}</td>`;
+                    try{
+                        const h=JSON.parse(v);
+                        t.style.display='block';m.style.display='none';
+                        h.forEach(i=>{
+                            if(i.timestamp&&i.result){
+                                const d=new Date(i.timestamp);
+                                const fd=`${d.getUTCDate().toString().padStart(2,'0')}.${(d.getUTCMonth()+1).toString().padStart(2,'0')}.${d.getUTCFullYear()}`;
+                                const ft=`${d.getUTCHours().toString().padStart(2,'0')}:${d.getUTCMinutes().toString().padStart(2,'0')}:${d.getUTCSeconds().toString().padStart(2,'0')}`;
+                                const tr=document.createElement('tr');
+                                tr.innerHTML=`<td><div class="date-time">${fd}<br>${ft}</div></td><td>${i.result}</td>`;
                                 l.appendChild(tr);
                             }
                         });
-                    } catch (e) { t.style.display = 'none'; m.style.display = 'block'; }
+                    }catch(e){t.style.display='none';m.style.display='block';}
                 });
             },
-
-            clearScanHistory: function() {
-                if (!this.userId) return;
-                this.webApp.showConfirm('Clear history?', c => {
-                    if (c) {
-                        this.webApp.DeviceStorage.removeItem(`scan_history_${this.userId}`, () => this.showScanHistory());
-                    }
-                });
+            clearScanHistory:function(){
+                if(!this.userId)return;
+                this.webApp.showConfirm('Clear history?',c=>{if(c)this.webApp.DeviceStorage.removeItem(`scan_history_${this.userId}`,()=>this.showScanHistory());});
             },
-
-            searchNFT: async function() {
-                if (!this.init()) return;
-                const n = document.getElementById('nft-name-input').value.trim();
-                const num = document.getElementById('nft-number-input').value.trim();
-                const msg = document.getElementById('no-result-message');
-                if (!n || !num) { msg.style.display = 'block'; return; }
-
-                const input = `${n}-${num}`;
-                const res = document.getElementById('nft-result');
-                const info = document.getElementById('nft-info');
-                const img = document.getElementById('nft-image');
-                const noImg = document.getElementById('no-image-message');
-                res.style.display = 'none'; msg.style.display = 'block'; msg.textContent = 'Searching...';
-                img.style.display = 'none'; noImg.style.display = 'none';
-
-                let loaded = false;
-                const max = 3; let a = 0;
-                while (a < max) {
-                    try {
-                        const p = 'https://api.allorigins.win/raw?url=';
-                        const u = `${p}${encodeURIComponent(`https://a-ttgme.stel.com/nft/${input}`)}`;
-                        const iurl = `https://tnft.stel.com/gift/${n}-${num}.webp`;
-
-                        await new Promise(r => {
-                            img.src = iurl;
-                            img.onload = () => { loaded = true; r(); };
-                            img.onerror = () => { loaded = false; r(); };
-                            setTimeout(r, 5000);
+            searchNFT:async function(){
+                if(!this.init())return;
+                const n=document.getElementById('nft-name-input').value.trim();
+                const num=document.getElementById('nft-number-input').value.trim();
+                const msg=document.getElementById('no-result-message');
+                if(!n||!num){msg.style.display='block';return;}
+                const input=`${n}-${num}`;
+                const res=document.getElementById('nft-result');
+                const info=document.getElementById('nft-info');
+                const img=document.getElementById('nft-image');
+                const noImg=document.getElementById('no-image-message');
+                res.style.display='none';msg.style.display='block';msg.textContent='Searching...';
+                img.style.display='none';noImg.style.display='none';
+                let loaded=false;const max=3;let a=0;
+                while(a<max){
+                    try{
+                        const p='https://api.allorigins.win/raw?url=';
+                        const u=`${p}${encodeURIComponent(`https://a-ttgme.stel.com/nft/${input}`)}`;
+                        const iurl=`https://tnft.stel.com/gift/${n}-${num}.webp`;
+                        await new Promise(r=>{
+                            img.src=iurl;img.onload=()=>{loaded=true;r();};
+                            img.onerror=()=>{loaded=false;r();};
+                            setTimeout(r,5000);
                         });
-
-                        const r = await fetch(u, { headers: {
-                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                            'Referer': 'https://a-ttgme.stel.com/'
-                        }});
-                        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-                        const t = await r.text();
-                        const d = new DOMParser().parseFromString(t, 'text/html');
-                        const tbl = d.querySelector('.tgme_gift_table');
-                        if (!tbl) throw new Error('No data');
-
-                        const data = {};
-                        tbl.querySelectorAll('tr').forEach(row => {
-                            const th = row.querySelector('th')?.textContent.trim();
-                            const td = row.querySelector('td');
-                            if (th && td) {
-                                if (th === 'Owner') {
-                                    const clone = td.cloneNode(true);
+                        const r=await fetch(u,{headers:{'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36','Referer':'https://a-ttgme.stel.com/'}});
+                        if(!r.ok)throw new Error(`HTTP ${r.status}`);
+                        const t=await r.text();
+                        const d=new DOMParser().parseFromString(t,'text/html');
+                        const tbl=d.querySelector('.tgme_gift_table');
+                        if(!tbl)throw new Error('No data');
+                        const data={};
+                        tbl.querySelectorAll('tr').forEach(row=>{
+                            const th=row.querySelector('th')?.textContent.trim();
+                            const td=row.querySelector('td');
+                            if(th&&td){
+                                if(th==='Owner'){
+                                    const clone=td.cloneNode(true);
                                     clone.querySelector('.tgme_gift_owner_photo')?.remove();
-                                    const link = clone.querySelector('a');
-                                    const name = link ? link.textContent.trim() : clone.textContent.trim() || 'Anonymous';
-                                    if (link) {
-                                        const h = link.getAttribute('href');
-                                        data[th] = `<span class="cat-avatar">User</span><a href="${h}" onclick="PayStarsApp.openLink('${h}');return false;">${name}</a>`;
-                                    } else data[th] = `<span class="cat-avatar">User</span>${name}`;
-                                } else data[th] = td.innerHTML.trim();
+                                    const link=clone.querySelector('a');
+                                    const name=link?link.textContent.trim():clone.textContent.trim()||'Anonymous';
+                                    if(link){
+                                        const h=link.getAttribute('href');
+                                        data[th]=`<span class="cat-avatar">User</span><a href="${h}" onclick="PayStarsApp.openLink('${h}');return false;">${name}</a>`;
+                                    }else data[th]=`<span class="cat-avatar">User</span>${name}`;
+                                }else data[th]=td.innerHTML.trim();
                             }
                         });
-
-                        data['Model'] = 'Choco Dream <span class="percent-bubble">15%</span>';
-                        data['Backdrop'] = 'French Blue <span class="percent-bubble">1.8%</span>';
-                        data['Symbol'] = 'Pig <span class="percent-bubble">30%</span>';
-
-                        info.innerHTML = `
-                            <tr><th>Owner</th><td>${data['Owner'] || '<span class="cat-avatar">User</span>Anonymous'}</td></tr>
-                            <tr><th>Model</th><td>${data['Model'] || 'N/A'}</td></tr>
-                            <tr><th>Backdrop</th><td>${data['Backdrop'] || 'N/A'}</td></tr>
-                            <tr><th>Symbol</th><td>${data['Symbol'] || 'N/A'}</td></tr>
-                            <tr><th>Quantity</th><td>${data['Quantity'] || 'N/A'}</td></tr>
+                        data['Model']='Choco Dream <span class="percent-bubble">15%</span>';
+                        data['Backdrop']='French Blue <span class="percent-bubble">1.8%</span>';
+                        data['Symbol']='Pig <span class="percent-bubble">30%</span>';
+                        info.innerHTML=`
+                            <tr><th>Owner</th><td>${data['Owner']||'<span class="cat-avatar">User</span>Anonymous'}</td></tr>
+                            <tr><th>Model</th><td>${data['Model']||'N/A'}</td></tr>
+                            <tr><th>Backdrop</th><td>${data['Backdrop']||'N/A'}</td></tr>
+                            <tr><th>Symbol</th><td>${data['Symbol']||'N/A'}</td></tr>
+                            <tr><th>Quantity</th><td>${data['Quantity']||'N/A'}</td></tr>
                         `;
-
-                        res.style.display = 'block'; msg.style.display = 'none';
-                        document.getElementById('nft-name-input').value = '';
-                        document.getElementById('nft-number-input').value = '';
-                        img.style.display = loaded ? 'block' : 'none';
+                        res.style.display='block';msg.style.display='none';
+                        document.getElementById('nft-name-input').value='';
+                        document.getElementById('nft-number-input').value='';
+                        img.style.display=loaded?'block':'none';
                         this.webApp.HapticFeedback.notificationOccurred('success');
                         return;
-                    } catch (e) {
-                        a++;
-                        if (a >= max) {
-                            msg.textContent = 'Not found or connection error';
-                            res.style.display = 'block';
+                    }catch(e){
+                        a++;if(a>=max){
+                            msg.textContent='Not found or connection error';
+                            res.style.display='block';
                             this.webApp.HapticFeedback.notificationOccurred('error');
-                        } else await new Promise(r => setTimeout(r, 1000 * a));
+                        }else await new Promise(r=>setTimeout(r,1000*a));
                     }
                 }
             },
-
-            switchPage: function(id) {
-                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-                const pg = document.getElementById(id); if (pg) pg.classList.add('active');
-                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                const nl = document.querySelector(`.nav-link[data-page="${id}"]`); if (nl) nl.classList.add('active');
-                this.currentPage = id;
+            switchPage:function(id){
+                document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+                const pg=document.getElementById(id);if(pg)pg.classList.add('active');
+                document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+                const nl=document.querySelector(`.nav-link[data-page="${id}"]`);if(nl)nl.classList.add('active');
+                this.currentPage=id;
                 this.webApp.HapticFeedback.impactOccurred('light');
-                history.pushState({ page: id }, '', window.location.pathname);
-                if (id === 'scan-history-page') this.showScanHistory();
+                history.pushState({page:id},'',window.location.pathname);
+                if(id==='scan-history-page')this.showScanHistory();
             },
-
-            toggleTheme: function() {
-                if (!this.init()) return;
-                const isLight = document.body.classList.toggle('light-theme');
+            toggleTheme:function(){
+                if(!this.init())return;
+                const isLight=document.body.classList.toggle('light-theme');
                 this.applyTelegramTheme(isLight);
                 this.webApp.HapticFeedback.impactOccurred('light');
-
-                if (this.userId) {
-                    this.webApp.DeviceStorage.setItem(`theme_${this.userId}`, isLight ? 'light' : 'dark', () => {});
-                }
+                if(this.userId)this.webApp.DeviceStorage.setItem(`theme_${this.userId}`,isLight?'light':'dark',()=>{});
             },
-
-            setupHapticFeedback: function() {
-                document.querySelectorAll('[data-haptic]').forEach(el => {
-                    el.addEventListener('click', () => {
-                        if (this.webApp) this.webApp.HapticFeedback.notificationOccurred(el.dataset.haptic);
-                    });
+            setupHapticFeedback:function(){
+                document.querySelectorAll('[data-haptic]').forEach(el=>el.addEventListener('click',()=>{if(this.webApp)this.webApp.HapticFeedback.notificationOccurred(el.dataset.haptic);}));
+            },
+            setupNavigation:function(){
+                document.querySelectorAll('.nav-link').forEach(b=>{
+                    b.removeEventListener('click',b._handler);
+                    if(b.dataset.page){b._handler=()=>this.switchPage(b.dataset.page);}
+                    else{b._handler=()=>b.onclick();}
+                    b.addEventListener('click',b._handler);
+                    b.addEventListener('contextmenu',e=>e.preventDefault());
                 });
             },
-
-            setupNavigation: function() {
-                document.querySelectorAll('.nav-link').forEach(b => {
-                    b.removeEventListener('click', b._handler);
-                    if (b.dataset.page) {
-                        b._handler = () => this.switchPage(b.dataset.page);
-                    } else {
-                        b._handler = () => b.onclick();
-                    }
-                    b.addEventListener('click', b._handler);
-                    b.addEventListener('contextmenu', e => e.preventDefault());
-                });
-            },
-
-            setupButtonContextMenuPrevention: function() {
-                document.querySelectorAll('.links button, .clear-history-btn').forEach(b => {
-                    b.addEventListener('contextmenu', e => e.preventDefault());
-                });
+            setupButtonContextMenuPrevention:function(){
+                document.querySelectorAll('.links button, .clear-history-btn').forEach(b=>b.addEventListener('contextmenu',e=>e.preventDefault()));
             }
         };
-
-        window.addEventListener('popstate', e => PayStarsApp.switchPage(e.state?.page || 'main-page'));
-
-        document.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('popstate',e=>PayStarsApp.switchPage(e.state?.page||'main-page'));
+        document.addEventListener('DOMContentLoaded',()=>{
             PayStarsApp.init();
             PayStarsApp.setupHapticFeedback();
             PayStarsApp.setupNavigation();
             PayStarsApp.setupButtonContextMenuPrevention();
             PayStarsApp.switchPage('main-page');
-
-            document.addEventListener('gesturestart', e => e.preventDefault());
-            document.addEventListener('touchmove', e => { if (e.scale !== 1) e.preventDefault(); }, { passive: false });
+            document.addEventListener('gesturestart',e=>e.preventDefault());
+            document.addEventListener('touchmove',e=>{if(e.scale!==1)e.preventDefault();},{passive:false});
         });
     </script>
 </body>
