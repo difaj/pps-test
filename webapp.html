@@ -35,7 +35,7 @@
             width: 100%;
             max-width: 500px;
             margin: 0 auto;
-            padding: 40px 20px 100px;
+            padding: 40px 20px;
             box-sizing: border-box;
             flex-grow: 1;
             position: relative;
@@ -133,19 +133,24 @@
         .nav-bar {
             display: flex;
             padding: 8px;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            max-width: 500px;
-            margin: 0 auto;
-            z-index: 1000;
             background: var(--glass-bg-dark);
             border-top: 1px solid var(--glass-border-dark);
-            border-radius: 20px 20px 0 0;
+            border-radius: 0;
             backdrop-filter: blur(var(--glass-blur));
             -webkit-backdrop-filter: blur(var(--glass-blur));
             box-shadow: var(--glass-shadow-dark);
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            box-sizing: border-box;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .nav-bar::-webkit-scrollbar {
+            display: none;
         }
 
         .nav-bar button.nav-link {
