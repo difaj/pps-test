@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pay Stars</title>
     <script src="https://a-telegram.stel.com/js/telegram-web-app.js"></script>
     <style>
@@ -57,7 +57,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             cursor: pointer;
             width: 100%;
             max-width: 300px;
@@ -80,7 +82,9 @@
         .nav-bar {
             display: flex;
             padding: 10px;
-            background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-top: 1px solid var(--tg-theme-hint-color, #aaaaaa);
             position: sticky;
             bottom: 0;
@@ -109,10 +113,13 @@
             min-width: 80px;
             flex: 1;
             transition: all 0.3s ease;
+            border-radius: 10px;
         }
         .nav-bar button.nav-link.active {
             font-weight: bold;
             border-bottom: 2px solid var(--tg-theme-button-color, #bb86fc);
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
         }
         .nav-bar button.nav-link:hover {
             background-color: var(--tg-theme-button-color, #bb86fc);
@@ -175,7 +182,9 @@
             padding: 10px 20px;
             border: 2px solid var(--tg-theme-button-color, #bb86fc);
             border-radius: 10px;
-            background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             cursor: pointer;
             width: 100%;
             max-width: 300px;
@@ -194,7 +203,7 @@
         }
         .search-input {
             padding: 10px;
-            font-size: 1rem;
+            font-size: 16px;
             border: 2px solid var(--tg-theme-button-color, #bb86fc);
             border-radius: 10px;
             background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
@@ -208,7 +217,9 @@
             font-size: 0.9rem;
             border: 2px solid var(--tg-theme-button-color, #bb86fc);
             border-radius: 10px;
-            background-color: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.2));
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             color: var(--tg-theme-button-color, #bb86fc);
             cursor: pointer;
             width: 100%;
@@ -254,10 +265,6 @@
             font-size: 0.9rem;
             margin-left: 5px;
         }
-        body.light-theme .percent-bubble {
-            background-color: rgba(128, 128, 128, 0.2);
-            color: var(--tg-theme-text-color, #000000);
-        }
         .cat-avatar {
             display: inline-block;
             width: 24px;
@@ -270,17 +277,11 @@
             margin-right: 8px;
             vertical-align: middle;
         }
-        body.light-theme .cat-avatar {
-            background-color: rgba(0,0,0,0.05);
-        }
         .no-image-message {
             font-size: 1rem;
             color: var(--tg-theme-hint-color, #aaaaaa);
             margin: 10px 0;
             text-align: center;
-        }
-        body.light-theme .no-image-message {
-            color: var(--tg-theme-hint-color, #666666);
         }
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -294,46 +295,34 @@
             --tg-theme-secondary-bg-color: rgba(0,0,0,0.1);
             --tg-theme-hint-color: #666666;
         }
-        body.light-theme .links li button {
-            background-color: rgba(0,0,0,0.1);
-        }
-        body.light-theme .links li button:hover {
-            background-color: var(--tg-theme-button-color);
-            color: var(--tg-theme-button-text-color);
+        body.light-theme .links li button,
+        body.light-theme .clear-history-btn,
+        body.light-theme .search-btn {
+            background-color: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
         body.light-theme .nav-bar {
-            background-color: rgba(0,0,0,0.0);
-            border-top: 1px solid var(--tg-theme-hint-color);
+            background-color: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
-        body.light-theme .tg-logo {
-            color: var(--tg-theme-hint-color);
+        body.light-theme .nav-bar button.nav-link.active {
+            background-color: rgba(0, 0, 0, 0.15);
+            border-bottom: 2px solid var(--tg-theme-button-color, #6200ea);
         }
-        body.light-theme .scan-history {
-            background-color: rgba(0,0,0,0.1);
-        }
-        body.light-theme .no-history, body.light-theme .no-result {
-            background-color: rgba(0,0,0,0.1);
-            color: var(--tg-theme-hint-color);
-        }
-        body.light-theme .clear-history-btn {
-            background-color: rgba(0,0,0,0.1);
-        }
-        body.light-theme .clear-history-btn:hover {
-            background-color: var(--tg-theme-button-color);
-            color: var(--tg-theme-button-text-color);
-        }
-        body.light-theme .search-input {
-            background-color: rgba(0,0,0,0.1);
-        }
-        body.light-theme .search-btn {
-            background-color: rgba(0,0,0,0.1);
-        }
-        body.light-theme .search-btn:hover {
-            background-color: var(--tg-theme-button-color);
-            color: var(--tg-theme-button-text-color);
-        }
-        body.light-theme .nft-result {
+        body.light-theme .percent-bubble {
             background-color: rgba(128, 128, 128, 0.2);
+            color: var(--tg-theme-text-color, #000000);
+        }
+        body.light-theme .cat-avatar {
+            background-color: rgba(0,0,0,0.05);
+        }
+        body.light-theme .no-image-message {
+            color: var(--tg-theme-hint-color, #666666);
+        }
+        input, textarea, select {
+            font-size: 16px;
         }
     </style>
 </head>
@@ -439,17 +428,13 @@
                     const user = this.webApp.initDataUnsafe?.user;
                     if (user) {
                         this.userId = user.id;
-                        console.log('User ID:', this.userId);
                     }
 
                     if (window.location.search) {
                         history.replaceState({}, '', window.location.pathname);
                     }
-
-                    console.log('Telegram WebApp initialized');
                     return true;
                 }
-                console.error('Telegram WebApp not available');
                 return false;
             },
 
@@ -459,7 +444,6 @@
                 try {
                     this.webApp.openLink(url);
                 } catch (error) {
-                    console.error('Error opening link:', error);
                     window.location.href = url;
                 }
             },
@@ -486,23 +470,18 @@
                         }
                     });
                 } catch (error) {
-                    console.error('Error setting emoji status:', error);
                     this.showFeedback(feedbackEl, 'Error', 3000);
                 }
             },
 
             showScanQrPopup: function(linksOnly) {
                 if (!this.init()) return;
-                if (!this.webApp.isVersionAtLeast('6.7')) {
-                    console.error('QR scanning requires Telegram WebApp version 6.7 or higher');
-                    return;
-                }
+                if (!this.webApp.isVersionAtLeast('6.7')) return;
                 this.webApp.HapticFeedback.impactOccurred('light');
                 try {
                     this.webApp.showScanQrPopup(
                         { text: linksOnly ? 'Scan a QR code with a link' : 'Scan any QR code' },
                         (result) => {
-                            console.log('QR code scanned:', result);
                             this.webApp.closeScanQrPopup();
                             if (linksOnly && result.startsWith('http')) {
                                 this.openLink(result);
@@ -514,9 +493,7 @@
                             return true;
                         }
                     );
-                } catch (error) {
-                    console.error('Error scanning QR code:', error);
-                }
+                } catch (error) {}
             },
 
             saveScanHistory: function(result) {
@@ -527,22 +504,11 @@
                     if (!error && value) {
                         try {
                             const parsed = JSON.parse(value);
-                            if (Array.isArray(parsed)) {
-                                history = parsed;
-                            } else {
-                                console.warn('Invalid scan history format, resetting to empty array');
-                            }
-                        } catch (error) {
-                            console.error('Error parsing scan history:', error, 'Value:', value);
-                        }
+                            if (Array.isArray(parsed)) history = parsed;
+                        } catch (error) {}
                     }
-                    history.push({
-                        timestamp: new Date().toISOString(),
-                        result
-                    });
-                    this.webApp.DeviceStorage.setItem(key, JSON.stringify(history), () => {
-                        console.log('Scan history saved');
-                    });
+                    history.push({ timestamp: new Date().toISOString(), result });
+                    this.webApp.DeviceStorage.setItem(key, JSON.stringify(history), () => {});
                 });
             },
 
@@ -554,14 +520,7 @@
                 const noHistoryMessage = document.getElementById('no-history-message');
                 historyList.innerHTML = '';
                 this.webApp.DeviceStorage.getItem(key, (error, value) => {
-                    if (error) {
-                        console.error('Error loading scan history:', error);
-                        historyTable.style.display = 'none';
-                        noHistoryMessage.style.display = 'block';
-                        noHistoryMessage.textContent = 'Error loading history';
-                        return;
-                    }
-                    if (!value) {
+                    if (error || !value) {
                         historyTable.style.display = 'none';
                         noHistoryMessage.style.display = 'block';
                         noHistoryMessage.textContent = "You don't have any scan history yet.";
@@ -569,14 +528,7 @@
                     }
                     try {
                         const history = JSON.parse(value);
-                        if (!Array.isArray(history)) {
-                            console.warn('Invalid history format:', history);
-                            historyTable.style.display = 'none';
-                            noHistoryMessage.style.display = 'block';
-                            noHistoryMessage.textContent = 'Invalid history format';
-                            return;
-                        }
-                        if (history.length === 0) {
+                        if (!Array.isArray(history) || history.length === 0) {
                             historyTable.style.display = 'none';
                             noHistoryMessage.style.display = 'block';
                             noHistoryMessage.textContent = "You don't have any scan history yet.";
@@ -591,13 +543,10 @@
                                     const formattedTime = `${date.getUTCHours().toString().padStart(2, '0')}:${date.getUTCMinutes().toString().padStart(2, '0')}:${date.getUTCSeconds().toString().padStart(2, '0')}`;
                                     tr.innerHTML = `<td><div class="date-time">${formattedDate}<br>${formattedTime}</div></td><td>${item.result}</td>`;
                                     historyList.appendChild(tr);
-                                } else {
-                                    console.warn('Invalid history item:', item);
                                 }
                             });
                         }
                     } catch (error) {
-                        console.error('Error parsing scan history:', error, 'Value:', value);
                         historyTable.style.display = 'none';
                         noHistoryMessage.style.display = 'block';
                         noHistoryMessage.textContent = 'Error loading scan history';
@@ -611,7 +560,6 @@
                     if (confirmed) {
                         const key = `scan_history_${this.userId}`;
                         this.webApp.DeviceStorage.removeItem(key, () => {
-                            console.log('Scan history cleared');
                             this.showScanHistory();
                         });
                     }
@@ -626,7 +574,8 @@
                 const noResultMessage = document.getElementById('no-result-message');
 
                 if (!nameInput || !numberInput) {
-                    this.showFeedback(noResultMessage, 'Please enter both NFT name and number', 3000);
+                    noResultMessage.textContent = 'Please enter both NFT name and number';
+                    noResultMessage.style.display = 'block';
                     return;
                 }
 
@@ -643,7 +592,6 @@
                 noImageMessage.style.display = 'none';
 
                 let imageLoaded = false;
-
                 const maxRetries = 3;
                 let attempt = 0;
 
@@ -653,21 +601,10 @@
                         const nftUrl = `${proxyUrl}${encodeURIComponent(`https://a-ttgme.stel.com/nft/${input}`)}`;
                         const imageUrl = `https://tnft.stel.com/gift/${nameInput}-${numberInput}.webp`;
 
-                        console.log('Attempting to load image:', imageUrl);
-
                         await new Promise((resolve) => {
-                            console.log('Loading image:', imageUrl);
                             imageElement.src = imageUrl;
-                            imageElement.onload = () => {
-                                console.log('Image loaded successfully');
-                                imageLoaded = true;
-                                resolve();
-                            };
-                            imageElement.onerror = () => {
-                                console.warn('Failed to load image:', imageUrl);
-                                imageLoaded = false;
-                                resolve();
-                            };
+                            imageElement.onload = () => { imageLoaded = true; resolve(); };
+                            imageElement.onerror = () => { imageLoaded = false; resolve(); };
                             setTimeout(resolve, 5000);
                         });
 
@@ -682,26 +619,14 @@
                             }
                         });
 
-                        console.log('Response status:', response.status, 'URL:', nftUrl);
-                        console.log('Response headers:', Object.fromEntries(response.headers.entries()));
-
-                        if (!response.ok) {
-                            const errorText = await response.text().catch(() => 'No error text');
-                            console.error('Error response body:', errorText);
-                            throw new Error(`HTTP error ${response.status}: ${response.status === 404 ? 'NFT not found' : response.status === 403 ? 'Access denied' : response.status === 500 ? 'Proxy server error' : 'Server error'}`);
-                        }
+                        if (!response.ok) throw new Error(`HTTP error ${response.status}`);
 
                         const text = await response.text();
-                        console.log('Received HTML (first 500 chars):', text.slice(0, 500));
-
                         const parser = new DOMParser();
                         const doc = parser.parseFromString(text, 'text/html');
                         const table = doc.querySelector('.tgme_gift_table');
 
-                        if (!table) {
-                            console.error('Table .tgme_gift_table not found in HTML');
-                            throw new Error('NFT data not found');
-                        }
+                        if (!table) throw new Error('NFT data not found');
 
                         const rows = table.querySelectorAll('tr');
                         const nftData = {};
@@ -717,9 +642,9 @@
                                     const ownerName = linkElement ? linkElement.textContent.trim() : ownerElement.textContent.trim() || 'Anonymous';
                                     if (linkElement) {
                                         const href = linkElement.getAttribute('href');
-                                        nftData[th] = `<span class="cat-avatar">👤</span><a href="${href}" onclick="PayStarsApp.openLink('${href}'); return false;">${ownerName}</a>`;
+                                        nftData[th] = `<span class="cat-avatar">User</span><a href="${href}" onclick="PayStarsApp.openLink('${href}'); return false;">${ownerName}</a>`;
                                     } else {
-                                        nftData[th] = `<span class="cat-avatar">👤</span>${ownerName}`;
+                                        nftData[th] = `<span class="cat-avatar">User</span>${ownerName}`;
                                     }
                                 } else {
                                     nftData[th] = td.innerHTML.trim();
@@ -731,12 +656,8 @@
                         nftData['Backdrop'] = 'French Blue <span class="percent-bubble">1.8%</span>';
                         nftData['Symbol'] = 'Pig <span class="percent-bubble">30%</span>';
 
-                        if (Object.keys(nftData).length === 0) {
-                            throw new Error('NFT data is empty');
-                        }
-
                         infoContainer.innerHTML = `
-                            <tr><th>Owner</th><td>${nftData['Owner'] || '<span class="cat-avatar">👤</span>Anonymous'}</td></tr>
+                            <tr><th>Owner</th><td>${nftData['Owner'] || '<span class="cat-avatar">User</span>Anonymous'}</td></tr>
                             <tr><th>Model</th><td>${nftData['Model'] || 'N/A'}</td></tr>
                             <tr><th>Backdrop</th><td>${nftData['Backdrop'] || 'N/A'}</td></tr>
                             <tr><th>Symbol</th><td>${nftData['Symbol'] || 'N/A'}</td></tr>
@@ -760,22 +681,11 @@
                         return;
                     } catch (error) {
                         attempt++;
-                        console.error(`Attempt ${attempt} failed:`, error.message);
                         if (attempt >= maxRetries) {
-                            console.error('Error searching NFT:', error.message);
-                            noResultMessage.textContent = error.message.includes('NFT data') 
-                                ? 'NFT data not found' 
-                                : error.message.includes('HTTP') 
-                                ? error.message 
-                                : error.message.includes('NetworkError') || error.message.includes('Failed to fetch')
-                                ? 'Network error: Please check your connection or try again later'
-                                : 'Connection error or proxy issue';
-                            this.webApp.HapticFeedback.notificationOccurred('error');
-                            imageElement.style.display = 'none';
-                            noImageMessage.style.display = 'none';
+                            noResultMessage.textContent = 'NFT not found or connection error';
                             resultContainer.style.display = 'block';
+                            this.webApp.HapticFeedback.notificationOccurred('error');
                         } else {
-                            console.log(`Retrying... (${attempt + 1}/${maxRetries})`);
                             await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
                         }
                     }
@@ -793,32 +703,18 @@
             },
 
             switchPage: function(pageId) {
-                console.log('Switching to page:', pageId);
-                document.querySelectorAll('.page').forEach(page => {
-                    page.classList.remove('active');
-                });
+                document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
                 const page = document.querySelector(`#${pageId}`);
-                if (page) {
-                    page.classList.add('active');
-                } else {
-                    console.error('Page not found:', pageId);
-                }
+                if (page) page.classList.add('active');
 
-                document.querySelectorAll('.nav-link').forEach(link => {
-                    link.classList.remove('active');
-                });
+                document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
                 const navLink = document.querySelector(`.nav-link[data-page="${pageId}"]`);
-                if (navLink) {
-                    navLink.classList.add('active');
-                }
+                if (navLink) navLink.classList.add('active');
 
                 this.currentPage = pageId;
                 this.webApp.HapticFeedback.impactOccurred('light');
-
                 history.pushState({ page: pageId }, '', window.location.pathname);
-                if (pageId === 'scan-history-page') {
-                    this.showScanHistory();
-                }
+                if (pageId === 'scan-history-page') this.showScanHistory();
             },
 
             toggleTheme: function() {
@@ -827,25 +723,34 @@
                 const theme = isLight ? 'light' : 'dark';
                 this.webApp.HapticFeedback.impactOccurred('light');
 
-                document.body.style.setProperty('--tg-theme-bg-color', isLight ? '#ffffff' : this.webApp.themeParams.bg_color || '#121212');
-                document.body.style.setProperty('--tg-theme-text-color', isLight ? '#333333' : this.webApp.themeParams.text_color || '#ffffff');
-                document.body.style.setProperty('--tg-theme-button-color', isLight ? '#6200ea' : this.webApp.themeParams.button_color || '#bb86fc');
-                document.body.style.setProperty('--tg-theme-button-text-color', isLight ? '#ffffff' : this.webApp.themeParams.button_text_color || '#ffffff');
-                document.body.style.setProperty('--tg-theme-secondary-bg-color', isLight ? 'rgba(0,0,0,0.1)' : this.webApp.themeParams.secondary_bg_color || 'rgba(0,0,0,0.2)');
-                document.body.style.setProperty('--tg-theme-hint-color', isLight ? '#666666' : this.webApp.themeParams.hint_color || '#aaaaaa');
+                if (isLight) {
+                    document.body.style.setProperty('--tg-theme-bg-color', '#ffffff');
+                    document.body.style.setProperty('--tg-theme-text-color', '#333333');
+                    document.body.style.setProperty('--tg-theme-button-color', '#6200ea');
+                    document.body.style.setProperty('--tg-theme-button-text-color', '#ffffff');
+                    document.body.style.setProperty('--tg-theme-secondary-bg-color', 'rgba(0,0,0,0.1)');
+                    document.body.style.setProperty('--tg-theme-hint-color', '#666666');
+                } else {
+                    document.body.style.setProperty('--tg-theme-bg-color', '#121212');
+                    document.body.style.setProperty('--tg-theme-text-color', '#ffffff');
+                    document.body.style.setProperty('--tg-theme-button-color', '#bb86fc');
+                    document.body.style.setProperty('--tg-theme-button-text-color', '#ffffff');
+                    document.body.style.setProperty('--tg-theme-secondary-bg-color', 'rgba(0,0,0,0.2)');
+                    document.body.style.setProperty('--tg-theme-hint-color', '#aaaaaa');
+                }
 
                 if (this.userId) {
-                    this.webApp.DeviceStorage.setItem(`theme_${this.userId}`, theme, () => {
-                        console.log('Theme saved:', theme);
-                    });
+                    this.webApp.DeviceStorage.setItem(`theme_${this.userId}`, theme, () => {});
                 }
             },
 
             loadTheme: function() {
-                if (!this.userId) return;
+                if (!this.userId || !this.webApp) return;
                 this.webApp.DeviceStorage.getItem(`theme_${this.userId}`, (error, value) => {
-                    if (!error && value === 'light') {
-                        document.body.classList.add('light-theme');
+                    const isLight = value === 'light';
+                    document.body.classList.toggle('light-theme', isLight);
+
+                    if (isLight) {
                         document.body.style.setProperty('--tg-theme-bg-color', '#ffffff');
                         document.body.style.setProperty('--tg-theme-text-color', '#333333');
                         document.body.style.setProperty('--tg-theme-button-color', '#6200ea');
@@ -853,14 +758,12 @@
                         document.body.style.setProperty('--tg-theme-secondary-bg-color', 'rgba(0,0,0,0.1)');
                         document.body.style.setProperty('--tg-theme-hint-color', '#666666');
                     } else {
-                        if (this.webApp) {
-                            document.body.style.setProperty('--tg-theme-bg-color', this.webApp.themeParams.bg_color);
-                            document.body.style.setProperty('--tg-theme-text-color', this.webApp.themeParams.text_color);
-                            document.body.style.setProperty('--tg-theme-button-color', this.webApp.themeParams.button_color);
-                            document.body.style.setProperty('--tg-theme-button-text-color', this.webApp.themeParams.button_text_color);
-                            document.body.style.setProperty('--tg-theme-secondary-bg-color', this.webApp.themeParams.secondary_bg_color);
-                            document.body.style.setProperty('--tg-theme-hint-color', this.webApp.themeParams.hint_color);
-                        }
+                        document.body.style.setProperty('--tg-theme-bg-color', '#121212');
+                        document.body.style.setProperty('--tg-theme-text-color', '#ffffff');
+                        document.body.style.setProperty('--tg-theme-button-color', '#bb86fc');
+                        document.body.style.setProperty('--tg-theme-button-text-color', '#ffffff');
+                        document.body.style.setProperty('--tg-theme-secondary-bg-color', 'rgba(0,0,0,0.2)');
+                        document.body.style.setProperty('--tg-theme-hint-color', '#aaaaaa');
                     }
                 });
             },
@@ -868,61 +771,50 @@
             setupHapticFeedback: function() {
                 document.querySelectorAll('[data-haptic]').forEach(el => {
                     el.addEventListener('click', () => {
-                        if (this.webApp) {
-                            this.webApp.HapticFeedback.notificationOccurred(el.dataset.haptic);
-                        }
+                        if (this.webApp) this.webApp.HapticFeedback.notificationOccurred(el.dataset.haptic);
                     });
                 });
             },
 
             setupNavigation: function() {
-                console.log('Setting up navigation');
                 const buttons = document.querySelectorAll('.nav-link');
-                console.log('Found nav buttons:', buttons.length);
                 buttons.forEach(button => {
                     button.removeEventListener('click', button._clickHandler);
                     if (button.dataset.page) {
-                        button._clickHandler = () => {
-                            console.log('Nav button clicked:', button.dataset.page);
-                            this.switchPage(button.dataset.page);
-                        };
+                        button._clickHandler = () => this.switchPage(button.dataset.page);
                         button.addEventListener('click', button._clickHandler);
                     } else if (button.onclick) {
-                        button._clickHandler = () => {
-                            console.log('Custom button clicked:', button.textContent);
-                            button.onclick();
-                        };
+                        button._clickHandler = () => button.onclick();
                         button.addEventListener('click', button._clickHandler);
                     }
-                    button.addEventListener('contextmenu', (e) => {
-                        e.preventDefault();
-                    });
+                    button.addEventListener('contextmenu', (e) => e.preventDefault());
                 });
             },
 
             setupButtonContextMenuPrevention: function() {
                 document.querySelectorAll('.links button, .clear-history-btn').forEach(button => {
-                    button.addEventListener('contextmenu', (e) => {
-                        e.preventDefault();
-                    });
+                    button.addEventListener('contextmenu', (e) => e.preventDefault());
                 });
             }
         };
 
         window.addEventListener('popstate', (event) => {
             const pageId = event.state?.page || 'main-page';
-            console.log('Popstate event, switching to:', pageId);
             PayStarsApp.switchPage(pageId);
         });
 
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('DOM fully loaded');
             PayStarsApp.init();
             PayStarsApp.setupHapticFeedback();
             PayStarsApp.setupNavigation();
             PayStarsApp.setupButtonContextMenuPrevention();
             PayStarsApp.switchPage('main-page');
             PayStarsApp.loadTheme();
+
+            document.addEventListener('gesturestart', (e) => e.preventDefault());
+            document.addEventListener('touchmove', (e) => {
+                if (e.scale !== 1) e.preventDefault();
+            }, { passive: false });
         });
     </script>
 </body>
