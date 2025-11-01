@@ -7,13 +7,15 @@
     <script src="https://a-telegram.stel.com/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --glass-bg-dark: rgba(255, 255, 255, 0.08);
-            --glass-bg-light: rgba(0, 0, 0, 0.05);
-            --glass-border-dark: rgba(255, 255, 255, 0.15);
-            --glass-border-light: rgba(0, 0, 0, 0.08);
-            --glass-shadow-dark: 0 8px 32px rgba(0, 0, 0, 0.37);
-            --glass-shadow-light: 0 8px 32px rgba(0, 0, 0, 0.08);
-            --glass-blur: 12px;
+            --glass-bg-dark: rgba(255, 255, 255, 0.10);
+            --glass-bg-light: rgba(0, 0, 0, 0.08);
+            --glass-border-dark: rgba(255, 255, 255, 0.20);
+            --glass-border-light: rgba(0, 0, 0, 0.12);
+            --glass-shadow-dark: 0 12px 32px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.05);
+            --glass-shadow-light: 0 12px 32px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+            --glass-blur: 16px;
+            --glass-glow-dark: 0 0 20px rgba(187, 134, 252, 0.3);
+            --glass-glow-light: 0 0 20px rgba(98, 0, 234, 0.25);
         }
 
         body {
@@ -52,7 +54,7 @@
         .links {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 18px;
             list-style: none;
             padding: 0;
             width: 100%;
@@ -69,11 +71,11 @@
             position: relative;
             background: var(--glass-bg-dark);
             border: 1px solid var(--glass-border-dark);
-            border-radius: 16px;
+            border-radius: 20px;
             backdrop-filter: blur(var(--glass-blur));
             -webkit-backdrop-filter: blur(var(--glass-blur));
             box-shadow: var(--glass-shadow-dark);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
         }
 
@@ -82,22 +84,34 @@
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
             background: linear-gradient(135deg,
-                rgba(255,255,255,0.15) 0%,
+                rgba(255,255,255,0.18) 0%,
                 transparent 40%,
-                rgba(255,255,255,0.05) 100%
+                rgba(255,255,255,0.08) 100%
             );
             pointer-events: none;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.4s ease;
         }
 
-        .glass:hover::before {
+        .glass::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .glass:hover::before,
+        .glass:hover::after {
             opacity: 1;
         }
 
         .glass:active {
-            transform: translateY(1px);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+            transform: translateY(2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
         }
 
         .links li button,
@@ -106,19 +120,20 @@
             position: relative;
             background: var(--glass-bg-dark);
             border: 1px solid var(--glass-border-dark);
-            border-radius: 16px;
+            border-radius: 20px;
             backdrop-filter: blur(var(--glass-blur));
             -webkit-backdrop-filter: blur(var(--glass-blur));
             box-shadow: var(--glass-shadow-dark);
             color: var(--tg-theme-button-color, #bb86fc);
             font-size: 1.1rem;
-            padding: 14px 24px;
+            padding: 16px 28px;
             cursor: pointer;
             width: 100%;
             max-width: 300px;
             box-sizing: border-box;
-            font-weight: 500;
-            transition: all 0.3s ease;
+            font-weight: 600;
+            transition: all 0.4s ease;
+            overflow: hidden;
         }
 
         .links li button:hover,
@@ -127,12 +142,13 @@
             background: var(--tg-theme-button-color, #bb86fc);
             color: #ffffff;
             border-color: transparent;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            box-shadow: var(--glass-glow-dark), 0 8px 24px rgba(0,0,0,0.35);
+            transform: translateY(-1px);
         }
 
         .nav-bar {
             display: flex;
-            padding: 8px;
+            padding: 10px;
             background: var(--glass-bg-dark);
             border-top: 1px solid var(--glass-border-dark);
             border-radius: 0;
@@ -147,6 +163,7 @@
             white-space: nowrap;
             scrollbar-width: none;
             -ms-overflow-style: none;
+            -webkit-overflow-scrolling: touch;
         }
 
         .nav-bar::-webkit-scrollbar {
@@ -154,16 +171,17 @@
         }
 
         .nav-bar button.nav-link {
-            flex: 1;
-            min-width: 70px;
-            padding: 12px 8px;
+            flex: 0 0 auto;
+            min-width: 80px;
+            padding: 12px 16px;
+            margin: 0 4px;
             font-size: 0.9rem;
             font-weight: 600;
             color: var(--tg-theme-button-color, #bb86fc);
             background: transparent;
             border: none;
-            border-radius: 14px;
-            transition: all 0.3s ease;
+            border-radius: 16px;
+            transition: all 0.4s ease;
             position: relative;
             overflow: hidden;
         }
@@ -174,37 +192,38 @@
             inset: 0;
             background: var(--tg-theme-button-color, #bb86fc);
             opacity: 0;
-            transition: opacity 0.3s ease;
-            border-radius: 14px;
+            transition: opacity 0.4s ease;
+            border-radius: 16px;
         }
 
         .nav-bar button.nav-link.active::before {
-            opacity: 0.2;
+            opacity: 0.25;
         }
 
         .nav-bar button.nav-link.active {
             color: #ffffff;
             font-weight: 700;
+            box-shadow: 0 0 15px rgba(187, 134, 252, 0.4);
         }
 
         .nav-bar button.nav-link:hover::before {
-            opacity: 0.15;
+            opacity: 0.18;
         }
 
         .search-container {
             display: flex;
             flex-direction: row;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 20px;
             flex-wrap: nowrap;
         }
 
         .search-input {
-            padding: 12px;
+            padding: 14px;
             font-size: 16px;
             border: 1px solid var(--glass-border-dark);
-            border-radius: 16px;
+            border-radius: 20px;
             background: var(--glass-bg-dark);
             backdrop-filter: blur(var(--glass-blur));
             -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -223,14 +242,19 @@
         .nft-result,
         .no-history,
         .no-result {
-            margin-top: 20px;
-            padding: 16px;
-            border-radius: 16px;
+            margin: 25px 0;
+            padding: 20px;
+            border-radius: 20px;
             background: var(--glass-bg-dark);
             border: 1px solid var(--glass-border-dark);
             backdrop-filter: blur(var(--glass-blur));
             -webkit-backdrop-filter: blur(var(--glass-blur));
             box-shadow: var(--glass-shadow-dark);
+            text-align: center;
+        }
+
+        .clear-history-btn {
+            margin-top: 15px;
         }
 
         .tg-logo {
@@ -257,6 +281,7 @@
             --glass-bg-dark: var(--glass-bg-light);
             --glass-border-dark: var(--glass-border-light);
             --glass-shadow-dark: var(--glass-shadow-light);
+            --glass-glow-dark: var(--glass-glow-light);
         }
 
         body.light-theme .glass,
@@ -276,10 +301,20 @@
 
         body.light-theme .glass::before {
             background: linear-gradient(135deg,
-                rgba(0,0,0,0.08) 0%,
+                rgba(0,0,0,0.12) 0%,
                 transparent 40%,
-                rgba(0,0,0,0.03) 100%
+                rgba(0,0,0,0.05) 100%
             );
+        }
+
+        body.light-theme .glass::after {
+            background: radial-gradient(circle at 50% 50%, rgba(0,0,0,0.12), transparent 70%);
+        }
+
+        body.light-theme .links li button:hover,
+        body.light-theme .clear-history-btn:hover,
+        body.light-theme .search-btn:hover {
+            box-shadow: var(--glass-glow-light), 0 8px 24px rgba(0,0,0,0.2);
         }
 
         html, body {
@@ -288,6 +323,10 @@
 
         input, textarea, select {
             font-size: 16px;
+        }
+
+        .status-feedback {
+            display: none;
         }
     </style>
 </head>
@@ -320,25 +359,25 @@
                 </table>
             </div>
             <div class="no-history" id="no-history-message">You don't have any scan history yet.</div>
-            <button class="clear-history-btn" onclick="PayStarsApp.clearScanHistory()" data-haptic="warning">Clear Scan History</button>
+            <button class="clear-history-btn glass" onclick="PayStarsApp.clearScanHistory()" data-haptic="warning">Clear Scan History</button>
             <div class="tg-logo">Telegram WebApp</div>
         </div>
 
         <div class="page" id="nft-search-page">
             <h1>Search NFT Gifts</h1>
             <div class="search-container">
-                <input type="text" id="nft-name-input" placeholder="Name" class="search-input">
-                <input type="text" id="nft-number-input" placeholder="Number" class="search-input">
-                <button onclick="PayStarsApp.searchNFT()" data-haptic="warning" class="search-btn">Search</button>
+                <input type="text" id="nft-name-input" placeholder="Name" class="search-input glass">
+                <input type="text" id="nft-number-input" placeholder="Number" class="search-input glass">
+                <button onclick="PayStarsApp.searchNFT()" data-haptic="warning" class="search-btn glass">Search</button>
             </div>
-            <div class="nft-result" id="nft-result" style="display: none;">
-                <img id="nft-image" alt="NFT Image" style="max-width: 100%; border-radius: 12px; margin: 10px 0; display: none;">
+            <div class="nft-result glass" id="nft-result" style="display: none;">
+                <img id="nft-image" alt="NFT Image" style="max-width: 100%; border-radius: 16px; margin: 12px 0; display: none;">
                 <div id="no-image-message" style="display: none;">Photo not available</div>
                 <table class="nft-table">
                     <tbody id="nft-info"></tbody>
                 </table>
             </div>
-            <div class="no-result" id="no-result-message">Enter an NFT name and number to search.</div>
+            <div class="no-result glass" id="no-result-message">Enter an NFT name and number to search.</div>
             <div class="tg-logo">Telegram WebApp</div>
         </div>
 
@@ -348,7 +387,7 @@
                 <li><button onclick="PayStarsApp.openLink('tg://nft?slug=aTCuqOAvWUsBAAAAj08P-4gBdtw')" data-haptic="warning">Test Button</button></li>
                 <li><button onclick="PayStarsApp.openLink('https://t.me/$qEkvAY4AKEoGAAAA4lfaNB2EbVk')" data-haptic="warning">Make a Payment</button></li>
                 <li><button onclick="PayStarsApp.setEmojiStatus(this, '5258115417230016513');" data-haptic="warning">
-                    Set Emoji Status <span class="status-feedback"></span>
+                    Set Emoji Status
                 </button></li>
                 <li><button onclick="PayStarsApp.toggleTheme()" data-haptic="warning">Toggle Theme</button></li>
             </ul>
@@ -382,9 +421,43 @@
                     const user = this.webApp.initDataUnsafe?.user;
                     if (user) this.userId = user.id;
                     if (window.location.search) history.replaceState({}, '', window.location.pathname);
+
+                    // АВТОМАТИЧНА ТЕМА (по Telegram)
+                    const systemTheme = this.webApp.colorScheme || 'dark';
+                    const isLight = systemTheme === 'light';
+                    document.body.classList.toggle('light-theme', isLight);
+                    this.applyTelegramTheme(isLight);
+
                     return true;
                 }
                 return false;
+            },
+
+            applyTelegramTheme: function(isLight) {
+                const colors = isLight ? {
+                    bg: '#ffffff',
+                    text: '#000000',
+                    button: '#6200ea',
+                    buttonText: '#ffffff',
+                    secondary: 'rgba(0,0,0,0.08)',
+                    hint: '#666666'
+                } : {
+                    bg: '#121212',
+                    text: '#ffffff',
+                    button: '#bb86fc',
+                    buttonText: '#ffffff',
+                    secondary: 'rgba(255,255,255,0.08)',
+                    hint: '#aaaaaa'
+                };
+
+                Object.entries(colors).forEach(([key, value]) => {
+                    const prop = `--tg-theme-${key === 'bg' ? 'bg-color' :
+                                  key === 'secondary' ? 'secondary-bg-color' :
+                                  key === 'buttonText' ? 'button-text-color' :
+                                  key === 'button' ? 'button-color' :
+                                  key === 'hint' ? 'hint-color' : 'text-color'}`;
+                    document.body.style.setProperty(prop, value);
+                });
             },
 
             openLink: function(url) {
@@ -394,16 +467,14 @@
             },
 
             setEmojiStatus: function(el, id) {
-                const fb = el.querySelector('.status-feedback');
-                if (!this.init()) { this.showFeedback(fb, 'WebApp not available', 3000); return; }
-                if (!this.webApp.isVersionAtLeast('8.0')) { this.showFeedback(fb, 'Update Telegram', 3000); return; }
+                if (!this.init()) return;
+                if (!this.webApp.isVersionAtLeast('8.0')) return;
                 this.webApp.HapticFeedback.impactOccurred('light');
                 try {
                     this.webApp.setEmojiStatus(id, null, (s) => {
-                        this.showFeedback(fb, s ? 'Status set' : 'Failed', s ? 2000 : 3000);
                         this.webApp.HapticFeedback.notificationOccurred(s ? 'success' : 'error');
                     });
-                } catch (e) { this.showFeedback(fb, 'Error', 3000); }
+                } catch (e) {}
             },
 
             showScanQrPopup: function(links) {
@@ -440,7 +511,7 @@
                 l.innerHTML = '';
                 this.webApp.DeviceStorage.getItem(k, (e, v) => {
                     if (e || !v || !Array.isArray(JSON.parse(v || '[]')) || (JSON.parse(v || '[]')).length === 0) {
-                        t.style.display = 'none'; m.style.display = 'block'; m.textContent = "You don't have any scan history yet."; return;
+                        t.style.display = 'none'; m.style.display = 'block'; return;
                     }
                     try {
                         const h = JSON.parse(v);
@@ -455,7 +526,7 @@
                                 l.appendChild(tr);
                             }
                         });
-                    } catch (e) { t.style.display = 'none'; m.style.display = 'block'; m.textContent = 'Error loading history'; }
+                    } catch (e) { t.style.display = 'none'; m.style.display = 'block'; }
                 });
             },
 
@@ -473,7 +544,7 @@
                 const n = document.getElementById('nft-name-input').value.trim();
                 const num = document.getElementById('nft-number-input').value.trim();
                 const msg = document.getElementById('no-result-message');
-                if (!n || !num) { msg.textContent = 'Enter name and number'; msg.style.display = 'block'; return; }
+                if (!n || !num) { msg.style.display = 'block'; return; }
 
                 const input = `${n}-${num}`;
                 const res = document.getElementById('nft-result');
@@ -499,7 +570,7 @@
                         });
 
                         const r = await fetch(u, { headers: {
-                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64, x64) AppleWebKit/537.36',
                             'Referer': 'https://a-ttgme.stel.com/'
                         }});
                         if (!r.ok) throw new Error(`HTTP ${r.status}`);
@@ -555,12 +626,6 @@
                 }
             },
 
-            showFeedback: function(el, msg, dur) {
-                if (!el) return;
-                el.textContent = msg; el.style.display = 'block';
-                setTimeout(() => { el.textContent = ''; el.style.display = 'none'; }, dur);
-            },
-
             switchPage: function(id) {
                 document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
                 const pg = document.getElementById(id); if (pg) pg.classList.add('active');
@@ -574,41 +639,13 @@
 
             toggleTheme: function() {
                 if (!this.init()) return;
-                const light = document.body.classList.toggle('light-theme');
-                const theme = light ? 'light' : 'dark';
+                const isLight = document.body.classList.toggle('light-theme');
+                this.applyTelegramTheme(isLight);
                 this.webApp.HapticFeedback.impactOccurred('light');
 
-                const colors = light ? {
-                    bg: '#ffffff', text: '#333333', btn: '#6200ea', btnText: '#ffffff',
-                    sec: 'rgba(0,0,0,0.1)', hint: '#666666'
-                } : {
-                    bg: '#121212', text: '#ffffff', btn: '#bb86fc', btnText: '#ffffff',
-                    sec: 'rgba(0,0,0,0.2)', hint: '#aaaaaa'
-                };
-
-                Object.entries(colors).forEach(([k, v]) => {
-                    document.body.style.setProperty(`--tg-theme-${k === 'bg' ? 'bg-color' : k === 'sec' ? 'secondary-bg-color' : k === 'btnText' ? 'button-text-color' : k === 'btn' ? 'button-color' : k === 'hint' ? 'hint-color' : 'text-color'}`, v);
-                });
-
-                if (this.userId) this.webApp.DeviceStorage.setItem(`theme_${this.userId}`, theme, () => {});
-            },
-
-            loadTheme: function() {
-                if (!this.userId || !this.webApp) return;
-                this.webApp.DeviceStorage.getItem(`theme_${this.userId}`, (e, v) => {
-                    const light = v === 'light';
-                    document.body.classList.toggle('light-theme', light);
-                    const colors = light ? {
-                        bg: '#ffffff', text: '#333333', btn: '#6200ea', btnText: '#ffffff',
-                        sec: 'rgba(0,0,0,0.1)', hint: '#666666'
-                    } : {
-                        bg: '#121212', text: '#ffffff', btn: '#bb86fc', btnText: '#ffffff',
-                        sec: 'rgba(0,0,0,0.2)', hint: '#aaaaaa'
-                    };
-                    Object.entries(colors).forEach(([k, v]) => {
-                        document.body.style.setProperty(`--tg-theme-${k === 'bg' ? 'bg-color' : k === 'sec' ? 'secondary-bg-color' : k === 'btnText' ? 'button-text-color' : k === 'btn' ? 'button-color' : k === 'hint' ? 'hint-color' : 'text-color'}`, v);
-                    });
-                });
+                if (this.userId) {
+                    this.webApp.DeviceStorage.setItem(`theme_${this.userId}`, isLight ? 'light' : 'dark', () => {});
+                }
             },
 
             setupHapticFeedback: function() {
@@ -647,7 +684,6 @@
             PayStarsApp.setupNavigation();
             PayStarsApp.setupButtonContextMenuPrevention();
             PayStarsApp.switchPage('main-page');
-            PayStarsApp.loadTheme();
 
             document.addEventListener('gesturestart', e => e.preventDefault());
             document.addEventListener('touchmove', e => { if (e.scale !== 1) e.preventDefault(); }, { passive: false });
