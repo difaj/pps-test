@@ -29,6 +29,7 @@
             flex-direction: column;
             transition: background-color 0.3s ease, color 0.3s ease;
             overflow-x: hidden;
+            touch-action: pan-y;
         }
 
         .container {
@@ -148,7 +149,7 @@
 
         .nav-bar {
             display: flex;
-            padding: 10px;
+            padding: 10px 8px;
             background: var(--glass-bg-dark);
             border-top: 1px solid var(--glass-border-dark);
             border-radius: 0;
@@ -160,10 +161,15 @@
             margin: 0 auto;
             box-sizing: border-box;
             overflow-x: auto;
+            overflow-y: hidden;
             white-space: nowrap;
             scrollbar-width: none;
             -ms-overflow-style: none;
             -webkit-overflow-scrolling: touch;
+            touch-action: pan-x;
+            scroll-behavior: smooth;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         .nav-bar::-webkit-scrollbar {
@@ -184,6 +190,7 @@
             transition: all 0.4s ease;
             position: relative;
             overflow: hidden;
+            touch-action: pan-y;
         }
 
         .nav-bar button.nav-link::before {
@@ -395,7 +402,7 @@
         </div>
     </div>
 
-    <div class="nav-bar">
+    <div class="nav-bar" id="nav-bar">
         <button class="nav-link active" data-page="main-page">Main</button>
         <button class="nav-link" data-page="contact-page">Contact</button>
         <button class="nav-link" data-page="scan-history-page">History</button>
@@ -422,11 +429,34 @@
                     if (user) this.userId = user.id;
                     if (window.location.search) history.replaceState({}, '', window.location.pathname);
 
-                    // АВТОМАТИЧНА ТЕМА (по Telegram)
                     const systemTheme = this.webApp.colorScheme || 'dark';
                     const isLight = systemTheme === 'light';
                     document.body.classList.toggle('light-theme', isLight);
                     this.applyTelegramTheme(isLight);
+
+                    // Фікс горизонтального скролу на Android
+                    const navBar = document.getElementById('nav-bar');
+                    if (navBar) {
+                        navBar.addEventListener('touchstart', function(e) {
+                            if (e.touches.length === 1) {
+                                this._startX = e.touches[0].clientX;
+                                this._startScroll = this.scrollLeft;
+                            }
+                        }, { passive: true });
+
+                        navBar.addEventListener('touchmove', function(e) {
+                            if (e.touches.length === 1 && this._startX != null) {
+                                const deltaX = this._startX - e.touches[0].clientX;
+                                this.scrollLeft = this._startScroll + deltaX;
+                                e.preventDefault();
+                            }
+                        }, { passive: false });
+
+                        navBar.addEventListener('touchend', function() {
+                            this._startX = null;
+                            this._startScroll = null;
+                        });
+                    }
 
                     return true;
                 }
@@ -570,7 +600,7 @@
                         });
 
                         const r = await fetch(u, { headers: {
-                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64, x64) AppleWebKit/537.36',
+                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
                             'Referer': 'https://a-ttgme.stel.com/'
                         }});
                         if (!r.ok) throw new Error(`HTTP ${r.status}`);
